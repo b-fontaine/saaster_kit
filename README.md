@@ -84,7 +84,7 @@ flowchart LR
    Service2 -.-> Dapr2 --> C & L & P
    L --> G
 ```
-Chaque appel utilisateur transite d’abord par **Traefik** (reverse-proxy sécurisé + WAF), puis par **Temporal** pour les workflows (inscription, authentification, etc.) sans couplage direct entre microservices. **Keycloak** gère l’IAM, et **Linkerd** assure le chiffrement mutuel, l’équilibrage de charge et la résilience inter-services. Enfin, **Prometheus**, **Grafana** et **Loki** offrent une visibilité complète.
+Chaque appel utilisateur transite d’abord par **Traefik** (reverse-proxy sécurisé + WAF), puis par **Temporal** pour les workflows (inscription, authentification, etc.) sans couplage direct entre microservices. **Keycloak** gère l’IAM, et **Linkerd** assure le chiffrement mutuel, l’équilibrage de charge et la résilience inter-services. Enfin, **Prometheus**, **Grafana** et **ElasticSearch** offrent une visibilité complète.
 
 ---
 

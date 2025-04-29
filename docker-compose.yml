@@ -1,7 +1,7 @@
-version: "3.5"
 services:
+  # Observability
   elasticsearch:
-    container_name: temporal-elasticsearch
+    container_name: saaster-elasticsearch
     environment:
       - cluster.routing.allocation.disk.threshold_enabled=true
       - cluster.routing.allocation.disk.watermark.low=512mb
@@ -12,12 +12,14 @@ services:
       - xpack.security.enabled=false
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
-      - temporal-network
+      - saaster-network
     expose:
       - 9200
     volumes:
       - /var/lib/elasticsearch/data
-  postgresql:
+
+  # Orchestration
+  temporal-postgresql:
     container_name: temporal-postgresql
     environment:
       POSTGRES_PASSWORD: temporal
@@ -32,7 +34,7 @@ services:
   temporal:
     container_name: temporal
     depends_on:
-      - postgresql
+      - temporal-postgresql
       - elasticsearch
     environment:
       - DB=postgres12
@@ -48,9 +50,10 @@ services:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
+      - saaster-network
       - temporal-network
     ports:
-      - 7233:7233
+      - "7233:7233"
     volumes:
       - ./dynamicconfig:/etc/temporal/config/dynamicconfig
   temporal-admin-tools:
@@ -62,7 +65,7 @@ services:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
     networks:
-      - temporal-network
+      - saaster-network
     stdin_open: true
     tty: true
   temporal-ui:
@@ -74,10 +77,60 @@ services:
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
-      - temporal-network
+      - saaster-network
     ports:
-      - 8080:8080
+      - "8081:8080"
+
+
+  # IAM
+  postgres:
+    image: postgres:15.6
+    container_name: postgres_keycloak
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    networks:
+      - keycloak-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    volumes:
+      - ./keycloak/imports:/opt/keycloak/data/import
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: false
+      KC_HOSTNAME_STRICT_HTTPS: false
+
+      KC_LOG_LEVEL: info
+      KC_METRICS_ENABLED: true
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev --import-realm --verbose
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - saaster-network
+      - keycloak-network
+
+
 networks:
+  saaster-network:
+    driver: bridge
+    name: saaster-network
   temporal-network:
     driver: bridge
     name: temporal-network
+  keycloak-network:
+    driver: bridge
+    name: keycloak-network
