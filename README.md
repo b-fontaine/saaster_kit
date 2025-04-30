@@ -1,28 +1,30 @@
 # Starter Kit SaaS B2B
 
-Ce **starter kit** fournit une base robuste, modulable et sécurisée pour développer un SaaS B2B full-stack, prêt à l’emploi en local. Il intègre :
+> 🇫🇷 Pour voir la version française, cliquez [ici](./doc/fr/README.md).
 
-- **Frontend** : Flutter (Web / Mobile / Desktop)  
-- **API Gateway & WAF** : Traefik + ModSecurity  
-- **IAM** : Keycloak (OAuth2 / OIDC)  
-- **Orchestration** : Temporal (workflows _event-driven_)  
-- **Microservices** : Go, chacun avec sa propre base PostgreSQL  
-- **Service mesh** : Dapr, Linkerd (mTLS, load-balancing, retries, circuit-breaker, health checks)  
-- **Observabilité** : Prometheus, Grafana (métriques) et ElasticSearch (logs)  
+This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to run locally. It includes:
+
+- **Frontend**: Flutter (Web / Mobile / Desktop)
+- **API Gateway & WAF**: Traefik + ModSecurity
+- **IAM**: Keycloak (OAuth2 / OIDC)
+- **Orchestration**: Temporal (event-driven workflows)
+- **Microservices**: Go, each with its own PostgreSQL database
+- **Service Mesh**: Dapr, Linkerd (mTLS, load balancing, retries, circuit breaker, health checks)
+- **Observability**: Prometheus, Grafana (metrics) and Elasticsearch (logs)
 
 ---
 
-## Installation et démarrage
+## Installation and Startup
 
 ```bash
 docker compose -p SaaSter up -d
 ```
 
-> **Note** : en environnement de production, remplacez les certificats ACME de développement par des certificats TLS fiables, et migrez vers Kubernetes à l’aide de vos manifests ou Helm charts.
+> **Note**: In a production environment, replace the development ACME certificates with trusted TLS certificates, and migrate to Kubernetes using your own manifests or Helm charts.
 
 ---
 
-## Description de l’architecture
+## Architecture Overview
 
 ```mermaid
 ---
@@ -64,10 +66,10 @@ flowchart LR
          Dapr2["Dapr Sidecar"]
       end
    end
-   subgraph s3["Observabilité"]
+   subgraph s3["Observability"]
       G["Grafana"]
       P["Prometheus"]
-      L["ElasticSearch"]
+      L["Elasticsearch"]
    end
    Orchestration & Micro-Services ---> Mesh
    D ---> D3
@@ -84,22 +86,23 @@ flowchart LR
    Service2 -.-> Dapr2 --> C & L & P
    L --> G
 ```
-Chaque appel utilisateur transite d’abord par **Traefik** (reverse-proxy sécurisé + WAF), puis par **Temporal** pour les workflows (inscription, authentification, etc.) sans couplage direct entre microservices. **Keycloak** gère l’IAM, et **Linkerd** assure le chiffrement mutuel, l’équilibrage de charge et la résilience inter-services. Enfin, **Prometheus**, **Grafana** et **ElasticSearch** offrent une visibilité complète.
+
+All user requests pass first through **Traefik** (secure reverse proxy + WAF), then through **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
 
 ---
 
-## Bonnes pratiques respectées
+## Best Practices Employed
 
-- **Database-per-Service** : chaque microservice possède sa propre base PostgreSQL, isolant les domaines fonctionnels.
-- **Event-Driven Orchestration** : Temporal garantit l’atomicité et la reprise sur échec des workflows métier.
-- **Zero-Trust & mTLS** : Linkerd maillant les services assure une authentification mutuelle et un chiffrement des communications internes.
-- **Sécurité “By Design”** : WAF ModSecurity, rate-limiting, scopes OAuth2, introspection de jetons et certificats TLS.
-- **Résilience** : patterns *retry*, *circuit breaker*, *health checks*, *bulkheads* et *scalabilité horizontale*.
-- **12-Factor App** : configuration via variables d’environnement, logs sur stdout, stateless services, etc.
-- **Observabilité** : métriques et logs centralisés pour un diagnostic rapide.
+- **Database-per-Service**: each microservice owns its own PostgreSQL database, isolating functional domains.
+- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows.
+- **Zero-Trust & mTLS**: Linkerd’s service mesh enforces mutual authentication and encrypts internal communications.
+- **Security “By Design”**: WAF via ModSecurity, rate limiting, OAuth2 scopes, token introspection, and TLS certificates.
+- **Resilience Patterns**: retries, circuit breakers, health checks, bulkheads, and horizontal scalability.
+- **12-Factor App**: configuration via environment variables, logging to stdout, stateless services, etc.
+- **Observability**: centralized metrics and logs for rapid diagnostics.
 
 ---
 
-## Licence
+## License
 
-Ce projet est distribué sous licence **MIT**. Consultez le fichier [`LICENSE`](./LICENSE) pour plus de détails.
+This project is released under the **MIT** license. See the [`LICENSE`](./LICENSE) file for more details.
