@@ -1,0 +1,24 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: keycloak-auth
+spec:
+  type: middleware.http.oauth2
+  version: v1
+  metadata:
+    - name: clientId
+      value: user-manager
+    - name: clientSecret
+      secretKeyRef:
+        name: keycloak-secret
+        key: client-secret
+    - name: scopes
+      value: "openid profile email"
+    - name: authURL
+      value: "http://keycloak:8080/realms/saaster/protocol/openid-connect/auth"
+    - name: tokenURL
+      value: "http://keycloak:8080/realms/saaster/protocol/openid-connect/token"
+    - name: introspectionURL
+      value: "http://keycloak:8080/realms/saaster/protocol/openid-connect/token/introspect"
+    - name: redirectURL
+      value: "http://localhost:8080/callback"
