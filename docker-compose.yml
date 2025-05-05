@@ -22,6 +22,7 @@ services:
   temporal-postgresql:
     container_name: temporal-postgresql
     environment:
+      POSTGRES_DB: temporal
       POSTGRES_PASSWORD: temporal
       POSTGRES_USER: temporal
     image: postgres:${POSTGRESQL_VERSION}
@@ -41,7 +42,8 @@ services:
       - DB_PORT=5432
       - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
-      - POSTGRES_SEEDS=postgresql
+      - POSTGRES_DB=temporal
+      - POSTGRES_SEEDS=temporal-postgresql
       - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
       - ENABLE_ES=true
       - ES_SEEDS=elasticsearch
@@ -52,6 +54,8 @@ services:
     networks:
       - saaster-network
       - temporal-network
+    expose:
+      - 7233
     ports:
       - "7233:7233"
     volumes:
