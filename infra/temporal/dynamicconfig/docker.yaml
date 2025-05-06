@@ -1,0 +1,91 @@
+system.enableVisibilityToKafka:
+  - value: false
+    constraints: {}
+
+system.forceSearchAttributesCacheRefreshOnRead:
+  - value: true # Dev setup only. Please don't turn this on in production.
+    constraints: {}
+
+# Create the user_manager namespace automatically
+system.enableAuthorization:
+  - value: false
+    constraints: {}
+
+# Configure the user_manager namespace and workflows
+limit.maxIDLength:
+  - value: 255
+    constraints: {}
+
+# Workflow task timeout
+workflow.workflowTaskTimeout:
+  - value: "10s"
+    constraints:
+      namespace: "user-manager"
+
+# Workflow execution timeout
+workflow.workflowExecutionTimeout:
+  - value: "30m"
+    constraints:
+      namespace: "user-manager"
+
+# Workflow run timeout
+workflow.workflowRunTimeout:
+  - value: "30m"
+    constraints:
+      namespace: "user-manager"
+
+# Activity task timeout
+workflow.defaultActivityRetryPolicy:
+  - value:
+      initialIntervalInSeconds: 1
+      maximumIntervalInSeconds: 100
+      maximumAttempts: 3
+      backoffCoefficient: 2.0
+    constraints:
+      namespace: "user-manager"
+
+# Task queue settings for user-manager-task-queue
+limit.maxTaskQueuePollers:
+  - value: 10
+    constraints:
+      namespace: "user-manager"
+      taskQueueName: "user-manager-task-queue"
+
+# Workflow history settings
+history.maximumMutableStateSize:
+  - value: 15
+    constraints:
+      namespace: "user-manager"
+
+# Worker settings
+worker.enableStickyQuery:
+  - value: true
+    constraints:
+      namespace: "user-manager"
+
+# Visibility settings
+system.visibilityDisableOrderByClause:
+  - value: false
+    constraints:
+      namespace: "user-manager"
+
+# Advanced workflow settings
+limit.historyCountLimitWarn:
+  - value: 10000
+    constraints:
+      namespace: "user-manager"
+
+limit.historyCountLimitError:
+  - value: 20000
+    constraints:
+      namespace: "user-manager"
+
+# Archival settings
+system.enableReadFromArchival:
+  - value: false
+    constraints:
+      namespace: "user-manager"
+
+system.enableArchival:
+  - value: false
+    constraints: {}

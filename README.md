@@ -32,7 +32,7 @@ config:
   theme: neo
   layout: elk
 ---
-flowchart LR
+flowchart TD
    subgraph Flutter["Flutter"]
       A1["Web"]
       A2["Mobile"]
