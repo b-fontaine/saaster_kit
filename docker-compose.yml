@@ -1,4 +1,67 @@
 services:
+  # Gateway & WAF
+  traefik:
+    image: traefik:v2.10.4
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.traefik.address=:8080"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.watch=true"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8080"  # Dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/config:/etc/traefik
+      - ./traefik/dynamic:/etc/traefik/dynamic
+    networks:
+      - saaster-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=traefik"
+
+  # Using Traefik's built-in ModSecurity middleware instead of a separate container
+
+  kong:
+    image: kong:3.3
+    container_name: kong
+    restart: unless-stopped
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+      KONG_PROXY_ACCESS_LOG: /dev/stdout
+      KONG_ADMIN_ACCESS_LOG: /dev/stdout
+      KONG_PROXY_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    volumes:
+      - ./kong/kong.yml:/etc/kong/kong.yml
+    networks:
+      - saaster-network
+    expose:
+      - 8000  # Proxy
+      - 8001  # Admin API
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.kong.rule=Host(`api.localhost`)"
+      - "traefik.http.services.kong.loadbalancer.server.port=8000"
+      - "traefik.http.routers.kong.middlewares=kong-waf@file"
+      - "traefik.http.routers.kong.entrypoints=websecure"
+    depends_on:
+      keycloak:
+        condition: service_started
+      temporal:
+        condition: service_healthy
+
   # Observability
   elasticsearch:
     container_name: saaster-elasticsearch
@@ -16,11 +79,18 @@ services:
     expose:
       - 9200
     volumes:
-      - /var/lib/elasticsearch/data
+      - elasticsearch_data:/var/lib/elasticsearch/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9200/_cluster/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
   # Orchestration
   temporal-postgresql:
     container_name: temporal-postgresql
+    restart: unless-stopped
     environment:
       POSTGRES_DB: temporal
       POSTGRES_PASSWORD: temporal
@@ -28,15 +98,23 @@ services:
     image: postgres:${POSTGRESQL_VERSION}
     networks:
       - temporal-network
+      - saaster-network
     expose:
       - 5432
     volumes:
-      - /var/lib/postgresql/data
+      - temporal_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal -d temporal"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   temporal:
     container_name: temporal
     depends_on:
-      - temporal-postgresql
-      - elasticsearch
+      temporal-postgresql:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     environment:
       - DB=postgres12
       - DB_PORT=5432
@@ -50,6 +128,8 @@ services:
       - ES_VERSION=v7
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
+      - SERVICES=history,matching,frontend,worker
+      - LOG_LEVEL=info
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
       - saaster-network
@@ -60,10 +140,17 @@ services:
       - "7233:7233"
     volumes:
       - ./backend/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:7233/health || exit 0"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
   temporal-admin-tools:
     container_name: temporal-admin-tools
     depends_on:
-      - temporal
+      temporal:
+        condition: service_healthy
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CLI_ADDRESS=temporal:7233
@@ -75,7 +162,8 @@ services:
   temporal-ui:
     container_name: temporal-ui
     depends_on:
-      - temporal
+      temporal:
+        condition: service_healthy
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
@@ -155,7 +243,7 @@ services:
       user_db:
         condition: service_healthy
       temporal:
-        condition: service_started
+        condition: service_healthy
     environment:
       - SERVER_PORT=8080
       - DB_HOST=user_db
@@ -209,3 +297,5 @@ networks:
 volumes:
   postgres_data:
   user_db_data:
+  temporal_postgres_data:
+  elasticsearch_data:

@@ -5,7 +5,7 @@
 This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to run locally. It includes:
 
 - **Frontend**: Flutter (Web / Mobile / Desktop)
-- **API Gateway & WAF**: Traefik + ModSecurity
+- **API Gateway & WAF**: Traefik + ModSecurity + Kong
 - **IAM**: Keycloak (OAuth2 / OIDC)
 - **Orchestration**: Temporal (event-driven workflows)
 - **Microservices**: Go, each with its own PostgreSQL database
@@ -43,6 +43,7 @@ flowchart LR
    end
    subgraph Gateway["Gateway"]
       B["Traefik + ModSecurity (WAF)"]
+      K["Kong (API Gateway)"]
    end
    subgraph Orchestration["Orchestration"]
       direction TB
@@ -50,9 +51,6 @@ flowchart LR
       D1["Temporal (Admin Tools)"]
       D2["Temporal (Web UI)"]
       D3[("Temporal (Database)")]
-   end
-   subgraph Mesh
-      M[Linkerd Sidecars]
    end
    subgraph Micro-Services
       subgraph s1["Auth-Service"]
@@ -71,14 +69,15 @@ flowchart LR
       P["Prometheus"]
       L["Elasticsearch"]
    end
-   Orchestration & Micro-Services ---> Mesh
+   Orchestration & Micro-Services
    D ---> D3
    D1 -.-> D
    D2 -.-> D
    P --> G
    Flutter --> B
    C --> Flutter -->|Auth endpoints| C
-   B -->|API calls| D & Service1 & Service2
+   B --> K
+   K -->|API calls| D
    D --> C & Service1 & Service2 & L
    Service1 --> DB-Service1 & L
    Service2 --> DB-Service2 & L
@@ -87,9 +86,91 @@ flowchart LR
    L --> G
 ```
 
-All user requests pass first through **Traefik** (secure reverse proxy + WAF), then through **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
+All user requests pass first through **Traefik** (secure reverse proxy + WAF), then through **Kong** (API Gateway) which routes to **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
 
 ---
+
+## API Gateway
+
+The gateway architecture consists of three main components:
+
+1. **Traefik**: Acts as the entry point and reverse proxy
+   - TLS termination
+   - Routing based on hostnames
+   - Load balancing
+   - Basic traffic management
+
+2. **ModSecurity**: Web Application Firewall (WAF) for security
+   - Protection against SQL injection
+   - Cross-site scripting (XSS) prevention
+   - Common web attacks mitigation
+   - OWASP Top 10 vulnerabilities protection
+
+3. **Kong**: API Gateway for managing API access
+   - Authentication with Keycloak
+   - JWT validation
+   - Rate limiting
+   - Request/response transformation
+   - Service aggregation
+   - Protocol translation (REST to gRPC for Temporal)
+
+The following endpoints are available:
+
+- **API Gateway**: http://api.localhost
+  - `/api/v1/workflows/*` - Temporal Workflow API
+  - `/api/v1/namespaces/*` - Temporal Namespace API
+  - `/temporal/*` - Temporal UI
+  - `/auth/*` - Keycloak authentication
+
+Access the Traefik dashboard at: http://traefik.localhost:8090
+
+### Using from Flutter
+
+Example Flutter code to interact with Temporal through the gateway:
+
+```dart
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class TemporalClient {
+  final String baseUrl;
+  final String apiKey;
+  final http.Client _httpClient = http.Client();
+
+  TemporalClient({
+    required this.apiKey,
+    this.baseUrl = 'http://api.localhost/api/v1',
+  });
+
+  Future<String> startWorkflow({
+    required String workflowType,
+    required String taskQueue,
+    required String workflowId,
+    required Map<String, dynamic> input,
+  }) async {
+    final response = await _httpClient.post(
+      Uri.parse('$baseUrl/workflows'),
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': apiKey,
+      },
+      body: jsonEncode({
+        'workflow_type': workflowType,
+        'task_queue': taskQueue,
+        'workflow_id': workflowId,
+        'input': input,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to start workflow: ${response.body}');
+    }
+
+    final data = jsonDecode(response.body);
+    return data['workflow_id'];
+  }
+}
+```
 
 ## Best Practices Employed
 
