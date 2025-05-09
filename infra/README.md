@@ -6,6 +6,10 @@ This directory contains all the infrastructure configuration files for the SaaS 
 
 ```
 infra/
+├── grafana/             # Grafana Visualization Platform
+│   └── provisioning/    # Grafana provisioning configuration
+│       ├── dashboards/  # Pre-configured dashboards
+│       └── datasources/ # Data source configurations
 ├── keycloak/            # Keycloak Identity and Access Management
 │   ├── imports/         # Realm configuration for Keycloak
 │   │   └── realm.json   # Predefined realm with users, roles, and clients
@@ -13,6 +17,8 @@ infra/
 ├── kong/                # Kong API Gateway
 │   ├── kong.yml         # Kong declarative configuration
 │   └── README.md        # Kong Documentation
+├── prometheus/          # Prometheus Monitoring System
+│   └── prometheus.yml   # Prometheus configuration
 ├── temporal/            # Temporal Workflow Engine
 │   ├── dynamicconfig/   # Temporal dynamic configuration
 │   │   ├── docker.yaml  # Configuration for Docker environment
@@ -24,7 +30,7 @@ infra/
     ├── dynamic/         # Dynamic Traefik configuration
     │   ├── middlewares.yml # Middleware definitions
     │   └── tls.yml      # TLS configuration
-    └── README.md        # Traefik documentation    
+    └── README.md        # Traefik documentation
 ```
 
 ## Component Configurations
@@ -106,6 +112,61 @@ Temporal is a workflow orchestration engine that manages long-running business p
   - History and archival settings
 
 The configuration specifically includes settings for the `user-manager` namespace, which is used by the user management service.
+
+### Observability Stack (Prometheus, Grafana, Elasticsearch)
+
+**Location**: `infra/prometheus/`, `infra/grafana/`, and Elasticsearch (configured in docker-compose.yml)
+
+The observability stack provides comprehensive monitoring and logging capabilities for the entire system.
+
+#### Components
+
+1. **Elasticsearch**: Stores logs from various services
+   - Configured to store logs from Dapr sidecars
+   - Accessible at http://localhost:9200
+
+2. **Prometheus**: Collects and stores metrics
+   - **Configuration File**: `prometheus/prometheus.yml`
+     - Defines scrape targets (Traefik, Temporal, Dapr, Kong)
+     - Configures scrape intervals and evaluation periods
+   - Accessible at http://localhost:9090
+
+3. **Grafana**: Visualizes metrics and logs
+   - **Configuration Files**:
+     - `grafana/provisioning/datasources/datasources.yml`: Configures Prometheus and Elasticsearch as data sources
+     - `grafana/provisioning/dashboards/dashboards.yml`: Sets up dashboard provisioning
+     - `grafana/provisioning/dashboards/*.json`: Pre-configured dashboards
+   - Accessible at http://localhost:3000 (admin/admin)
+
+#### Dapr Integration
+
+The user_manager service is configured to send logs to Elasticsearch and metrics to Prometheus through Dapr:
+
+- **Logs**: Configured via `elasticsearch-logging.yaml` component and Dapr's config.yaml
+- **Metrics**: Exposed through the `prometheus-metrics.yaml` component
+
+#### Adding New Services to Observability
+
+To add a new service to the observability stack:
+
+1. **For Logs**:
+   - Configure the Dapr sidecar with the elasticsearch-logging component
+   - Enable logging in the Dapr configuration
+
+2. **For Metrics**:
+   - Configure the Dapr sidecar with the prometheus-metrics component
+   - Add the service to the Prometheus scrape configuration
+
+3. **For Visualization**:
+   - Create or import dashboards in Grafana
+   - Configure alerts if needed
+
+#### Troubleshooting
+
+- **Check Elasticsearch**: `curl -X GET "localhost:9200/_cat/indices?v"`
+- **Check Prometheus targets**: http://localhost:9090/targets
+- **Check Dapr logs**: `docker logs user_manager_dapr`
+- **Verify Grafana data sources**: http://localhost:3000/datasources
 
 ## Usage
 

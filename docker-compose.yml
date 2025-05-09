@@ -19,8 +19,8 @@ services:
       - "8090:8080"  # Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/config:/etc/traefik
-      - ./traefik/dynamic:/etc/traefik/dynamic
+      - ./infra/traefik/config:/etc/traefik
+      - ./infra/traefik/dynamic:/etc/traefik/dynamic
     networks:
       - saaster-network
     labels:
@@ -44,7 +44,7 @@ services:
       KONG_ADMIN_ERROR_LOG: /dev/stderr
       KONG_ADMIN_LISTEN: 0.0.0.0:8001
     volumes:
-      - ./kong/kong.yml:/etc/kong/kong.yml
+      - ./infra/kong/kong.yml:/etc/kong/kong.yml
     networks:
       - saaster-network
     expose:
@@ -78,6 +78,8 @@ services:
       - saaster-network
     expose:
       - 9200
+    ports:
+      - "9200:9200"
     volumes:
       - elasticsearch_data:/var/lib/elasticsearch/data
     healthcheck:
@@ -86,6 +88,48 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    container_name: prometheus
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - "9090:9090"
+    networks:
+      - saaster-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  grafana:
+    image: grafana/grafana:10.0.3
+    container_name: grafana
+    volumes:
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    ports:
+      - "3000:3000"
+    networks:
+      - saaster-network
+    depends_on:
+      - prometheus
+      - elasticsearch
+    restart: unless-stopped
 
   # Orchestration
   temporal-postgresql:
@@ -134,16 +178,14 @@ services:
     networks:
       - saaster-network
       - temporal-network
-    expose:
-      - 7233
     ports:
       - "7233:7233"
     volumes:
-      - ./backend/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
+      - ./infra/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:7233/health || exit 0"]
-      interval: 10s
-      timeout: 5s
+      interval: 30s
+      timeout: 10s
       retries: 15
       start_period: 60s
   temporal-admin-tools:
@@ -190,7 +232,7 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     volumes:
-      - ./keycloak/imports:/opt/keycloak/data/import
+      - ./infra/keycloak/imports:/opt/keycloak/data/import
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
@@ -299,3 +341,5 @@ volumes:
   user_db_data:
   temporal_postgres_data:
   elasticsearch_data:
+  prometheus_data:
+  grafana_data:
