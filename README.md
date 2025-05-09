@@ -8,7 +8,11 @@ This **starter kit** provides a robust, extensible, and secure foundation for de
 - **API Gateway & WAF**: Traefik + ModSecurity + Kong
 - **IAM**: Keycloak (OAuth2 / OIDC)
 - **Orchestration**: Temporal (event-driven workflows)
+  - Default namespace: Used for system workflows
+  - Client namespace: Used for client management workflows
 - **Microservices**: Go, each with its own PostgreSQL database
+  - User Manager: Handles user registration and management
+  - Client Manager: Manages client information and profiles
 - **Service Mesh**: Dapr, Linkerd (mTLS, load balancing, retries, circuit breaker, health checks)
 - **Observability**: Prometheus, Grafana (metrics) and Elasticsearch (logs)
 
@@ -53,14 +57,14 @@ flowchart TD
       D3[("Temporal (Database)")]
    end
    subgraph Micro-Services
-      subgraph s1["Auth-Service"]
-         Service1["Auth-Service (Go)"]
-         DB-Service1[("auth_db")]
+      subgraph s1["User-Manager"]
+         UserManager["User-Manager (Go)"]
+         DB-UserManager[("user_db")]
          Dapr1["Dapr Sidecar"]
       end
-      subgraph s2["User-Service"]
-         Service2["User-Service (Go)"]
-         DB-Service2[("user_db")]
+      subgraph s2["Client-Manager"]
+         ClientManager["Client-Manager (Go)"]
+         DB-ClientManager[("client_manager_db")]
          Dapr2["Dapr Sidecar"]
       end
    end
@@ -78,11 +82,11 @@ flowchart TD
    C --> Flutter -->|Auth endpoints| C
    B --> K
    K -->|API calls| D
-   D --> C & Service1 & Service2 & L
-   Service1 --> DB-Service1 & L
-   Service2 --> DB-Service2 & L
-   Service1 -.-> Dapr1 --> C & L & P
-   Service2 -.-> Dapr2 --> C & L & P
+   D --> C & UserManager & ClientManager & L
+   UserManager --> DB-UserManager & L
+   ClientManager --> DB-ClientManager & L
+   UserManager -.-> Dapr1 --> C & L & P
+   ClientManager -.-> Dapr2 --> C & L & P
    L --> G
 ```
 
@@ -175,7 +179,7 @@ class TemporalClient {
 ## Best Practices Employed
 
 - **Database-per-Service**: each microservice owns its own PostgreSQL database, isolating functional domains.
-- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows.
+- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows. See [Temporal Configuration Guide](./doc/temporal_configuration.md) for details on configuring Temporal for new microservices.
 - **Zero-Trust & mTLS**: Linkerd’s service mesh enforces mutual authentication and encrypts internal communications.
 - **Security “By Design”**: WAF via ModSecurity, rate limiting, OAuth2 scopes, token introspection, and TLS certificates.
 - **Resilience Patterns**: retries, circuit breakers, health checks, bulkheads, and horizontal scalability.

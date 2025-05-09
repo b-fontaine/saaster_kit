@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Binaries
+bin/
+tmp/
+
+# Test files
+*_test.go
+tests/
+
+# Misc
+README.md
+LICENSE

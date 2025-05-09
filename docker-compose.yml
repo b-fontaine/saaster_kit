@@ -200,6 +200,11 @@ services:
     networks:
       - saaster-network
     stdin_open: true
+    healthcheck:
+      test: ["CMD", "tctl", "--address", "temporal:7233", "namespace", "list"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     tty: true
   temporal-ui:
     container_name: temporal-ui
@@ -322,6 +327,72 @@ services:
       - ./backend/user_manager/deployments/dapr:/config
     network_mode: "service:user_manager"
 
+  client_manager_db:
+    image: postgres:${POSTGRESQL_VERSION}
+    container_name: client_manager_db
+    environment:
+      POSTGRES_DB: client_manager_db
+      POSTGRES_USER: client_manager
+      POSTGRES_PASSWORD: password
+    volumes:
+      - client_manager_db_data:/var/lib/postgresql/data
+    networks:
+      - saaster-network
+      - client-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U client_manager -d client_manager_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  client_manager:
+    build:
+      context: ./backend/client_manager
+      dockerfile: Dockerfile
+    container_name: client_manager
+    depends_on:
+      client_manager_db:
+        condition: service_healthy
+      temporal:
+        condition: service_healthy
+    volumes:
+      - ./backend/client_manager/scripts:/app/scripts
+    environment:
+      - SERVER_PORT=8080
+      - DB_HOST=client_manager_db
+      - DB_PORT=5432
+      - DB_USER=client_manager
+      - DB_PASSWORD=password
+      - DB_NAME=client_manager_db
+      - TEMPORAL_ADDRESS=temporal:7233
+      - TEMPORAL_NAMESPACE=client-namespace
+      - TEMPORAL_TASK_QUEUE=client-manager-task-queue
+      - KEYCLOAK_URL=http://keycloak:8080
+    networks:
+      - saaster-network
+      - client-network
+    ports:
+      - "8083:8080"
+
+  client_manager_dapr:
+    image: daprio/daprd:1.12.0
+    container_name: client_manager_dapr
+    depends_on:
+      - client_manager
+    command: [
+      "./daprd",
+      "--app-id", "client-manager",
+      "--app-port", "8080",
+      "--dapr-http-port", "3500",
+      "--dapr-grpc-port", "50001",
+      "--components-path", "/components",
+      "--config", "/config/config.yaml"
+    ]
+    volumes:
+      - ./backend/client_manager/deployments/dapr/components:/components
+      - ./backend/client_manager/deployments/dapr/config:/config
+    network_mode: "service:client_manager"
+
 networks:
   saaster-network:
     driver: bridge
@@ -335,10 +406,14 @@ networks:
   user-network:
     driver: bridge
     name: user-network
+  client-network:
+    driver: bridge
+    name: client-network
 
 volumes:
   postgres_data:
   user_db_data:
+  client_manager_db_data:
   temporal_postgres_data:
   elasticsearch_data:
   prometheus_data:

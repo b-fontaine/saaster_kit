@@ -1,0 +1,50 @@
+http:
+  routers:
+    user-manager:
+      rule: "PathPrefix(`/api/users`)"
+      service: user-manager
+      entrypoints:
+        - web
+      middlewares:
+        - cors
+
+    client-manager:
+      rule: "PathPrefix(`/api/clients`)"
+      service: client-manager
+      entrypoints:
+        - web
+      middlewares:
+        - cors
+
+    keycloak:
+      rule: "PathPrefix(`/auth`)"
+      service: keycloak
+      entrypoints:
+        - web
+
+    temporal-ui:
+      rule: "PathPrefix(`/temporal`)"
+      service: temporal-ui
+      entrypoints:
+        - web
+
+  services:
+    user-manager:
+      loadBalancer:
+        servers:
+          - url: "http://user_manager:8080"
+
+    client-manager:
+      loadBalancer:
+        servers:
+          - url: "http://client_manager:8080"
+
+    keycloak:
+      loadBalancer:
+        servers:
+          - url: "http://keycloak:8080"
+
+    temporal-ui:
+      loadBalancer:
+        servers:
+          - url: "http://temporal-ui:8080"

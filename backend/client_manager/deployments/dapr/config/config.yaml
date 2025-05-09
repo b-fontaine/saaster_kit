@@ -1,0 +1,29 @@
+apiVersion: dapr.io/v1alpha1
+kind: Configuration
+metadata:
+  name: client-manager-config
+spec:
+  tracing:
+    samplingRate: "1"
+    zipkin:
+      endpointAddress: "http://zipkin:9411/api/v2/spans"
+  metric:
+    enabled: true
+    rules:
+      - name: "dapr_runtime_system_components_loaded"
+        type: "counter"
+        help: "The number of components loaded."
+      - name: "dapr_runtime_api_received"
+        type: "counter"
+        help: "The number of API calls received."
+  logging:
+    apiLogging:
+      enabled: true
+    outputLevel: info
+  mtls:
+    enabled: true
+  secrets:
+    scopes:
+      - storeName: kubernetes
+        defaultAccess: allow
+        allowedSecrets: ["keycloak-secret"]
