@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/handlers"
+	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/logger"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/repositories"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/temporal"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/application/services"
@@ -34,13 +35,29 @@ func main() {
 	temporalNamespace := getEnv("TEMPORAL_NAMESPACE", "client-namespace")
 	temporalTaskQueue := getEnv("TEMPORAL_TASK_QUEUE", "client-manager-task-queue")
 
+	// Initialize context
+	ctx := context.Background()
+
+	// Initialize Dapr client
+	daprClient, err := dapr.NewClient()
+	if err != nil {
+		log.Fatalf("Failed to create Dapr client: %v", err)
+	}
+	defer daprClient.Close()
+
+	// Initialize structured logger
+	appLogger := logger.NewLogger(daprClient, "client-manager")
+	appLogger.Info(ctx, "Starting client_manager service", map[string]interface{}{
+		"version": "1.0.0",
+	})
+
 	// Connect to the database
 	dbURL := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
 		dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	db, err := sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		appLogger.Fatal(ctx, "Failed to connect to database", err, nil)
 	}
 	defer db.Close()
 
@@ -50,26 +67,19 @@ func main() {
 	db.SetConnMaxLifetime(5 * time.Minute)
 
 	// Check database connection
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	if err := db.PingContext(ctx); err != nil {
-		log.Fatalf("Failed to ping database: %v", err)
+	if err := db.PingContext(dbCtx); err != nil {
+		appLogger.Fatal(ctx, "Failed to ping database", err, nil)
 	}
-	log.Println("Connected to database successfully")
+	appLogger.Info(ctx, "Connected to database successfully", nil)
 
 	// Run database migrations
 	if err := runMigrations(db); err != nil {
-		log.Fatalf("Failed to run migrations: %v", err)
+		appLogger.Fatal(ctx, "Failed to run migrations", err, nil)
 	}
-	log.Println("Migrations completed successfully")
-
-	// Initialize Dapr client
-	daprClient, err := dapr.NewClient()
-	if err != nil {
-		log.Fatalf("Failed to create Dapr client: %v", err)
-	}
-	defer daprClient.Close()
+	appLogger.Info(ctx, "Migrations completed successfully", nil)
 
 	// Initialize repositories
 	clientRepo := repositories.NewClientRepository(db)
@@ -85,13 +95,18 @@ func main() {
 		if temporalErr == nil {
 			break
 		}
-		log.Printf("Attempt %d: Failed to create Temporal client: %v. Retrying in 5 seconds...", i+1, temporalErr)
+		appLogger.Warn(ctx, "Failed to create Temporal client, retrying", map[string]interface{}{
+			"attempt": i + 1,
+			"error":   temporalErr.Error(),
+			"retry_in": "5 seconds",
+		})
 		time.Sleep(5 * time.Second)
 	}
 
 	if temporalErr != nil {
-		log.Printf("WARNING: Could not connect to Temporal after multiple attempts: %v", temporalErr)
-		log.Printf("The application will start without Temporal integration")
+		appLogger.Error(ctx, "Could not connect to Temporal after multiple attempts", temporalErr, map[string]interface{}{
+			"impact": "The application will start without Temporal integration",
+		})
 	} else {
 		defer temporalClient.Close()
 
@@ -105,21 +120,51 @@ func main() {
 
 		_, workerErr := workflows.StartWorker(workerConfig)
 		if workerErr != nil {
-			log.Printf("WARNING: Failed to start Temporal worker: %v", workerErr)
-			log.Printf("The application will start without Temporal worker")
+			appLogger.Error(ctx, "Failed to start Temporal worker", workerErr, map[string]interface{}{
+				"impact": "The application will start without Temporal worker",
+			})
 		} else {
-			log.Printf("Temporal worker started successfully")
+			appLogger.Info(ctx, "Temporal worker started successfully", map[string]interface{}{
+				"namespace": temporalNamespace,
+				"taskQueue": temporalTaskQueue,
+			})
 		}
 	}
 
 	// Initialize handlers
 	clientHandler := handlers.NewClientHandler(clientService, temporalClient)
 
-	// Set up Gin router
-	router := gin.Default()
+	// Set up Gin router with the logger middleware
+	router := gin.New()
 
 	// Add middleware
 	router.Use(gin.Recovery())
+
+	// Add custom logging middleware
+	router.Use(func(c *gin.Context) {
+		start := time.Now()
+		path := c.Request.URL.Path
+		method := c.Request.Method
+
+		c.Next()
+
+		latency := time.Since(start)
+		status := c.Writer.Status()
+
+		logFields := map[string]interface{}{
+			"method":   method,
+			"path":     path,
+			"status":   status,
+			"latency":  latency.String(),
+			"client_ip": c.ClientIP(),
+		}
+
+		if status >= 400 {
+			appLogger.Error(ctx, "API request failed", nil, logFields)
+		} else {
+			appLogger.Info(ctx, "API request completed", logFields)
+		}
+	})
 
 	// Define API routes
 	api := router.Group("/api/v1")
@@ -139,9 +184,11 @@ func main() {
 	}
 
 	// Start the server
-	log.Printf("Starting server on port %s", serverPort)
+	appLogger.Info(ctx, "Starting server", map[string]interface{}{
+		"port": serverPort,
+	})
 	if err := router.Run(":" + serverPort); err != nil {
-		log.Fatalf("Failed to start server: %v", err)
+		appLogger.Fatal(ctx, "Failed to start server", err, nil)
 	}
 }
 

@@ -34,5 +34,8 @@ COPY --from=builder /app/scripts ./scripts
 # Expose port
 EXPOSE 8080
 
+# Make scripts executable
+RUN chmod +x ./scripts/*.sh
+
 # Run the application
-CMD ["./client_manager"]
+CMD ["./scripts/entrypoint.sh"]

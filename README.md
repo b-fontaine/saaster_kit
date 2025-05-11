@@ -11,7 +11,6 @@ This **starter kit** provides a robust, extensible, and secure foundation for de
   - Default namespace: Used for system workflows
   - Client namespace: Used for client management workflows
 - **Microservices**: Go, each with its own PostgreSQL database
-  - User Manager: Handles user registration and management
   - Client Manager: Manages client information and profiles
 - **Service Mesh**: Dapr, Linkerd (mTLS, load balancing, retries, circuit breaker, health checks)
 - **Observability**: Prometheus, Grafana (metrics) and Elasticsearch (logs)
@@ -57,15 +56,10 @@ flowchart TD
       D3[("Temporal (Database)")]
    end
    subgraph Micro-Services
-      subgraph s1["User-Manager"]
-         UserManager["User-Manager (Go)"]
-         DB-UserManager[("user_db")]
-         Dapr1["Dapr Sidecar"]
-      end
-      subgraph s2["Client-Manager"]
-         ClientManager["Client-Manager (Go)"]
+      subgraph s1["Client-Manager"]
+         ClientManager["client_manager (Go)"]
          DB-ClientManager[("client_manager_db")]
-         Dapr2["Dapr Sidecar"]
+         Dapr1["Dapr Sidecar"]
       end
    end
    subgraph s3["Observability"]
@@ -82,11 +76,9 @@ flowchart TD
    C --> Flutter -->|Auth endpoints| C
    B --> K
    K -->|API calls| D
-   D --> C & UserManager & ClientManager & L
-   UserManager --> DB-UserManager & L
+   D --> C & ClientManager & L
    ClientManager --> DB-ClientManager & L
-   UserManager -.-> Dapr1 --> C & L & P
-   ClientManager -.-> Dapr2 --> C & L & P
+   ClientManager -.-> Dapr1 --> C & L & P
    L --> G
 ```
 

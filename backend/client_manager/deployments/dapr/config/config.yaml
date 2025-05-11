@@ -20,6 +20,8 @@ spec:
     apiLogging:
       enabled: true
     outputLevel: info
+    appOutputLevel: info
+    samplingRate: "1"
   mtls:
     enabled: true
   secrets:

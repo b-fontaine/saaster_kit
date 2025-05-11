@@ -1,12 +1,5 @@
 http:
   routers:
-    user-manager:
-      rule: "PathPrefix(`/api/users`)"
-      service: user-manager
-      entrypoints:
-        - web
-      middlewares:
-        - cors
 
     client-manager:
       rule: "PathPrefix(`/api/clients`)"
@@ -29,10 +22,6 @@ http:
         - web
 
   services:
-    user-manager:
-      loadBalancer:
-        servers:
-          - url: "http://user_manager:8080"
 
     client-manager:
       loadBalancer:
