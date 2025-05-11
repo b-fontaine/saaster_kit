@@ -32,8 +32,9 @@ providers:
     directory: "/etc/traefik/dynamic"
     watch: true
 
-experimental:
-  plugins:
-    modsecurity:
-      moduleName: github.com/traefik/modsecurity-plugin
-      version: v0.1.0
+# Temporarily disabled ModSecurity plugin
+# experimental:
+#   plugins:
+#     modsecurity:
+#       moduleName: github.com/acouvreur/traefik-modsecurity-plugin
+#       version: v1.3.0

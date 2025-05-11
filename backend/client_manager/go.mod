@@ -48,7 +48,6 @@ require (
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
-	go.temporal.io/api v1.24.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	golang.org/x/arch v0.6.0 // indirect
 	golang.org/x/crypto v0.15.0 // indirect

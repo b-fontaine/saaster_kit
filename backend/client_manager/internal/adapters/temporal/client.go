@@ -21,12 +21,16 @@ type TemporalClient struct {
 
 // NewTemporalClient creates a new Temporal client
 func NewTemporalClient(temporalAddress, namespace, taskQueue string) (*TemporalClient, error) {
+	// Try to register the namespace, but ignore errors if it already exists
 	nsClient, err := client.NewNamespaceClient(client.Options{
 		HostPort: temporalAddress,
 	})
-	err = nsClient.Register(context.Background(), &workflowservice.RegisterNamespaceRequest{
-		Namespace: namespace,
-	})
+	if err == nil {
+		_ = nsClient.Register(context.Background(), &workflowservice.RegisterNamespaceRequest{
+			Namespace: namespace,
+		})
+		nsClient.Close()
+	}
 
 	c, err := client.Dial(client.Options{
 		HostPort:  temporalAddress,

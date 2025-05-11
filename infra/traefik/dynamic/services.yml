@@ -1,39 +1,62 @@
 http:
   routers:
-
-    client-manager:
-      rule: "PathPrefix(`/api/clients`)"
-      service: client-manager
-      entrypoints:
-        - web
-      middlewares:
-        - cors
-
+    # Web UI routers
     keycloak:
       rule: "PathPrefix(`/auth`)"
       service: keycloak
       entrypoints:
-        - web
+        - websecure
+      # middlewares:
+      #   - waf
 
     temporal-ui:
       rule: "PathPrefix(`/temporal`)"
       service: temporal-ui
       entrypoints:
-        - web
+        - websecure
+      middlewares:
+        - strip-temporal-prefix
+
+    grafana:
+      rule: "PathPrefix(`/grafana`)"
+      service: grafana
+      entrypoints:
+        - websecure
+      middlewares:
+        - strip-grafana-prefix
+
+    # API Gateway router
+    kong-api:
+      rule: "Host(`api.localhost`) || PathPrefix(`/api`)"
+      service: kong
+      entrypoints:
+        - websecure
+      # middlewares:
+      #   - waf
 
   services:
-
-    client-manager:
-      loadBalancer:
-        servers:
-          - url: "http://client_manager:8080"
-
+    # Web UI services
     keycloak:
       loadBalancer:
         servers:
-          - url: "http://keycloak:8080"
+          - url: "http://saaster-keycloak-1:8080"
+        passHostHeader: true
 
     temporal-ui:
       loadBalancer:
         servers:
           - url: "http://temporal-ui:8080"
+        passHostHeader: true
+
+    grafana:
+      loadBalancer:
+        servers:
+          - url: "http://grafana:3000"
+        passHostHeader: true
+
+    # API Gateway service
+    kong:
+      loadBalancer:
+        servers:
+          - url: "http://kong:8000"
+        passHostHeader: true

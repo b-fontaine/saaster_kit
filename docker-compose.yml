@@ -1,35 +1,51 @@
 services:
   # Gateway & WAF
   traefik:
-    image: traefik:v2.10.4
-    container_name: traefik
-    restart: unless-stopped
-    command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.traefik.address=:8080"
-      - "--providers.file.directory=/etc/traefik/dynamic"
-      - "--providers.file.watch=true"
+    image: traefik:3.0.1
     ports:
       - "80:80"
-      - "443:443"
-      - "8090:8080"  # Dashboard
+      - "8080:8080"
+    command:
+      - --api.dashboard=true
+      - --api.insecure=true
+      - --experimental.plugins.traefik-modsecurity-plugin.modulename=github.com/acouvreur/traefik-modsecurity-plugin
+      - --experimental.plugins.traefik-modsecurity-plugin.version=v1.3.0
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.http.address=:80
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./infra/traefik/config:/etc/traefik
-      - ./infra/traefik/dynamic:/etc/traefik/dynamic
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.modSecurityUrl=http://waf:8080
+      - traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.maxBodySize=10485760
     networks:
       - saaster-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.entrypoints=traefik"
 
-  # Using Traefik's built-in ModSecurity middleware instead of a separate container
+  waf:
+    image: owasp/modsecurity-crs:4.2.0-apache-202405220605
+    environment:
+      - PARANOIA=1
+      - ANOMALY_INBOUND=10
+      - ANOMALY_OUTBOUND=5
+      - BACKEND=http://dummy
+    networks:
+      - saaster-network
+
+  dummy:
+    image: traefik/whoami
+    networks:
+      - saaster-network
+
+  website:
+    image: traefik/whoami
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.website.rule=PathPrefix(`/website`)
+      - traefik.http.routers.website.middlewares=waf@docker
+    networks:
+      - saaster-network
 
   kong:
     image: kong:3.3
@@ -47,15 +63,20 @@ services:
       - ./infra/kong/kong.yml:/etc/kong/kong.yml
     networks:
       - saaster-network
+      - kong-network
     expose:
       - 8000  # Proxy
       - 8001  # Admin API
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.kong.rule=Host(`api.localhost`)"
-      - "traefik.http.services.kong.loadbalancer.server.port=8000"
-      - "traefik.http.routers.kong.middlewares=kong-waf@file"
-      - "traefik.http.routers.kong.entrypoints=websecure"
+      - traefik.enable=true
+      - traefik.http.routers.kong.rule=PathPrefix(`/api`)
+      - traefik.http.services.kong.loadbalancer.server.port=8000
+      - traefik.http.routers.kong.middlewares=waf@docker
+      - traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT
+      - traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*
+      - traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=*
+      - traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100
+      - traefik.http.middlewares.testheader.headers.addvaryheader=true
     depends_on:
       keycloak:
         condition: service_started
@@ -75,11 +96,10 @@ services:
       - xpack.security.enabled=false
     image: elasticsearch:${ELASTICSEARCH_VERSION}
     networks:
-      - saaster-network
+      - monitoring-network
+      - temporal-network
     expose:
       - 9200
-    ports:
-      - "9200:9200"
     volumes:
       - elasticsearch_data:/var/lib/elasticsearch/data
     healthcheck:
@@ -101,10 +121,8 @@ services:
       - '--web.console.libraries=/etc/prometheus/console_libraries'
       - '--web.console.templates=/etc/prometheus/consoles'
       - '--web.enable-lifecycle'
-    ports:
-      - "9090:9090"
     networks:
-      - saaster-network
+      - monitoring-network
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://localhost:9090/-/healthy"]
@@ -122,10 +140,18 @@ services:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-    ports:
-      - "3000:3000"
+      - GF_SERVER_ROOT_URL=https://localhost/grafana
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    expose:
+      - "3000"
     networks:
       - saaster-network
+      - monitoring-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)
+      - traefik.http.routers.grafana.middlewares=waf@docker
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
     depends_on:
       - prometheus
       - elasticsearch
@@ -142,7 +168,6 @@ services:
     image: postgres:${POSTGRESQL_VERSION}
     networks:
       - temporal-network
-      - saaster-network
     expose:
       - 5432
     volumes:
@@ -176,10 +201,7 @@ services:
       - LOG_LEVEL=info
     image: temporalio/auto-setup:${TEMPORAL_VERSION}
     networks:
-      - saaster-network
       - temporal-network
-    ports:
-      - "7233:7233"
     volumes:
       - ./infra/temporal/dynamicconfig:/etc/temporal/config/dynamicconfig
     healthcheck:
@@ -198,7 +220,7 @@ services:
       - TEMPORAL_CLI_ADDRESS=temporal:7233
     image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION}
     networks:
-      - saaster-network
+      - temporal-network
     stdin_open: true
     healthcheck:
       test: ["CMD", "tctl", "--address", "temporal:7233", "namespace", "list"]
@@ -217,8 +239,12 @@ services:
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
       - saaster-network
-    ports:
-      - "8081:8080"
+      - temporal-network
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.temporal.rule=PathPrefix(`/temporal`)
+      - traefik.http.routers.temporal.middlewares=waf@docker
+      - traefik.http.services.temporal.loadbalancer.server.port=8080
 
 
   # IAM
@@ -256,8 +282,6 @@ services:
     command: start-dev --import-realm --verbose
     depends_on:
       - postgres
-    ports:
-      - "8080:8080"
     networks:
       - saaster-network
       - keycloak-network
@@ -276,7 +300,6 @@ services:
     volumes:
       - client_manager_db_data:/var/lib/postgresql/data
     networks:
-      - saaster-network
       - client-network
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U client_manager -d client_manager_db"]
@@ -308,10 +331,11 @@ services:
       - TEMPORAL_TASK_QUEUE=client-manager-task-queue
       - KEYCLOAK_URL=http://keycloak:8080
     networks:
-      - saaster-network
+      - kong-network
       - client-network
-    ports:
-      - "8083:8080"
+      - temporal-network
+      - monitoring-network
+    restart: on-failure
 
   client_manager_dapr:
     image: daprio/daprd:1.12.0
@@ -333,6 +357,7 @@ services:
       - ./backend/client_manager/deployments/dapr/components:/components
       - ./backend/client_manager/deployments/dapr/config/config.yaml:/config/config.yaml
     network_mode: "service:client_manager"
+    restart: on-failure
 
 networks:
   saaster-network:
@@ -344,10 +369,15 @@ networks:
   keycloak-network:
     driver: bridge
     name: keycloak-network
-
+  kong-network:
+    driver: bridge
+    name: kong-network
   client-network:
     driver: bridge
     name: client-network
+  monitoring-network:
+    driver: bridge
+    name: monitoring-network
 
 volumes:
   postgres_data:
