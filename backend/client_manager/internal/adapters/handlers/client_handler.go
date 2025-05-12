@@ -64,7 +64,7 @@ func (h *ClientHandler) AddClient(c *gin.Context) {
 	)
 
 	// Try to save client using Temporal workflow if available
-	if h.temporalClient != nil {
+	if h.temporalClient != nil && h.temporalClient.IsConnected() {
 		result, err := h.temporalClient.AddClient(c.Request.Context(), client)
 		if err != nil {
 			// If Temporal fails, fall back to direct service call
@@ -104,7 +104,7 @@ func (h *ClientHandler) GetClient(c *gin.Context) {
 	}
 
 	// Try to get client using Temporal workflow if available
-	if h.temporalClient != nil {
+	if h.temporalClient != nil && h.temporalClient.IsConnected() {
 		client, err := h.temporalClient.GetClient(c.Request.Context(), userUUID)
 		if err != nil {
 			// If Temporal fails, fall back to direct service call

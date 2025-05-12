@@ -54,6 +54,11 @@ func (c *TemporalClient) Close() {
 	}
 }
 
+// IsConnected returns true if the client is connected
+func (c *TemporalClient) IsConnected() bool {
+	return c.client != nil
+}
+
 // AddClient starts the AddClient workflow
 func (c *TemporalClient) AddClient(ctx context.Context, clientEntity *entities.Client) (*entities.Client, error) {
 	workflowID := fmt.Sprintf("add-client-%s", clientEntity.UUID.String())

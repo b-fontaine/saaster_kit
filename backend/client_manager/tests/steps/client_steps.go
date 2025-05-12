@@ -12,13 +12,13 @@ import (
 
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/handlers"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/repositories"
+	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/adapters/temporal"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/application/services"
 	"github.com/b-fontaine/saaster_kit/backend/client_manager/internal/domain/entities"
 	"github.com/cucumber/godog"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"
-	"github.com/stretchr/testify/assert"
 )
 
 // ClientTestContext holds the test context
@@ -50,20 +50,31 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		panic(fmt.Sprintf("Failed to connect to test database: %v", err))
 	}
 
+	// Verify database connection
+	err = testCtx.db.Ping()
+	if err != nil {
+		panic(fmt.Sprintf("Failed to ping test database: %v", err))
+	}
+
 	// Set up API routes for testing
 	clientRepo := repositories.NewClientRepository(testCtx.db)
 	clientService := services.NewClientService(clientRepo)
-	clientHandler := handlers.NewClientHandler(clientService)
+
+	// Create a mock Temporal client for testing
+	// We'll use nil for now, as we're testing the direct service path
+	var temporalClient *temporal.TemporalClient = nil
+
+	clientHandler := handlers.NewClientHandler(clientService, temporalClient)
 
 	api := testCtx.router.Group("/api/v1")
 	clients := api.Group("/clients")
-	
+
 	// Mock auth middleware for testing
 	clients.Use(func(c *gin.Context) {
 		c.Set("userID", testCtx.clientUUID.String())
 		c.Next()
 	})
-	
+
 	clients.POST("", clientHandler.AddClient)
 	clients.GET("", clientHandler.GetClient)
 
@@ -73,13 +84,13 @@ func InitializeScenario(ctx *godog.ScenarioContext) {
 		testCtx.response = httptest.NewRecorder()
 		testCtx.clientData = make(map[string]string)
 		testCtx.responseBody = nil
-		
+
 		// Clean up database before each test
 		_, err := testCtx.db.Exec("DELETE FROM clients")
 		if err != nil {
 			return ctx, fmt.Errorf("failed to clean up database: %w", err)
 		}
-		
+
 		return ctx, nil
 	})
 
@@ -120,14 +131,14 @@ func (ctx *ClientTestContext) iAddAClientWithTheFollowingDetails(table *godog.Ta
 	if len(table.Rows) < 2 {
 		return fmt.Errorf("table must have at least one data row")
 	}
-	
+
 	headers := table.Rows[0].Cells
 	data := table.Rows[1].Cells
-	
+
 	for i, header := range headers {
 		ctx.clientData[header.Value] = data[i].Value
 	}
-	
+
 	// Create request body
 	requestBody, err := json.Marshal(map[string]string{
 		"firstName":    ctx.clientData["firstName"],
@@ -138,38 +149,38 @@ func (ctx *ClientTestContext) iAddAClientWithTheFollowingDetails(table *godog.Ta
 	if err != nil {
 		return fmt.Errorf("failed to marshal request body: %w", err)
 	}
-	
+
 	// Create request
 	req, err := http.NewRequest("POST", "/api/v1/clients", bytes.NewBuffer(requestBody))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	
+
 	// Perform request
 	ctx.router.ServeHTTP(ctx.response, req)
 	ctx.responseBody = ctx.response.Body.Bytes()
-	
+
 	return nil
 }
 
 func (ctx *ClientTestContext) theClientShouldBeSavedSuccessfully() error {
 	if ctx.response.Code != http.StatusOK {
-		return fmt.Errorf("expected status code %d but got %d: %s", 
+		return fmt.Errorf("expected status code %d but got %d: %s",
 			http.StatusOK, ctx.response.Code, ctx.response.Body.String())
 	}
-	
+
 	// Check if client was saved in the database
 	var count int
 	err := ctx.db.QueryRow("SELECT COUNT(*) FROM clients WHERE uuid = $1", ctx.clientUUID).Scan(&count)
 	if err != nil {
 		return fmt.Errorf("failed to query database: %w", err)
 	}
-	
+
 	if count != 1 {
 		return fmt.Errorf("expected 1 client record but found %d", count)
 	}
-	
+
 	return nil
 }
 
@@ -178,28 +189,28 @@ func (ctx *ClientTestContext) iShouldReceiveTheClientDetailsInTheResponse() erro
 	if err := json.Unmarshal(ctx.responseBody, &client); err != nil {
 		return fmt.Errorf("failed to unmarshal response: %w", err)
 	}
-	
+
 	// Verify client details
 	if client.UUID != ctx.clientUUID {
 		return fmt.Errorf("expected UUID %s but got %s", ctx.clientUUID, client.UUID)
 	}
-	
+
 	if client.FirstName != ctx.clientData["firstName"] {
 		return fmt.Errorf("expected firstName %s but got %s", ctx.clientData["firstName"], client.FirstName)
 	}
-	
+
 	if client.LastName != ctx.clientData["lastName"] {
 		return fmt.Errorf("expected lastName %s but got %s", ctx.clientData["lastName"], client.LastName)
 	}
-	
+
 	if client.ContactEmail != ctx.clientData["contactEmail"] {
 		return fmt.Errorf("expected contactEmail %s but got %s", ctx.clientData["contactEmail"], client.ContactEmail)
 	}
-	
+
 	if client.PhoneNumber != ctx.clientData["phoneNumber"] {
 		return fmt.Errorf("expected phoneNumber %s but got %s", ctx.clientData["phoneNumber"], client.PhoneNumber)
 	}
-	
+
 	return nil
 }
 
@@ -213,11 +224,11 @@ func (ctx *ClientTestContext) iHaveAClientRecordInTheSystem() error {
 		"test.user@example.com",
 		"+9876543210",
 	)
-	
+
 	if err != nil {
 		return fmt.Errorf("failed to insert client record: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -227,7 +238,7 @@ func (ctx *ClientTestContext) iDoNotHaveAClientRecordInTheSystem() error {
 	if err != nil {
 		return fmt.Errorf("failed to delete client record: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -237,68 +248,68 @@ func (ctx *ClientTestContext) iRequestMyClientInformation() error {
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}
-	
+
 	// Perform request
 	ctx.router.ServeHTTP(ctx.response, req)
 	ctx.responseBody = ctx.response.Body.Bytes()
-	
+
 	return nil
 }
 
 func (ctx *ClientTestContext) iShouldReceiveMyClientDetails() error {
 	if ctx.response.Code != http.StatusOK {
-		return fmt.Errorf("expected status code %d but got %d: %s", 
+		return fmt.Errorf("expected status code %d but got %d: %s",
 			http.StatusOK, ctx.response.Code, ctx.response.Body.String())
 	}
-	
+
 	var client entities.Client
 	if err := json.Unmarshal(ctx.responseBody, &client); err != nil {
 		return fmt.Errorf("failed to unmarshal response: %w", err)
 	}
-	
+
 	// Verify client details
 	if client.UUID != ctx.clientUUID {
 		return fmt.Errorf("expected UUID %s but got %s", ctx.clientUUID, client.UUID)
 	}
-	
+
 	if client.FirstName != "Test" {
 		return fmt.Errorf("expected firstName %s but got %s", "Test", client.FirstName)
 	}
-	
+
 	if client.LastName != "User" {
 		return fmt.Errorf("expected lastName %s but got %s", "User", client.LastName)
 	}
-	
+
 	if client.ContactEmail != "test.user@example.com" {
 		return fmt.Errorf("expected contactEmail %s but got %s", "test.user@example.com", client.ContactEmail)
 	}
-	
+
 	if client.PhoneNumber != "+9876543210" {
 		return fmt.Errorf("expected phoneNumber %s but got %s", "+9876543210", client.PhoneNumber)
 	}
-	
+
 	return nil
 }
 
 func (ctx *ClientTestContext) iShouldReceiveAnEmptyClientWithMyUUID() error {
 	if ctx.response.Code != http.StatusOK {
-		return fmt.Errorf("expected status code %d but got %d: %s", 
+		return fmt.Errorf("expected status code %d but got %d: %s",
 			http.StatusOK, ctx.response.Code, ctx.response.Body.String())
 	}
-	
+
 	var client entities.Client
 	if err := json.Unmarshal(ctx.responseBody, &client); err != nil {
 		return fmt.Errorf("failed to unmarshal response: %w", err)
 	}
-	
+
 	// Verify client details
 	if client.UUID != ctx.clientUUID {
 		return fmt.Errorf("expected UUID %s but got %s", ctx.clientUUID, client.UUID)
 	}
-	
+
 	if !client.IsEmpty() {
 		return fmt.Errorf("expected empty client but got %+v", client)
 	}
-	
+
 	return nil
 }

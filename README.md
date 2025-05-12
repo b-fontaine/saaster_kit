@@ -34,52 +34,50 @@ docker compose -p SaaSter up -d
 config:
   theme: neo
   layout: elk
+  look: neo
 ---
 flowchart TD
-   subgraph Flutter["Flutter"]
-      A1["Web"]
-      A2["Mobile"]
-      A3["Desktop"]
-   end
-   subgraph IAM["IAM"]
-      C["Keycloak (OAuth2/OIDC)"]
-   end
-   subgraph Gateway["Gateway"]
-      B["Traefik + ModSecurity (WAF)"]
-      K["Kong (API Gateway)"]
-   end
-   subgraph Orchestration["Orchestration"]
-      direction TB
-      D["Temporal (Workflow Engine)"]
-      D1["Temporal (Admin Tools)"]
-      D2["Temporal (Web UI)"]
-      D3[("Temporal (Database)")]
-   end
-   subgraph Micro-Services
-      subgraph s1["Client-Manager"]
-         ClientManager["client_manager (Go)"]
-         DB-ClientManager[("client_manager_db")]
-         Dapr1["Dapr Sidecar"]
-      end
-   end
-   subgraph s3["Observability"]
-      G["Grafana"]
-      P["Prometheus"]
-      L["Elasticsearch"]
-   end
-   Orchestration & Micro-Services
-   D ---> D3
-   D1 -.-> D
-   D2 -.-> D
-   P --> G
-   Flutter --> B
-   C --> Flutter -->|Auth endpoints| C
-   B --> K
-   K -->|API calls| D
-   D --> C & ClientManager & L
-   ClientManager --> DB-ClientManager & L
-   ClientManager -.-> Dapr1 --> C & L & P
-   L --> G
+    subgraph client["fa:fa-user User"]
+        mobile(["fa:fa-mobile Flutter Mobile"])
+        desktop(["fa:fa-desktop Flutter Desktop"])
+        chrome(["fa:fa-wifi Browser"])
+    end
+    subgraph kong["Kong"]
+        api(["API Gateway"])
+        proxy(["Proxy"])
+        waf(["WAF"])
+    end
+    subgraph front["fa:fa-globe Web Frontend"]
+        web["Flutter Web App"]
+        landing["Flutter Landing Page"]
+        temporal["Temporal UI"]
+        grafana["Grafana"]
+    end
+    subgraph orch["Orchestration"]
+        D["Temporal (Workflow Engine)"]
+        D1["Temporal (Admin Tools)"]
+        D3[("Temporal (Database)")]
+    end
+    subgraph customer["Customer"]
+        customer-service["customer_service (Go)"]
+        customer-db[("customer_service_db")]
+    end
+    subgraph ms["Micro Services"]
+        customer
+    end
+    subgraph obs["Observability"]
+        promoteus["Prometheus"]
+        elasticsearch["Elasticsearch"]
+    end
+    D --> D3
+    D1 -.-> D
+    customer-service --> customer-db & iam["Keycloak"] & D & obs
+    grafana --> obs
+    temporal --> D1
+    client --> kong
+    kong --> front & ms
+    kong <--> iam
+    client <--> iam
 ```
 
 All user requests pass first through **Traefik** (secure reverse proxy + WAF), then through **Kong** (API Gateway) which routes to **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
@@ -179,6 +177,28 @@ class TemporalClient {
 - **Observability**: centralized metrics and logs for rapid diagnostics.
 
 ---
+
+## Documentation Summary
+
+This project contains extensive documentation across various components. Below is a summary of the available documentation:
+
+### Backend
+
+- [Backend Overview](./backend/README.md) - Overview of the backend architecture, including microservices, hexagonal architecture, and CQRS pattern.
+- [Client Manager](./backend/client_manager/README.md) - Documentation for the client manager microservice, including API endpoints and data models.
+- [Client Manager Tests](./backend/client_manager/tests/README.md) - Guide for running tests with Testcontainers for the client manager service.
+
+### Frontend
+
+- [Frontend Overview](./frontend/README.md) - Documentation for the Flutter applications, including web, mobile, and desktop clients.
+
+### Infrastructure
+
+- [Infrastructure Overview](./infra/README.md) - Overview of the infrastructure components, including Docker Compose configuration.
+- [Keycloak](./infra/keycloak/README.md) - Documentation for Keycloak configuration, including realms, clients, and users.
+- [Kong API Gateway](./infra/kong/README.md) - Detailed guide for Kong API Gateway, including configuration, routes, and plugins.
+- [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including configuration, workflows, and activities.
+- [Traefik and ModSecurity](./infra/traefik/README.md) - Guide for Traefik reverse proxy and ModSecurity WAF configuration.
 
 ## License
 
