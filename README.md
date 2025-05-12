@@ -42,10 +42,11 @@ flowchart TD
         desktop(["fa:fa-desktop Flutter Desktop"])
         chrome(["fa:fa-wifi Browser"])
     end
-    subgraph kong["Kong"]
-        api(["API Gateway"])
-        proxy(["Proxy"])
-        waf(["WAF"])
+    subgraph kong["Kong with Plugins"]
+        oidc["OIDC"]
+        open-appsec["Open AppSec"]
+        grpc-gateway["gRPC Gateway"]
+        cors["CORS"]
     end
     subgraph front["fa:fa-globe Web Frontend"]
         web["Flutter Web App"]
@@ -72,8 +73,10 @@ flowchart TD
     D --> D3
     D1 -.-> D
     customer-service --> customer-db & iam["Keycloak"] & D & obs
-    grafana --> obs
-    temporal --> D1
+    obs -.-> grafana
+    D1 -.-> temporal
+    ms -.-> web
+    D --> obs
     client --> kong
     kong --> front & ms
     kong <--> iam

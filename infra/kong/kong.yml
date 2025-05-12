@@ -1,142 +1,233 @@
-_format_version: "3.0"
+_format_version: "1.1"
 
 services:
-  # Client Manager API service
-  - name: client-manager-api
-    url: http://client_manager:8080
-    routes:
-      - name: client-manager-route
-        paths:
-          - /v1/clients
-        strip_path: false
+  - name: keycloak
+    url: http://keycloak:8080
     plugins:
-      - name: key-auth
-        config:
-          key_names:
-            - apikey
-          hide_credentials: true
       - name: cors
         config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          headers:
-            - Authorization
-            - Content-Type
-            - Accept
+          origins: ["*"]
+          methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+          headers: ["Authorization","Content-Type","X-Requested-With"]
           credentials: true
           max_age: 3600
-      - name: rate-limiting
-        config:
-          minute: 60
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - "Content-Type: application/json"
-  # Temporal API service
-  - name: temporal-api
-    url: http://temporal:7233
     routes:
-      - name: temporal-workflows
-        paths:
-          - /api/v1/workflows
+      - name: keycloak-route
+        protocols: ["http","https"]
+        paths: ["/auth"]
         strip_path: false
-      - name: temporal-namespaces
-        paths:
-          - /api/v1/namespaces
-        strip_path: false
-    plugins:
-      - name: key-auth
-        config:
-          key_names:
-            - apikey
-          hide_credentials: true
-      - name: cors
-        config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - PUT
-            - DELETE
-            - OPTIONS
-          headers:
-            - Authorization
-            - Content-Type
-            - Accept
-          credentials: true
-          max_age: 3600
-      - name: rate-limiting
-        config:
-          minute: 60
-          policy: local
-      - name: request-transformer
-        config:
-          add:
-            headers:
-              - "Content-Type: application/json"
+        preserve_host: true
 
-  # Temporal UI service
   - name: temporal-ui
     url: http://temporal-ui:8080
+    plugins:
+      - name: cors
+        config:
+          origins: ["*"]
+          methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+          headers: ["Authorization","Content-Type","X-Requested-With"]
+          credentials: true
+          max_age: 3600
     routes:
       - name: temporal-ui-route
-        paths:
-          - /temporal
-        strip_path: true
-    plugins:
-      - name: cors
-        config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - OPTIONS
-          headers:
-            - Authorization
-            - Content-Type
-            - Accept
-          credentials: true
-          max_age: 3600
-
-  # Keycloak service
-  - name: keycloak-service
-    url: http://keycloak:8080
-    routes:
-      - name: keycloak-auth
-        paths:
-          - /auth
+        protocols: ["http","https"]
+        paths: ["/temporal"]
         strip_path: false
+        preserve_host: true
+
+  - name: grafana
+    url: http://grafana:3000
     plugins:
       - name: cors
         config:
-          origins:
-            - "*"
-          methods:
-            - GET
-            - POST
-            - OPTIONS
-          headers:
-            - Authorization
-            - Content-Type
-            - Accept
+          origins: ["*"]
+          methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+          headers: ["Authorization","Content-Type","X-Requested-With"]
           credentials: true
           max_age: 3600
+    routes:
+      - name: grafana-route
+        protocols: ["http","https"]
+        paths: ["/grafana"]
+        strip_path: false
+        preserve_host: true
+
+  - name: customer_service-grpc
+    url: grpc://customer_service:50051
+    plugins:
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+      - name: oauth2
+        config:
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_password_grant: false
+          global_credentials: false
+          token_expiration: 7200
+          scopes: ["read", "write"]
+          mandatory_scope: false
+          hide_credentials: false
+          enable_implicit_grant: false
+          accept_http_if_already_terminated: true
+          reuse_refresh_token: true
+          auth_header_name: "Authorization"
+          refresh_token_ttl: 1209600
+          provision_key: "your-provision-key"
+    routes:
+      - name: customer_service-route
+        protocols: ["grpc"]
+        paths: ["/grpc/customer_service"]
+        strip_path: false
+
+  - name: customer-get
+    url: grpc://customer_service:50051
+    plugins:
+      - name: grpc-gateway
+        config:
+          proto: /kong/proto/customer.proto
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+      - name: oauth2
+        config:
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_password_grant: false
+          global_credentials: false
+          token_expiration: 7200
+          scopes: ["read", "write"]
+          mandatory_scope: false
+          hide_credentials: false
+          enable_implicit_grant: false
+          accept_http_if_already_terminated: true
+          reuse_refresh_token: true
+          auth_header_name: "Authorization"
+          refresh_token_ttl: 1209600
+          provision_key: "your-provision-key"
+    routes:
+      - name: customer-get-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["GET"]
+        strip_path: false
+
+  - name: customer-add
+    url: grpc://customer_service:50051
+    plugins:
+      - name: grpc-gateway
+        config:
+          proto: /kong/proto/customer.proto
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+      - name: oauth2
+        config:
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_password_grant: false
+          global_credentials: false
+          token_expiration: 7200
+          scopes: ["read", "write"]
+          mandatory_scope: false
+          hide_credentials: false
+          enable_implicit_grant: false
+          accept_http_if_already_terminated: true
+          reuse_refresh_token: true
+          auth_header_name: "Authorization"
+          refresh_token_ttl: 1209600
+          provision_key: "your-provision-key"
+    routes:
+      - name: customer-add-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["PUT"]
+        strip_path: false
+
+  - name: customer-update
+    url: grpc://customer_service:50051
+    plugins:
+      - name: grpc-gateway
+        config:
+          proto: /kong/proto/customer.proto
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+      - name: oauth2
+        config:
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_password_grant: false
+          global_credentials: false
+          token_expiration: 7200
+          scopes: ["read", "write"]
+          mandatory_scope: false
+          hide_credentials: false
+          enable_implicit_grant: false
+          accept_http_if_already_terminated: true
+          reuse_refresh_token: true
+          auth_header_name: "Authorization"
+          refresh_token_ttl: 1209600
+          provision_key: "your-provision-key"
+    routes:
+      - name: customer-update-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["POST"]
+        strip_path: false
+
+  - name: customer-list
+    url: grpc://customer_service:50051
+    plugins:
+      - name: grpc-gateway
+        config:
+          proto: /kong/proto/customer.proto
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+      - name: oauth2
+        config:
+          enable_authorization_code: true
+          enable_client_credentials: true
+          enable_password_grant: false
+          global_credentials: false
+          token_expiration: 7200
+          scopes: ["read", "write"]
+          mandatory_scope: false
+          hide_credentials: false
+          enable_implicit_grant: false
+          accept_http_if_already_terminated: true
+          reuse_refresh_token: true
+          auth_header_name: "Authorization"
+          refresh_token_ttl: 1209600
+          provision_key: "your-provision-key"
+    routes:
+      - name: customer-list-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customers"]
+        methods: ["GET"]
+        strip_path: false
+
+plugins:
+  - name: cors
+    config:
+      origins: ["*"]
+      methods: ["GET","POST","PUT","OPTIONS"]
+      headers: ["Authorization","Content-Type"]
+      credentials: true
+      max_age: 3600
 
 consumers:
-  - username: flutter-app
-    keyauth_credentials:
-      - key: flutter-app-api-key
-
-  - username: client-manager-consumer
-    keyauth_credentials:
-      - key: client-manager-api-key
+  - username: api-client
+    custom_id: api-client-1
+    oauth2_credentials:
+    - name: "API Client"
+      client_id: "client-id"
+      client_secret: "client-secret"
+      redirect_uris: ["http://localhost:80/callback"]
+      hash_secret: false

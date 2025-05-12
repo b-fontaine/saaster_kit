@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package saaster.customer;
+
+option go_package = "./customer";
+
+service CustomerService {
+  // AddCustomer adds a new customer
+  rpc AddCustomer(AddCustomerRequest) returns (CustomerResponse);
+
+  // GetCustomer retrieves a customer by UUID
+  rpc GetCustomer(GetCustomerRequest) returns (CustomerResponse);
+
+  // UpdateCustomer updates an existing customer
+  rpc UpdateCustomer(UpdateCustomerRequest) returns (CustomerResponse);
+
+  // ListCustomers retrieves all customers
+  rpc ListCustomers(ListCustomersRequest) returns (ListCustomersResponse);
+}
+
+message AddCustomerRequest {
+  string uuid = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string contact_email = 4;
+  string contact_phone = 5;
+}
+
+message GetCustomerRequest {
+  string uuid = 1;
+}
+
+message UpdateCustomerRequest {
+  string uuid = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string contact_email = 4;
+  string contact_phone = 5;
+}
+
+message ListCustomersRequest {
+  // Empty request
+}
+
+message CustomerResponse {
+  string uuid = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string contact_email = 4;
+  string contact_phone = 5;
+}
+
+message ListCustomersResponse {
+  repeated CustomerResponse customers = 1;
+}

@@ -3396,36 +3396,30 @@ Augment Code provides a powerful way to create new microservices with a single p
 Here's an example prompt that you can use with Augment Code to create a new microservice:
 
 ```
-Create a new microservice called "inventory_manager" for the SaaSter Kit backend with the following specifications:
+Create a new microservice called "customer_service" for the SaaSter Kit backend with the following specifications:
 
 1. Domain entities:
-   - Item: with fields for UUID, name, SKU, quantity, location, and timestamps
-   - Location: with fields for UUID, name, address, and timestamps
+   - Customer: with fields for UUID (same as keycloak user), first_name, last_name, contact_email, contact_phone
 
 2. Core functionality:
-   - Add, get, update, and delete items
-   - Add, get, update, and delete locations
-   - Transfer items between locations
-   - Generate inventory reports
+   - Add, get, update, and list for Customer 
 
 3. API endpoints:
-   - RESTful endpoints for all CRUD operations on items and locations
-   - Endpoint for transferring items between locations
-   - Endpoint for generating inventory reports
+   - gRPC endpoints for all CRUD operations 
+   - gRPC endpoints call associated temporal workflow
 
 4. Database:
    - PostgreSQL with appropriate migrations
-   - Separate tables for items and locations with proper relationships
 
 5. Integration:
-   - Temporal workflows for long-running operations
-   - Dapr for service-to-service communication
-   - Elasticsearch for logging
-   - Prometheus for metrics
+   - Temporal with specific namespace for Workflows and Activities
+   - OpenTelemetry for monitoring
+	   - Elasticsearch for logging and traces
+	   - Prometheus for metrics
    - Keycloak for authentication
 
 6. Testing:
-   - BDD tests with Gherkin and Godog
+   - BDD tests with Gherkin, Godog and TestContainer
    - Unit tests for core functionality
 
 Follow the hexagonal architecture pattern with domain, ports, adapters, and application layers. Implement CQRS for separating read and write operations. Ensure proper error handling, validation, and logging throughout the service.

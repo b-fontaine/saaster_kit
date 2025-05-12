@@ -1,0 +1,34 @@
+_format_version: "1.1"
+
+services:
+  - name: customer_service-api
+    url: grpc://customer_service:50051
+    plugins:
+      - name: grpc-gateway
+        config:
+          proto: /kong/proto/customer.proto
+      - name: request-transformer
+        config:
+          add:
+            headers: ["Authorization:${headers.authorization}"]
+    routes:
+      - name: get-customer-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["GET"]
+        strip_path: false
+      - name: add-customer-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["PUT"]
+        strip_path: false
+      - name: update-customer-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customer"]
+        methods: ["POST"]
+        strip_path: false
+      - name: list-customers-route
+        protocols: ["http", "https"]
+        paths: ["/api/v1/customers"]
+        methods: ["GET"]
+        strip_path: false

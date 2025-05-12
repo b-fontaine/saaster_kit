@@ -1,82 +1,29 @@
 services:
   # Gateway & WAF
-  traefik:
-    image: traefik:3.0.1
-    ports:
-      - "80:80"
-      - "8080:8080"
-    command:
-      - --api.dashboard=true
-      - --api.insecure=true
-      - --experimental.plugins.traefik-modsecurity-plugin.modulename=github.com/acouvreur/traefik-modsecurity-plugin
-      - --experimental.plugins.traefik-modsecurity-plugin.version=v1.3.0
-      - --providers.docker=true
-      - --providers.docker.exposedbydefault=false
-      - --entrypoints.http.address=:80
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.modSecurityUrl=http://waf:8080
-      - traefik.http.middlewares.waf.plugin.traefik-modsecurity-plugin.maxBodySize=10485760
-    networks:
-      - saaster-network
-
-  waf:
-    image: owasp/modsecurity-crs:4.2.0-apache-202405220605
-    environment:
-      - PARANOIA=1
-      - ANOMALY_INBOUND=10
-      - ANOMALY_OUTBOUND=5
-      - BACKEND=http://dummy
-    networks:
-      - saaster-network
-
-  dummy:
-    image: traefik/whoami
-    networks:
-      - saaster-network
-
-  website:
-    image: traefik/whoami
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.website.rule=PathPrefix(`/website`)
-      - traefik.http.routers.website.middlewares=waf@docker
-    networks:
-      - saaster-network
-
   kong:
-    image: kong:3.3
+    build:
+      context: ./infra/kong/docker
+      dockerfile: Dockerfile
     container_name: kong
     restart: unless-stopped
     environment:
       KONG_DATABASE: "off"
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
-      KONG_PROXY_ACCESS_LOG: /dev/stdout
-      KONG_ADMIN_ACCESS_LOG: /dev/stdout
-      KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+      KONG_DECLARATIVE_CONFIG_MERGE: "true"
+      KONG_DECLARATIVE_CONFIG_MERGE_LIST: /etc/kong/routes.yml
+      KONG_PLUGINS: bundled,grpc-gateway,cors,request-transformer
     volumes:
       - ./infra/kong/kong.yml:/etc/kong/kong.yml
+      - ./infra/kong/routes.yml:/etc/kong/routes.yml
+      - ./backend/customer_service/proto:/kong/proto
     networks:
       - saaster-network
       - kong-network
-    expose:
-      - 8000  # Proxy
-      - 8001  # Admin API
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.kong.rule=PathPrefix(`/api`)
-      - traefik.http.services.kong.loadbalancer.server.port=8000
-      - traefik.http.routers.kong.middlewares=waf@docker
-      - traefik.http.middlewares.testheader.headers.accesscontrolallowmethods=GET,OPTIONS,PUT
-      - traefik.http.middlewares.testheader.headers.accesscontrolallowheaders=*
-      - traefik.http.middlewares.testheader.headers.accesscontrolalloworiginlist=*
-      - traefik.http.middlewares.testheader.headers.accesscontrolmaxage=100
-      - traefik.http.middlewares.testheader.headers.addvaryheader=true
+    ports:
+      - "80:8000"   # HTTP proxy
+      - "443:8443"   # HTTPS proxy
+      - "8001:8001"   # Admin API
+      - "8444:8444"   # Admin HTTPS
     depends_on:
       keycloak:
         condition: service_started
@@ -147,11 +94,6 @@ services:
     networks:
       - saaster-network
       - monitoring-network
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.grafana.rule=PathPrefix(`/grafana`)
-      - traefik.http.routers.grafana.middlewares=waf@docker
-      - traefik.http.services.grafana.loadbalancer.server.port=3000
     depends_on:
       - prometheus
       - elasticsearch
@@ -235,17 +177,13 @@ services:
         condition: service_healthy
     environment:
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_CORS_ORIGINS=http://localhost:3000
+      - TEMPORAL_CORS_ORIGINS=http://localhost/temporal
+      - TEMPORAL_UI_PORT=8080
+      - TEMPORAL_UI_PUBLIC_PATH=/temporal
     image: temporalio/ui:${TEMPORAL_UI_VERSION}
     networks:
       - saaster-network
       - temporal-network
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.temporal.rule=PathPrefix(`/temporal`)
-      - traefik.http.routers.temporal.middlewares=waf@docker
-      - traefik.http.services.temporal.loadbalancer.server.port=8080
-
 
   # IAM
   postgres:
@@ -273,6 +211,7 @@ services:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HTTP_RELATIVE_PATH: /auth
 
       KC_LOG_LEVEL: info
       KC_METRICS_ENABLED: true
@@ -286,77 +225,57 @@ services:
       - saaster-network
       - keycloak-network
 
-  # Client Manager Microservice
-
-
-
-  client_manager_db:
+  # Customer Service Microservice
+  customer_service_db:
     image: postgres:${POSTGRESQL_VERSION}
-    container_name: client_manager_db
+    container_name: customer_service_db
     environment:
-      POSTGRES_DB: client_manager_db
-      POSTGRES_USER: client_manager
+      POSTGRES_DB: customer_service_db
+      POSTGRES_USER: customer_service
       POSTGRES_PASSWORD: password
     volumes:
-      - client_manager_db_data:/var/lib/postgresql/data
+      - customer_service_db_data:/var/lib/postgresql/data
     networks:
-      - client-network
+      - customer-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U client_manager -d client_manager_db"]
+      test: ["CMD-SHELL", "pg_isready -U customer_service -d customer_service_db"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  client_manager:
+  customer_service:
     build:
-      context: ./backend/client_manager
+      context: ./backend/customer_service
       dockerfile: Dockerfile
-    container_name: client_manager
+    container_name: customer_service
     depends_on:
-      client_manager_db:
+      customer_service_db:
         condition: service_healthy
       temporal:
         condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     volumes:
-      - ./backend/client_manager/scripts:/app/scripts
+      - ./backend/customer_service/scripts:/app/scripts
     environment:
-      - SERVER_PORT=8080
-      - DB_HOST=client_manager_db
+      - GRPC_PORT=50051
+      - DB_HOST=customer_service_db
       - DB_PORT=5432
-      - DB_USER=client_manager
+      - DB_USER=customer_service
       - DB_PASSWORD=password
-      - DB_NAME=client_manager_db
+      - DB_NAME=customer_service_db
       - TEMPORAL_ADDRESS=temporal:7233
-      - TEMPORAL_NAMESPACE=client-namespace
-      - TEMPORAL_TASK_QUEUE=client-manager-task-queue
+      - TEMPORAL_NAMESPACE=customer-namespace
+      - TEMPORAL_TASK_QUEUE=customer-service-task-queue
+      - OTLP_ENDPOINT=otel-collector:4317
+      - ELASTIC_URL=http://elasticsearch:9200
+      - ELASTIC_INDEX=customer-service-logs
       - KEYCLOAK_URL=http://keycloak:8080
     networks:
       - kong-network
-      - client-network
+      - customer-network
       - temporal-network
       - monitoring-network
-    restart: on-failure
-
-  client_manager_dapr:
-    image: daprio/daprd:1.12.0
-    container_name: client_manager_dapr
-    depends_on:
-      - client_manager
-      - elasticsearch
-    command: [
-      "./daprd",
-      "--app-id", "client-manager",
-      "--app-port", "8080",
-      "--dapr-http-port", "3500",
-      "--dapr-grpc-port", "50001",
-      "--components-path", "/components",
-      "--config", "/config/config.yaml",
-      "--log-level", "debug"
-    ]
-    volumes:
-      - ./backend/client_manager/deployments/dapr/components:/components
-      - ./backend/client_manager/deployments/dapr/config/config.yaml:/config/config.yaml
-    network_mode: "service:client_manager"
     restart: on-failure
 
 networks:
@@ -372,17 +291,16 @@ networks:
   kong-network:
     driver: bridge
     name: kong-network
-  client-network:
+  customer-network:
     driver: bridge
-    name: client-network
+    name: customer-network
   monitoring-network:
     driver: bridge
     name: monitoring-network
 
 volumes:
   postgres_data:
-
-  client_manager_db_data:
+  customer_service_db_data:
   temporal_postgres_data:
   elasticsearch_data:
   prometheus_data:
