@@ -1,0 +1,37 @@
+name: design_system_widgetbook
+description: "Widgetbook for the design system using Material UI and atomic design pattern."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  design_system:
+    path: ../
+  widgetbook: ^3.7.1
+  widgetbook_annotation: ^3.1.0
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
+  device_info_plus: ^9.1.1
+  responsive_framework: ^1.1.1
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.8
+  widgetbook_generator: ^3.7.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
