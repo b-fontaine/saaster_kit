@@ -131,22 +131,39 @@ consumers:
 
 ## Current Configuration
 
-Our `kong.yml` defines three main services:
+Our `kong.yml` defines several main services:
 
-1. **temporal-api**: Proxies requests to the Temporal server API
-   - Routes: `/api/v1/workflows` and `/api/v1/namespaces`
-   - Protected by API key authentication
-   - Includes CORS, rate limiting, and request transformation
+1. **Frontend Applications** (No OAuth2 Authentication Required):
+   - **keycloak**: Proxies requests to the Keycloak authentication service
+     - Route: `/auth`
+     - Includes CORS configuration
+     - No authentication required (Keycloak has its own authentication)
 
-2. **temporal-ui**: Proxies requests to the Temporal web UI
-   - Route: `/temporal`
-   - Includes CORS configuration
+   - **temporal-ui**: Proxies requests to the Temporal web UI
+     - Route: `/temporal`
+     - Includes CORS configuration
+     - No authentication required (Temporal UI has its own authentication)
 
-3. **keycloak-service**: Proxies requests to Keycloak authentication service
-   - Route: `/auth`
-   - Includes CORS configuration
+   - **grafana**: Proxies requests to the Grafana dashboard
+     - Route: `/grafana`
+     - Includes CORS configuration
+     - No authentication required (Grafana has its own authentication)
 
-It also defines a consumer `flutter-app` with an API key for authentication.
+2. **API Services** (OAuth2 Authentication Required):
+   - **customer-service-grpc**: Proxies gRPC requests to the customer service
+     - Protected by OAuth2 authentication
+     - Includes request transformation to pass authentication tokens
+
+   - **REST to gRPC Mappings**: Maps REST endpoints to gRPC methods
+     - GET `/api/v1/customer` → GetCustomer
+     - PUT `/api/v1/customer` → AddCustomer
+     - POST `/api/v1/customer` → UpdateCustomer
+     - GET `/api/v1/customers` → ListCustomers
+     - All protected by OAuth2 authentication
+     - Includes gRPC-Gateway for REST to gRPC conversion
+     - Includes request transformation to pass authentication tokens
+
+It also defines a consumer `api-client` with OAuth2 credentials for authentication.
 
 ## Adding New Routes for Temporal Workflows
 
@@ -336,6 +353,84 @@ services:
 
 This example uses conditional templating to handle different API endpoints with a single transformer configuration.
 
+## OAuth2 Authentication and Frontend Applications
+
+### OAuth2 Authentication for API Endpoints
+
+Our Kong configuration uses OAuth2 authentication for API endpoints. This provides a secure way to authenticate clients and pass the authentication token to backend services.
+
+1. **OAuth2 Plugin Configuration**:
+   ```yaml
+   plugins:
+     - name: oauth2
+       config:
+         enable_authorization_code: true
+         enable_client_credentials: true
+         enable_password_grant: false
+         global_credentials: false
+         token_expiration: 7200
+         scopes: ["read", "write"]
+         mandatory_scope: false
+         hide_credentials: false
+         enable_implicit_grant: false
+         accept_http_if_already_terminated: true
+         reuse_refresh_token: true
+         auth_header_name: "Authorization"
+         refresh_token_ttl: 1209600
+         provision_key: "your-provision-key"
+   ```
+
+2. **Consumer Configuration**:
+   ```yaml
+   consumers:
+     - username: api-client
+       custom_id: api-client-1
+       oauth2_credentials:
+       - name: "API Client"
+         client_id: "client-id"
+         client_secret: "client-secret"
+         redirect_uris: ["http://localhost:8000/callback"]
+         hash_secret: false
+   ```
+
+3. **Token Propagation**:
+   The request-transformer plugin is used to pass the OAuth2 token to backend services:
+   ```yaml
+   plugins:
+     - name: request-transformer
+       config:
+         add:
+           headers: ["Authorization:${headers.authorization}"]
+   ```
+
+### Frontend Applications Without Authentication
+
+Frontend applications like Keycloak, Temporal UI, and Grafana have their own authentication systems, so they don't need OAuth2 authentication in Kong. We configure them as follows:
+
+```yaml
+- name: keycloak
+  url: http://keycloak:8080
+  plugins:
+    - name: cors
+      config:
+        origins: ["*"]
+        methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+        headers: ["Authorization","Content-Type","X-Requested-With"]
+        credentials: true
+        max_age: 3600
+  routes:
+    - name: keycloak-route
+      protocols: ["http","https"]
+      paths: ["/auth"]
+      strip_path: false
+      preserve_host: true
+```
+
+The key points are:
+- No OAuth2 plugin is applied to these services
+- CORS is configured to allow cross-origin requests
+- `preserve_host: true` maintains the original host header
+
 ## Applying Changes
 
 After updating the `kong.yml` file, restart Kong to apply the changes:
@@ -346,11 +441,33 @@ docker compose -p saaster restart kong
 
 ## Testing the API
 
-Test your new API endpoint with curl:
+### Testing Frontend Applications
 
-```bash
-curl -X GET "http://localhost:8000/api/v1/users/123" \
-  -H "apikey: flutter-app-api-key"
+Access the frontend applications directly in your browser:
+
+```
+http://localhost/auth       # Keycloak
+http://localhost/temporal    # Temporal UI
+http://localhost/grafana     # Grafana
 ```
 
-This will start a Temporal workflow to get user information and return the result.
+### Testing API Endpoints with OAuth2
+
+1. **Get an OAuth2 Token**:
+   ```bash
+   curl -X POST \
+     http://localhost/oauth2/token \
+     -d "grant_type=client_credentials" \
+     -d "client_id=client-id" \
+     -d "client_secret=client-secret" \
+     -d "scope=read"
+   ```
+
+2. **Use the Token to Access API Endpoints**:
+   ```bash
+   curl -X GET \
+     http://localhost/api/v1/customers \
+     -H "Authorization: Bearer YOUR_TOKEN"
+   ```
+
+This will authenticate with OAuth2 and access the API endpoint.
