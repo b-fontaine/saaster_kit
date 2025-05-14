@@ -10,6 +10,9 @@
       <excludeFolder url="file://$MODULE_DIR$/frontend/design_system/widgetbook/.dart_tool" />
       <excludeFolder url="file://$MODULE_DIR$/frontend/design_system/widgetbook/.pub" />
       <excludeFolder url="file://$MODULE_DIR$/frontend/design_system/widgetbook/build" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/website/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/website/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/frontend/website/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -12,9 +12,14 @@ services:
       KONG_DECLARATIVE_CONFIG_MERGE: "true"
       KONG_DECLARATIVE_CONFIG_MERGE_LIST: /etc/kong/routes.yml
       KONG_PLUGINS: bundled,grpc-gateway,cors,request-transformer
+      KONG_SSL: "on"
+      KONG_SSL_CERT: /etc/kong/localhost.crt
+      KONG_SSL_CERT_KEY: /etc/kong/localhost.key
     volumes:
       - ./infra/kong/kong.yml:/etc/kong/kong.yml
       - ./infra/kong/routes.yml:/etc/kong/routes.yml
+      - ./infra/kong/localhost.crt:/etc/kong/localhost.crt
+      - ./infra/kong/localhost.key:/etc/kong/localhost.key
       - ./backend/customer_service/proto:/kong/proto
     networks:
       - saaster-network
@@ -224,6 +229,20 @@ services:
     networks:
       - saaster-network
       - keycloak-network
+
+  # Frontends
+  website:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - FOLDER=website
+    container_name: website
+    ports:
+      - "6900:80"
+    networks:
+      - kong-network
+    restart: on-failure
 
   # Customer Service Microservice
   customer_service_db:

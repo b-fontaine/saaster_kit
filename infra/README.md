@@ -1,6 +1,6 @@
 # Infrastructure Configuration
 
-This directory contains all the infrastructure configuration files for the SaaS B2B Starter Kit. Each subdirectory represents a different component of the infrastructure.
+This directory contains all the infrastructure configuration files for the SaaS B2B Starter Kit. Each subdirectory represents a different component of the infrastructure. The infrastructure is designed to provide a complete foundation for building a SaaS application with microservices architecture, authentication, workflow orchestration, and observability.
 
 ## Directory Structure
 
@@ -15,48 +15,20 @@ infra/
 │   │   └── realm.json   # Predefined realm with users, roles, and clients
 │   └── README.md        # Keycloak documentation
 ├── kong/                # Kong API Gateway
+│   ├── docker/          # Docker build context for Kong
 │   ├── kong.yml         # Kong declarative configuration
+│   ├── routes.yml       # Additional route configurations
 │   └── README.md        # Kong Documentation
 ├── prometheus/          # Prometheus Monitoring System
 │   └── prometheus.yml   # Prometheus configuration
-├── temporal/            # Temporal Workflow Engine
-│   ├── dynamicconfig/   # Temporal dynamic configuration
-│   │   ├── docker.yaml  # Configuration for Docker environment
-│   │   └── README.md    # Dynamic config documentation
-│   └── README.md        # Temporal documentation
-└── traefik/             # Traefik Reverse Proxy and Load Balancer
-    ├── config/          # Main Traefik configuration
-    │   └── traefik.yml  # Global Traefik settings
-    ├── dynamic/         # Dynamic Traefik configuration
-    │   ├── middlewares.yml # Middleware definitions
-    │   └── tls.yml      # TLS configuration
-    └── README.md        # Traefik documentation
+└── temporal/            # Temporal Workflow Engine
+    ├── dynamicconfig/   # Temporal dynamic configuration
+    │   ├── docker.yaml  # Configuration for Docker environment
+    │   └── README.md    # Dynamic config documentation
+    └── README.md        # Temporal documentation
 ```
 
 ## Component Configurations
-
-### Traefik (Reverse Proxy and Load Balancer)
-
-**Location**: `infra/traefik/`
-
-Traefik serves as the entry point for all traffic in the system. It handles:
-
-- **TLS Termination**: Manages HTTPS connections and certificates
-- **Routing**: Directs traffic to appropriate backend services
-- **Load Balancing**: Distributes traffic across service instances
-- **Middleware Integration**: Connects with ModSecurity for WAF capabilities
-
-**Configuration Files**:
-
-- `config/traefik.yml`: Main configuration file that defines:
-  - Global settings and log levels
-  - Entry points (HTTP/HTTPS ports)
-  - Provider configurations (Docker, File)
-  - Dashboard settings
-  - ModSecurity plugin integration
-
-- `dynamic/middlewares.yml`: Defines middleware chains for request processing
-- `dynamic/tls.yml`: TLS certificate configuration
 
 ### Kong (API Gateway)
 
@@ -67,23 +39,37 @@ Kong acts as the API Gateway, managing API access, authentication, and transform
 **Configuration Files**:
 
 - `kong.yml`: Declarative configuration file that defines:
-  - Services: Backend services like Temporal API, Temporal UI, and Keycloak
+  - Services: Backend services like Temporal UI, Keycloak, Grafana, and microservices
   - Routes: URL paths and their mappings to services
   - Plugins: Authentication, CORS, rate limiting, and request transformation
   - Consumers: API clients with credentials
+- `routes.yml`: Additional route configurations that are merged with the main configuration
 
 Key features configured in Kong:
 
-- **Authentication**: API key authentication for services
+- **Authentication**: OAuth2 authentication for API endpoints
+- **Frontend Applications**: Routes to web UIs like Keycloak, Temporal UI, and Grafana without authentication
+- **REST to gRPC Translation**: Maps REST endpoints to gRPC methods using the gRPC-Gateway plugin
 - **Rate Limiting**: Prevents abuse by limiting request rates
 - **CORS**: Cross-Origin Resource Sharing configuration
 - **Request Transformation**: Modifies requests before they reach backend services
+
+**Accessible Endpoints**:
+
+| Endpoint | Description | Authentication |
+|----------|-------------|---------------|
+| `/` | Landing page website | No authentication required |
+| `/auth/*` | Keycloak authentication service | Uses Keycloak's own authentication |
+| `/temporal/*` | Temporal UI for workflow monitoring | Uses Temporal's own authentication |
+| `/grafana/*` | Grafana dashboard for metrics visualization | Uses Grafana's own authentication |
+| `/api/v1/customer` | Customer API (GET, PUT, POST) | OAuth2 required |
+| `/api/v1/customers` | List Customers API (GET) | OAuth2 required |
 
 ### Keycloak (Identity and Access Management)
 
 **Location**: `infra/keycloak/`
 
-Keycloak provides OAuth2/OpenID Connect authentication and authorization services.
+Keycloak provides OAuth2/OpenID Connect authentication and authorization services for the entire platform.
 
 **Configuration Files**:
 
@@ -95,6 +81,18 @@ Keycloak provides OAuth2/OpenID Connect authentication and authorization service
   - Password policies
 
 This configuration is automatically imported when Keycloak starts, providing a ready-to-use IAM solution.
+
+**Key Features**:
+
+- **OAuth2/OIDC**: Standard-compliant implementation of OAuth2 and OpenID Connect
+- **User Management**: Complete user lifecycle management
+- **Role-Based Access Control**: Fine-grained authorization based on roles
+- **Token Management**: JWT token issuance and validation
+- **Client Registration**: Registration of client applications
+
+**Access**:
+
+Keycloak is accessible at `http://localhost/auth` through the Kong API Gateway.
 
 ### Temporal (Workflow Engine)
 
@@ -111,7 +109,29 @@ Temporal is a workflow orchestration engine that manages long-running business p
   - Namespace-specific configurations
   - History and archival settings
 
-The configuration specifically includes settings for the `user-manager` namespace, which is used by the user management service.
+**Namespaces**:
+
+- **default**: Used for system workflows
+- **customer-namespace**: Used for customer management workflows
+
+**Key Features**:
+
+- **Durable Execution**: Workflows continue execution even after process/node failures
+- **Event Sourcing**: Records all workflow events for deterministic replay
+- **Versioning**: Supports workflow code versioning for safe updates
+- **Visibility**: Provides visibility into workflow execution status
+- **Scalability**: Horizontally scalable architecture
+
+**Components**:
+
+- **Temporal Server**: Core workflow engine
+- **Temporal UI**: Web interface for monitoring and managing workflows
+- **Temporal Admin Tools**: CLI tools for administrative tasks
+- **Workers**: Microservice components that implement and execute workflow logic
+
+**Access**:
+
+Temporal UI is accessible at `http://localhost/temporal` through the Kong API Gateway.
 
 ### Observability Stack (Prometheus, Grafana, Elasticsearch)
 
@@ -122,25 +142,39 @@ The observability stack provides comprehensive monitoring and logging capabiliti
 #### Components
 
 1. **Elasticsearch**: Stores logs from various services
-   - Configured to store logs from Dapr sidecars
+   - Configured to store logs from Dapr sidecars and microservices
+   - Indexes logs with structured metadata for efficient querying
    - Accessible at http://localhost:9200
 
 2. **Prometheus**: Collects and stores metrics
    - **Configuration File**: `prometheus/prometheus.yml`
-     - Defines scrape targets (Traefik, Temporal, Dapr, Kong)
+     - Defines scrape targets (Traefik, Temporal, Dapr, Kong, microservices)
      - Configures scrape intervals and evaluation periods
+     - Sets up alerting rules
    - Accessible at http://localhost:9090
 
 3. **Grafana**: Visualizes metrics and logs
    - **Configuration Files**:
      - `grafana/provisioning/datasources/datasources.yml`: Configures Prometheus and Elasticsearch as data sources
      - `grafana/provisioning/dashboards/dashboards.yml`: Sets up dashboard provisioning
-     - `grafana/provisioning/dashboards/*.json`: Pre-configured dashboards
-   - Accessible at http://localhost:3000 (admin/admin)
+     - `grafana/provisioning/dashboards/*.json`: Pre-configured dashboards for services
+   - Features:
+     - Pre-configured dashboards for microservices
+     - Alerting capabilities
+     - User authentication
+   - Accessible at `http://localhost/grafana` through the Kong API Gateway
+
+#### OpenTelemetry Integration
+
+Microservices are instrumented with OpenTelemetry to provide:
+
+- **Distributed Tracing**: Track requests across service boundaries
+- **Metrics**: Collect performance and business metrics
+- **Logs**: Structured logging with context
 
 #### Dapr Integration
 
-The user_manager service is configured to send logs to Elasticsearch and metrics to Prometheus through Dapr:
+Services are configured to send logs to Elasticsearch and metrics to Prometheus through Dapr:
 
 - **Logs**: Configured via `elasticsearch-logging.yaml` component and Dapr's config.yaml
 - **Metrics**: Exposed through the `prometheus-metrics.yaml` component
@@ -168,12 +202,36 @@ To add a new service to the observability stack:
 - **Check Dapr logs**: `docker logs user_manager_dapr`
 - **Verify Grafana data sources**: http://localhost:3000/datasources
 
+## Microservices Integration
+
+The infrastructure components are designed to work seamlessly with the microservices in the `backend/` directory:
+
+### Customer Service
+
+- **Location**: `backend/customer_service/`
+- **Database**: PostgreSQL with dedicated database
+- **API**: gRPC endpoints with REST mapping through Kong
+- **Workflows**: Temporal workflows for customer management operations
+- **Observability**: OpenTelemetry integration with Elasticsearch and Prometheus
+
+## Accessible Websites
+
+Once the infrastructure is running, the following web interfaces are available:
+
+| Website | URL | Description | Authentication |
+|---------|-----|-------------|---------------|
+| Landing Page | http://localhost/ | Main website with marketing content | No authentication required |
+| Keycloak | http://localhost/auth | Identity and Access Management | Uses its own authentication |
+| Temporal UI | http://localhost/temporal | Workflow monitoring and management | Uses its own authentication |
+| Grafana | http://localhost/grafana | Metrics visualization | Uses its own authentication |
+| Kong Admin | http://localhost:8001 | API Gateway administration | No authentication required |
+
 ## Usage
 
 These configuration files are automatically used when starting the services with Docker Compose:
 
 ```bash
-docker compose -p saaster up -d
+docker compose -p SaaSter up -d
 ```
 
 The Docker Compose file maps these configuration directories to the appropriate locations in each container.
@@ -182,13 +240,13 @@ The Docker Compose file maps these configuration directories to the appropriate 
 
 To customize the infrastructure:
 
-1. **Traefik**: Modify `traefik.yml` for global settings or the dynamic configuration files for specific routing rules and middlewares.
+1. **Kong**: Update `kong.yml` and `routes.yml` to add new services, routes, or modify authentication settings.
 
-2. **Kong**: Update `kong.yml` to add new services, routes, or modify authentication settings.
+2. **Keycloak**: Edit `realm.json` to change authentication policies, add users, or configure client applications.
 
-3. **Keycloak**: Edit `realm.json` to change authentication policies, add users, or configure client applications.
+3. **Temporal**: Adjust `docker.yaml` to modify workflow timeouts, retry policies, or other runtime behaviors. Register new namespaces for additional microservices.
 
-4. **Temporal**: Adjust `docker.yaml` to modify workflow timeouts, retry policies, or other runtime behaviors.
+4. **Observability**: Add new dashboards to Grafana, configure additional scrape targets in Prometheus, or adjust log settings.
 
 ## Security Considerations
 
@@ -199,3 +257,5 @@ The current configuration is designed for development and testing. For productio
 - Implement stronger authentication mechanisms
 - Review and adjust rate limits based on expected traffic patterns
 - Consider using secrets management for sensitive configuration values
+- Implement a Web Application Firewall (WAF) for enhanced protection
+- Configure network policies to restrict inter-service communication

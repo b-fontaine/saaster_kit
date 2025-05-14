@@ -1,7 +1,5 @@
 # Starter Kit SaaS B2B
 
-> 🇫🇷 Pour voir la version française, cliquez [ici](./doc/fr/README.md).
-
 This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to run locally. It includes:
 
 - **Frontend**: Flutter (Web / Mobile / Desktop)
@@ -44,7 +42,6 @@ flowchart TD
     end
     subgraph kong["Kong with Plugins"]
         oidc["OIDC"]
-        open-appsec["Open AppSec"]
         grpc-gateway["gRPC Gateway"]
         cors["CORS"]
     end
@@ -173,7 +170,7 @@ class CustomerClient {
 
     return jsonDecode(response.body);
   }
-  
+
   Future<Map<String, dynamic>> addCustomer(Map<String, dynamic> customerData) async {
     final response = await _httpClient.put(
       Uri.parse('$baseUrl/customer'),
@@ -205,6 +202,29 @@ class CustomerClient {
 
 ---
 
+## Accessible Websites
+
+Once the Kong API Gateway is running, the following web interfaces/applications become available:
+
+| Website | URL | Description | Authentication |
+|---------|-----|-------------|---------------|
+| Landing Page | http://localhost/ | Main website with marketing content and call-to-action elements | No authentication required |
+| Keycloak | http://localhost/auth | Identity and Access Management (IAM) service for user authentication and authorization | Uses its own authentication system |
+| Temporal UI | http://localhost/temporal | Web interface for monitoring and managing Temporal workflows | Uses its own authentication system |
+| Grafana | http://localhost/grafana | Dashboard for metrics visualization and monitoring | Uses its own authentication system |
+
+
+### API Endpoints
+
+The following API endpoints are available through the Kong API Gateway:
+
+| API Endpoint | HTTP Method | Description | Authentication |
+|--------------|-------------|-------------|---------------|
+| /api/v1/customer | GET | Retrieve customer information | OAuth2 required |
+| /api/v1/customer | PUT | Add a new customer | OAuth2 required |
+| /api/v1/customer | POST | Update customer information | OAuth2 required |
+| /api/v1/customers | GET | List all customers | OAuth2 required |
+
 ## Documentation Summary
 
 This project contains extensive documentation across various components. Below is a summary of the available documentation:
@@ -225,7 +245,6 @@ This project contains extensive documentation across various components. Below i
 - [Keycloak](./infra/keycloak/README.md) - Documentation for Keycloak configuration, including realms, clients, and users.
 - [Kong API Gateway](./infra/kong/README.md) - Detailed guide for Kong API Gateway, including configuration, routes, and plugins.
 - [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including configuration, workflows, and activities.
-- [Traefik and ModSecurity](./infra/traefik/README.md) - Guide for Traefik reverse proxy and ModSecurity WAF configuration.
 
 ## License
 

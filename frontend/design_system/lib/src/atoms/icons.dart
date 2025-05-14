@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../utils/responsive_utils.dart';
 import 'colors.dart';
 
@@ -102,6 +103,7 @@ class DSIcons {
   static const IconData smartphone = Icons.smartphone;
   static const IconData tablet = Icons.tablet;
   static const IconData desktop = Icons.desktop_mac;
+  static const IconData formatQuote = Icons.format_quote;
 
   // Helper methods
 
@@ -131,12 +133,7 @@ class DSIcons {
     double? size,
     String? semanticLabel,
   }) {
-    return Icon(
-      icon,
-      color: color,
-      size: size,
-      semanticLabel: semanticLabel,
-    );
+    return Icon(icon, color: color, size: size, semanticLabel: semanticLabel);
   }
 
   /// Creates an app-themed icon

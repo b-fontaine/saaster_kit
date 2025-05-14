@@ -1,6 +1,16 @@
 _format_version: "1.1"
 
 services:
+  - name: website
+    url: http://website:80
+    plugins:
+    routes:
+      - name: website-route
+        protocols: ["http","https"]
+        paths: ["/"]
+        strip_path: false
+        preserve_host: false
+
   - name: keycloak
     url: http://keycloak:8080
     plugins:
