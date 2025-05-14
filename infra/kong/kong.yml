@@ -24,6 +24,26 @@ services:
         strip_path: false
         preserve_host: false
 
+  - name: kong-admin
+    url: http://kong:8001
+    plugins:
+    routes:
+      - name: kong-admin-route
+        protocols: ["http","https"]
+        paths: ["/kong-admin"]
+        strip_path: false
+        preserve_host: false
+
+  - name: widgetbook
+    url: http://widgetbook:80
+    plugins:
+    routes:
+      - name: widgetbook-route
+        protocols: ["http","https"]
+        paths: ["/widgetbook"]
+        strip_path: false
+        preserve_host: false
+
   - name: keycloak
     url: http://keycloak:8080
     plugins:

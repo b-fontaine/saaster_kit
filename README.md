@@ -269,15 +269,16 @@ For detailed configuration options, see the [SafeLine WAF documentation](./infra
 
 Once the Kong API Gateway is running, the following web interfaces/applications become available:
 
-| Website      | URL                        | Description                                                                            | Authentication                     |
-|--------------|----------------------------|----------------------------------------------------------------------------------------|------------------------------------|
-| Landing Page | http://localhost/          | Main website with marketing content and call-to-action elements                        | No authentication required         |
-| SaaS App     | http://localhost/app       | Main SaaS application with user authentication and authorization                       | Uses its own authentication system |
-| Keycloak     | http://localhost/auth      | Identity and Access Management (IAM) service for user authentication and authorization | Uses its own authentication system |
-| Temporal UI  | http://localhost/temporal  | Web interface for monitoring and managing Temporal workflows                           | Uses its own authentication system |
-| Grafana      | http://localhost/grafana   | Dashboard for metrics visualization and monitoring                                     | Uses its own authentication system |
-| SafeLine UI  | https://localhost/safeline | Web Application Firewall management interface                                          | admin/admin (default)              |
-| Kong Admin   | http://localhost:8001      | API Gateway administration interface                                                   | No authentication required         |
+| Website      | URL                         | Description                                                                            | Authentication                     |
+|--------------|-----------------------------|----------------------------------------------------------------------------------------|------------------------------------|
+| Landing Page | http://localhost/           | Main website with marketing content and call-to-action elements                        | No authentication required         |
+| SaaS App     | http://localhost/app        | Main SaaS application with user authentication and authorization                       | Uses its own authentication system |
+| Widgetbook   | http://localhost/widgetbook | Interactive documentation and testing for design system components                     | No authentication required         |
+| Keycloak     | http://localhost/auth       | Identity and Access Management (IAM) service for user authentication and authorization | Uses its own authentication system |
+| Temporal UI  | http://localhost/temporal   | Web interface for monitoring and managing Temporal workflows                           | Uses its own authentication system |
+| Grafana      | http://localhost/grafana    | Dashboard for metrics visualization and monitoring                                     | Uses its own authentication system |
+| SafeLine UI  | https://localhost/safeline  | Web Application Firewall management interface                                          | admin/admin (default)              |
+| Kong Admin   | http://localhost/kong-admin | API Gateway administration interface                                                   | No authentication required         |
 
 ### API Endpoints
 
@@ -292,22 +293,25 @@ The following API endpoints are available through the Kong API Gateway:
 
 ## Documentation Summary
 
-This project contains extensive documentation across various components. Below is a summary of the available
-documentation:
+This project contains extensive documentation across various components. Below is a comprehensive summary of all
+available documentation:
 
 ### Backend
 
 - [Backend Overview](./backend/README.md) - Overview of the backend architecture, including microservices, hexagonal
   architecture, and CQRS pattern.
-- [Client Manager](./backend/client_manager/README.md) - Documentation for the client manager microservice, including
-  API endpoints and data models.
-- [Client Manager Tests](./backend/client_manager/tests/README.md) - Guide for running tests with Testcontainers for the
-  client manager service.
+    - [Customer Service](./backend/customer_service/README.md) - Documentation for the customer service microservice,
+      including API endpoints, Temporal workflows, and architecture.
 
 ### Frontend
 
 - [Frontend Overview](./frontend/README.md) - Documentation for the Flutter applications, including web, mobile, and
   desktop clients.
+- [Design System](./frontend/design_system/README.md) - Comprehensive Flutter design system using Material UI and atomic
+  design pattern with responsive components.
+    - [Widgetbook](./frontend/design_system/widgetbook/README.md) - Interactive showcase and documentation of design
+      system components using Widgetbook.
+- [Website](./frontend/website/README.md) - Documentation for the Flutter-based marketing website and landing pages.
 
 ### Infrastructure
 
@@ -320,6 +324,8 @@ documentation:
 - [SafeLine WAF](./infra/safeline/README.md) - Guide for SafeLine Web Application Firewall configuration and usage.
 - [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including
   configuration, workflows, and activities.
+- [Temporal Dynamic Config](./infra/temporal/dynamicconfig/README.md) - Guide for configuring Temporal's dynamic
+  configuration settings for different namespaces and task queues.
 
 ## License
 

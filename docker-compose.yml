@@ -373,6 +373,16 @@ services:
     networks:
       - kong-network
     restart: on-failure
+  widgetbook:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - FOLDER=design_system/widgetbook
+    container_name: website
+    networks:
+      - kong-network
+    restart: on-failure
 
   # Customer Service Microservice
   customer_service_db:
