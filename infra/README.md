@@ -30,6 +30,27 @@ infra/
 
 ## Component Configurations
 
+### SafeLine (Web Application Firewall)
+
+**Location**: `infra/safeline/`
+
+SafeLine is a self-hosted Web Application Firewall (WAF) that protects your web applications from attacks and exploits.
+
+**Key Features**:
+
+- **Block Web Attacks**: Defends against SQL injection, XSS, code injection, and other common web attacks
+- **Rate Limiting**: Protects against DoS attacks and brute force attempts
+- **Anti-Bot Protection**: Blocks malicious bots while allowing legitimate users
+- **Dynamic Protection**: Encrypts HTML and JS code to prevent client-side attacks
+
+**Integration with Kong**:
+
+SafeLine is integrated with Kong API Gateway using the `kong-safeline` plugin. The plugin is configured globally to protect all routes and services.
+
+**Access**:
+
+The SafeLine Management UI is accessible at `https://localhost:9443` with default credentials (admin/admin).
+
 ### Kong (API Gateway)
 
 **Location**: `infra/kong/`
@@ -225,6 +246,7 @@ Once the infrastructure is running, the following web interfaces are available:
 | Temporal UI | http://localhost/temporal | Workflow monitoring and management | Uses its own authentication |
 | Grafana | http://localhost/grafana | Metrics visualization | Uses its own authentication |
 | Kong Admin | http://localhost:8001 | API Gateway administration | No authentication required |
+| SafeLine UI | https://localhost:9443 | Web Application Firewall management | admin/admin (default) |
 
 ## Usage
 
@@ -242,11 +264,13 @@ To customize the infrastructure:
 
 1. **Kong**: Update `kong.yml` and `routes.yml` to add new services, routes, or modify authentication settings.
 
-2. **Keycloak**: Edit `realm.json` to change authentication policies, add users, or configure client applications.
+2. **SafeLine**: Access the SafeLine Management UI at `https://localhost:9443` to customize protection rules, view attack logs, and adjust security settings.
 
-3. **Temporal**: Adjust `docker.yaml` to modify workflow timeouts, retry policies, or other runtime behaviors. Register new namespaces for additional microservices.
+3. **Keycloak**: Edit `realm.json` to change authentication policies, add users, or configure client applications.
 
-4. **Observability**: Add new dashboards to Grafana, configure additional scrape targets in Prometheus, or adjust log settings.
+4. **Temporal**: Adjust `docker.yaml` to modify workflow timeouts, retry policies, or other runtime behaviors. Register new namespaces for additional microservices.
+
+5. **Observability**: Add new dashboards to Grafana, configure additional scrape targets in Prometheus, or adjust log settings.
 
 ## Security Considerations
 
@@ -257,5 +281,6 @@ The current configuration is designed for development and testing. For productio
 - Implement stronger authentication mechanisms
 - Review and adjust rate limits based on expected traffic patterns
 - Consider using secrets management for sensitive configuration values
-- Implement a Web Application Firewall (WAF) for enhanced protection
+- Customize SafeLine WAF rules based on your specific application needs
 - Configure network policies to restrict inter-service communication
+- Regularly update SafeLine to get the latest security rules and protections

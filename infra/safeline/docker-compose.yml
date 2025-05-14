@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  safeline:
+    image: chaitin/safeline:latest
+    container_name: safeline
+    restart: unless-stopped
+    volumes:
+      - ./data:/data/safeline
+    ports:
+      - "9443:9443"  # Management UI
+    networks:
+      - saaster-network
+
+  detector:
+    image: chaitin/safeline-detector:latest
+    container_name: safeline-detector
+    restart: unless-stopped
+    volumes:
+      - ./data:/data/safeline
+    ports:
+      - "8000:8000"  # Detector API port
+    environment:
+      - BIND_ADDR=0.0.0.0
+      - LISTEN_PORT=8000
+    networks:
+      - saaster-network
+
+networks:
+  saaster-network:
+    external: true

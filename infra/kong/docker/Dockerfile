@@ -16,5 +16,8 @@ RUN apt-get update && \
 # Install the Kong gRPC Gateway plugin
 RUN luarocks install kong-plugin-grpc-gateway
 
+# Install the Kong SafeLine plugin
+RUN luarocks install kong-safeline
+
 # Switch back to the kong user
 USER kong

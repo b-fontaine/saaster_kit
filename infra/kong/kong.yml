@@ -1,5 +1,18 @@
 _format_version: "1.1"
 
+plugins:
+  - name: safeline
+    config:
+      host: safeline-detector
+      port: 8000
+  - name: cors
+    config:
+      origins: ["*"]
+      methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+      headers: ["Authorization","Content-Type","X-Requested-With"]
+      credentials: true
+      max_age: 3600
+
 services:
   - name: website
     url: http://website:80
@@ -44,6 +57,24 @@ services:
         paths: ["/temporal"]
         strip_path: false
         preserve_host: true
+
+  - name: safeline-dashboard
+    url: https://safeline-mgt:1443
+    plugins:
+      - name: cors
+        config:
+          origins: ["*"]
+          methods: ["GET","POST","PUT","DELETE","OPTIONS"]
+          headers: ["Authorization","Content-Type","X-Requested-With"]
+          credentials: true
+          max_age: 3600
+    routes:
+      - name: safeline-dashboard-route
+        protocols: ["https"]
+        paths: ["/safeline"]
+        strip_path: false
+        preserve_host: true
+
 
   - name: grafana
     url: http://grafana:3000
@@ -223,14 +254,6 @@ services:
         methods: ["GET"]
         strip_path: false
 
-plugins:
-  - name: cors
-    config:
-      origins: ["*"]
-      methods: ["GET","POST","PUT","OPTIONS"]
-      headers: ["Authorization","Content-Type"]
-      credentials: true
-      max_age: 3600
 
 consumers:
   - username: api-client

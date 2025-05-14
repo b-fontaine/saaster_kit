@@ -78,3 +78,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 .DS_Store
+
+# Ignore all folders and files in infra/safeline/data
+infra/safeline/data/**

@@ -1,17 +1,25 @@
 # Starter Kit SaaS B2B
 
-This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to run locally. It includes:
+This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to
+run locally. It includes:
 
 - **Frontend**: Flutter (Web / Mobile / Desktop)
-- **API Gateway & WAF**: Traefik + ModSecurity + Kong
+    - Landing Page: Built with Flutter Web, Material UI, and atomic design pattern
+    - SaaS App: Built with Flutter Web, Material UI, and atomic design pattern, connected to Auth and microservices
+    - Design System: Atomic design pattern with responsive and adaptive components
+- **API Gateway & WAF**: Kong + SafeLine
+    - Kong: API Gateway for routing, authentication, rate limiting, and request transformation
+    - SafeLine: Web Application Firewall for protecting against web attacks
 - **IAM**: Keycloak (OAuth2 / OIDC)
 - **Orchestration**: Temporal (event-driven workflows)
-  - Default namespace: Used for system workflows
-  - Client namespace: Used for client management workflows
+    - Temporal: Workflow engine for managing long-running business processes
+    - Temporal UI: Web interface for monitoring and managing workflows
 - **Microservices**: Go, each with its own PostgreSQL database
-  - Client Manager: Manages client information and profiles
-- **Service Mesh**: Dapr, Linkerd (mTLS, load balancing, retries, circuit breaker, health checks)
-- **Observability**: Prometheus, Grafana (metrics) and Elasticsearch (logs)
+    - Customer Service: Manages customer information and profiles
+- **Observability**: OpenTelemetry with Prometheus, Grafana and Elasticsearch
+    - Prometheus: Collects and stores metrics
+    - Grafana: Visualizes metrics and logs
+    - Elasticsearch: Stores and indexes logs/traces from all microservices
 
 ---
 
@@ -21,7 +29,8 @@ This **starter kit** provides a robust, extensible, and secure foundation for de
 docker compose -p SaaSter up -d
 ```
 
-> **Note**: In a production environment, replace the development ACME certificates with trusted TLS certificates, and migrate to Kubernetes using your own manifests or Helm charts.
+> **Note**: In a production environment, replace the development ACME certificates with trusted TLS certificates, and
+> migrate to Kubernetes using your own manifests or Helm charts.
 
 ---
 
@@ -44,6 +53,21 @@ flowchart TD
         oidc["OIDC"]
         grpc-gateway["gRPC Gateway"]
         cors["CORS"]
+    end
+    safeline-detector -.-> kong
+    kong --> safeline-mgt
+    subgraph safeline["SafeLine WAF"]
+        safeline-mgt["SafeLine Management"]
+        safeline-detector["SafeLine Detector"]
+        safeline-tengine["SafeLine Tengine"]
+        safeline-db[("SafeLine DB")]
+        safeline-luigi["SafeLine Luigi"]
+        safeline-fvm["SafeLine FVM"]
+        safeline-chaos["SafeLine Chaos"]
+        safeline-chaos & safeline-luigi & safeline-mgt --> safeline-db
+        safeline-mgt --> safeline-fvm
+        safeline-luigi --> safeline-detector
+        safeline-tengine --> safeline-detector
     end
     subgraph front["fa:fa-globe Web Frontend"]
         web["Flutter Web App"]
@@ -80,58 +104,67 @@ flowchart TD
     client <--> iam
 ```
 
-All user requests pass first through **Traefik** (secure reverse proxy + WAF), then through **Kong** (API Gateway) which routes to **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
+All user requests pass through **Kong** (API Gateway) with **SafeLine** (Web Application Firewall) protection, which
+routes to **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between
+microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service
+resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
 
 ---
 
 ## API Gateway
 
-The gateway architecture consists of three main components:
+The gateway architecture consists of two main components:
 
-1. **Traefik**: Acts as the entry point and reverse proxy
-   - TLS termination
-   - Routing based on hostnames
-   - Load balancing
-   - Basic traffic management
+1. **Kong**: API Gateway for managing API access
+    - TLS termination
+    - Routing based on hostnames
+    - Load balancing
+    - Basic traffic management
+    - Authentication with OAuth2 for API endpoints
+    - Frontend applications access without authentication
+    - Request/response transformation
+    - Service aggregation
+    - Protocol translation (REST to gRPC)
+    - gRPC-Gateway for REST to gRPC conversion
 
-2. **ModSecurity**: Web Application Firewall (WAF) for security
-   - Protection against SQL injection
-   - Cross-site scripting (XSS) prevention
-   - Common web attacks mitigation
-   - OWASP Top 10 vulnerabilities protection
+2. **SafeLine**: Web Application Firewall (WAF) for security
+    - Protection against SQL injection, XSS, and other OWASP Top 10 vulnerabilities
+    - Anti-bot protection with interactive challenges
+    - Rate limiting to prevent DoS attacks
+    - Dynamic HTML/JS protection to prevent client-side attacks
+    - Authentication challenges for restricted areas
+    - Real-time traffic monitoring and attack detection
+    - Customizable protection rules and policies
 
-3. **Kong**: API Gateway for managing API access
-   - Authentication with OAuth2 for API endpoints
-   - Frontend applications access without authentication
-   - Rate limiting
-   - Request/response transformation
-   - Service aggregation
-   - Protocol translation (REST to gRPC)
-   - gRPC-Gateway for REST to gRPC conversion
+### Integration
+
+SafeLine is integrated with Kong using the `kong-safeline` plugin, which is applied globally to all routes. This ensures
+that all traffic passing through Kong is inspected and protected by SafeLine's security features.
 
 The following endpoints are available:
 
 - **API Gateway**: http://localhost
-  - `/api/v1/customer` - Customer API (GET, PUT, POST)
-  - `/api/v1/customers` - List Customers API (GET)
-  - `/temporal/*` - Temporal UI (no authentication required)
-  - `/auth/*` - Keycloak authentication (no authentication required)
-  - `/grafana/*` - Grafana dashboard (no authentication required)
+    - `/api/v1/customer` - Customer API (GET, PUT, POST)
+    - `/api/v1/customers` - List Customers API (GET)
+    - `/temporal/*` - Temporal UI (no authentication required)
+    - `/auth/*` - Keycloak authentication (no authentication required)
+    - `/grafana/*` - Grafana dashboard (no authentication required)
 
-Access the Traefik dashboard at: http://traefik.localhost:8090
+Access the SafeLine dashboard at: https://localhost:9443
 
 ### REST to gRPC Mapping
 
 Kong API Gateway is configured to map REST endpoints to gRPC methods for the customer service:
 
-| REST Endpoint | HTTP Method | gRPC Method |
-|---------------|-------------|-------------|
-| `/api/v1/customer` | GET | GetCustomer |
-| `/api/v1/customer` | PUT | AddCustomer |
-| `/api/v1/customer` | POST | UpdateCustomer |
-| `/api/v1/customers` | GET | ListCustomers |
+| REST Endpoint       | HTTP Method | gRPC Method    |
+|---------------------|-------------|----------------|
+| `/api/v1/customer`  | GET         | GetCustomer    |
+| `/api/v1/customer`  | PUT         | AddCustomer    |
+| `/api/v1/customer`  | POST        | UpdateCustomer |
+| `/api/v1/customers` | GET         | ListCustomers  |
 
-This mapping is achieved using the gRPC-Gateway plugin in Kong, which translates between REST and gRPC protocols. The configuration includes:
+This mapping is achieved using the gRPC-Gateway plugin in Kong, which translates between REST and gRPC protocols. The
+configuration includes:
 
 1. **Protocol Translation**: Converting REST requests to gRPC calls
 2. **Authentication Propagation**: Passing OAuth2 tokens to backend services
@@ -190,12 +223,42 @@ class CustomerClient {
 }
 ```
 
+## Web Application Firewall (SafeLine)
+
+SafeLine is a self-hosted Web Application Firewall (WAF) that protects your web applications from attacks and exploits.
+It is integrated with Kong API Gateway to provide comprehensive security for all traffic.
+
+### Key Features
+
+- **Block Web Attacks**: Defends against SQL injection, XSS, code injection, command injection, CRLF injection, XXE,
+  SSRF, path traversal, and more.
+- **Rate Limiting**: Protects against DoS attacks, brute force attempts, and traffic surges.
+- **Anti-Bot Challenge**: Blocks bots while allowing human users through interactive challenges.
+- **Authentication Challenge**: Can require password authentication for visitors to specific routes.
+- **Dynamic Protection**: Dynamically encrypts HTML and JS code to prevent client-side attacks.
+
+### Management Interface
+
+SafeLine provides a web-based management interface accessible at `https://localhost:9443` with default credentials (
+admin/admin). Through this interface, you can:
+
+- View attack logs and analytics
+- Configure protection rules
+- Set up rate limiting policies
+- Enable/disable specific security features
+- Monitor traffic and security events
+
+For detailed configuration options, see the [SafeLine WAF documentation](./infra/safeline/README.md).
+
 ## Best Practices Employed
 
 - **Database-per-Service**: each microservice owns its own PostgreSQL database, isolating functional domains.
-- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows. See [Temporal Configuration Guide](./doc/temporal_configuration.md) for details on configuring Temporal for new microservices.
+- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows.
+  See [Temporal Configuration Guide](./doc/temporal_configuration.md) for details on configuring Temporal for new
+  microservices.
 - **Zero-Trust & mTLS**: Linkerd's service mesh enforces mutual authentication and encrypts internal communications.
-- **Security "By Design"**: WAF via ModSecurity, rate limiting, OAuth2 authentication for APIs, separate authentication for frontend applications, token propagation, and TLS certificates.
+- **Security "By Design"**: Advanced WAF protection via SafeLine, rate limiting, OAuth2 authentication for APIs,
+  separate authentication for frontend applications, token propagation, and TLS certificates.
 - **Resilience Patterns**: retries, circuit breakers, health checks, bulkheads, and horizontal scalability.
 - **12-Factor App**: configuration via environment variables, logging to stdout, stateless services, etc.
 - **Observability**: centralized metrics and logs for rapid diagnostics.
@@ -206,45 +269,57 @@ class CustomerClient {
 
 Once the Kong API Gateway is running, the following web interfaces/applications become available:
 
-| Website | URL | Description | Authentication |
-|---------|-----|-------------|---------------|
-| Landing Page | http://localhost/ | Main website with marketing content and call-to-action elements | No authentication required |
-| Keycloak | http://localhost/auth | Identity and Access Management (IAM) service for user authentication and authorization | Uses its own authentication system |
-| Temporal UI | http://localhost/temporal | Web interface for monitoring and managing Temporal workflows | Uses its own authentication system |
-| Grafana | http://localhost/grafana | Dashboard for metrics visualization and monitoring | Uses its own authentication system |
-
+| Website      | URL                        | Description                                                                            | Authentication                     |
+|--------------|----------------------------|----------------------------------------------------------------------------------------|------------------------------------|
+| Landing Page | http://localhost/          | Main website with marketing content and call-to-action elements                        | No authentication required         |
+| SaaS App     | http://localhost/app       | Main SaaS application with user authentication and authorization                       | Uses its own authentication system |
+| Keycloak     | http://localhost/auth      | Identity and Access Management (IAM) service for user authentication and authorization | Uses its own authentication system |
+| Temporal UI  | http://localhost/temporal  | Web interface for monitoring and managing Temporal workflows                           | Uses its own authentication system |
+| Grafana      | http://localhost/grafana   | Dashboard for metrics visualization and monitoring                                     | Uses its own authentication system |
+| SafeLine UI  | https://localhost/safeline | Web Application Firewall management interface                                          | admin/admin (default)              |
+| Kong Admin   | http://localhost:8001      | API Gateway administration interface                                                   | No authentication required         |
 
 ### API Endpoints
 
 The following API endpoints are available through the Kong API Gateway:
 
-| API Endpoint | HTTP Method | Description | Authentication |
-|--------------|-------------|-------------|---------------|
-| /api/v1/customer | GET | Retrieve customer information | OAuth2 required |
-| /api/v1/customer | PUT | Add a new customer | OAuth2 required |
-| /api/v1/customer | POST | Update customer information | OAuth2 required |
-| /api/v1/customers | GET | List all customers | OAuth2 required |
+| API Endpoint      | HTTP Method | Description                   | Authentication  |
+|-------------------|-------------|-------------------------------|-----------------|
+| /api/v1/customer  | GET         | Retrieve customer information | OAuth2 required |
+| /api/v1/customer  | PUT         | Add a new customer            | OAuth2 required |
+| /api/v1/customer  | POST        | Update customer information   | OAuth2 required |
+| /api/v1/customers | GET         | List all customers            | OAuth2 required |
 
 ## Documentation Summary
 
-This project contains extensive documentation across various components. Below is a summary of the available documentation:
+This project contains extensive documentation across various components. Below is a summary of the available
+documentation:
 
 ### Backend
 
-- [Backend Overview](./backend/README.md) - Overview of the backend architecture, including microservices, hexagonal architecture, and CQRS pattern.
-- [Client Manager](./backend/client_manager/README.md) - Documentation for the client manager microservice, including API endpoints and data models.
-- [Client Manager Tests](./backend/client_manager/tests/README.md) - Guide for running tests with Testcontainers for the client manager service.
+- [Backend Overview](./backend/README.md) - Overview of the backend architecture, including microservices, hexagonal
+  architecture, and CQRS pattern.
+- [Client Manager](./backend/client_manager/README.md) - Documentation for the client manager microservice, including
+  API endpoints and data models.
+- [Client Manager Tests](./backend/client_manager/tests/README.md) - Guide for running tests with Testcontainers for the
+  client manager service.
 
 ### Frontend
 
-- [Frontend Overview](./frontend/README.md) - Documentation for the Flutter applications, including web, mobile, and desktop clients.
+- [Frontend Overview](./frontend/README.md) - Documentation for the Flutter applications, including web, mobile, and
+  desktop clients.
 
 ### Infrastructure
 
-- [Infrastructure Overview](./infra/README.md) - Overview of the infrastructure components, including Docker Compose configuration.
-- [Keycloak](./infra/keycloak/README.md) - Documentation for Keycloak configuration, including realms, clients, and users.
-- [Kong API Gateway](./infra/kong/README.md) - Detailed guide for Kong API Gateway, including configuration, routes, and plugins.
-- [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including configuration, workflows, and activities.
+- [Infrastructure Overview](./infra/README.md) - Overview of the infrastructure components, including Docker Compose
+  configuration.
+- [Keycloak](./infra/keycloak/README.md) - Documentation for Keycloak configuration, including realms, clients, and
+  users.
+- [Kong API Gateway](./infra/kong/README.md) - Detailed guide for Kong API Gateway, including configuration, routes, and
+  plugins.
+- [SafeLine WAF](./infra/safeline/README.md) - Guide for SafeLine Web Application Firewall configuration and usage.
+- [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including
+  configuration, workflows, and activities.
 
 ## License
 
