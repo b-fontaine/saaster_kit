@@ -33,8 +33,22 @@ services:
     depends_on:
       keycloak:
         condition: service_started
-      temporal:
-        condition: service_healthy
+      webapp:
+        condition: service_started
+      safeline-tengine:
+        condition: service_started
+      safeline-chaos:
+        condition: service_started
+      safeline-luigi:
+        condition: service_started
+      safeline-fvm:
+        condition: service_started
+      safeline-mgt:
+        condition: service_started
+      safeline-detect:
+        condition: service_started
+      safeline-postgres:
+        condition: service_started
 
   safeline-postgres:
     container_name: safeline-pg
@@ -369,17 +383,32 @@ services:
       dockerfile: Dockerfile
       args:
         - FOLDER=website
+        - BASE_HREF=/
     container_name: website
     networks:
       - kong-network
     restart: on-failure
+
   widgetbook:
     build:
       context: ./frontend
       dockerfile: Dockerfile
       args:
         - FOLDER=design_system/widgetbook
-    container_name: website
+        - BASE_HREF=/widgetbook/
+    container_name: widgetbook
+    networks:
+      - kong-network
+    restart: on-failure
+
+  webapp:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - FOLDER=main_app
+        - BASE_HREF=/app/
+    container_name: webapp
     networks:
       - kong-network
     restart: on-failure

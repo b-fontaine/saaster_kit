@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../atoms/colors.dart';
-import '../atoms/spacing.dart';
 import '../organisms/app_bar.dart';
 import '../organisms/navigation.dart';
-import '../utils/breakpoints.dart';
 
 /// Design System Application Scaffold
 class DSAppScaffold {
   // Private constructor to prevent instantiation
   DSAppScaffold._();
-  
+
   /// Standard application scaffold
   static Widget standard({
     required BuildContext context,
@@ -35,19 +34,20 @@ class DSAppScaffold {
     bool primary = true,
   }) {
     return Scaffold(
-      appBar: title != null || appBarTitle != null
-          ? DSAppBars.appStandardAppBar(
-              context: context,
-              title: title ?? '',
-              actions: appBarActions,
-              leading: leading,
-              centerTitle: centerTitle,
-              backgroundColor: appBarBackgroundColor,
-              foregroundColor: appBarForegroundColor,
-              elevation: appBarElevation,
-              bottom: bottom,
-            )
-          : null,
+      appBar:
+          title != null || appBarTitle != null
+              ? DSAppBars.appStandardAppBar(
+                context: context,
+                title: title ?? '',
+                actions: appBarActions,
+                leading: leading,
+                centerTitle: centerTitle,
+                backgroundColor: appBarBackgroundColor,
+                foregroundColor: appBarForegroundColor,
+                elevation: appBarElevation,
+                bottom: bottom,
+              )
+              : null,
       body: body,
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
@@ -61,7 +61,7 @@ class DSAppScaffold {
       primary: primary,
     );
   }
-  
+
   /// Application scaffold with bottom navigation
   static Widget withBottomNavigation({
     required BuildContext context,
@@ -92,19 +92,20 @@ class DSAppScaffold {
     bool resizeToAvoidBottomInset = true,
   }) {
     return Scaffold(
-      appBar: title != null || appBarTitle != null
-          ? DSAppBars.appStandardAppBar(
-              context: context,
-              title: title ?? '',
-              actions: appBarActions,
-              leading: leading,
-              centerTitle: centerTitle,
-              backgroundColor: appBarBackgroundColor,
-              foregroundColor: appBarForegroundColor,
-              elevation: appBarElevation,
-              bottom: bottom,
-            )
-          : null,
+      appBar:
+          title != null || appBarTitle != null
+              ? DSAppBars.appStandardAppBar(
+                context: context,
+                title: title ?? '',
+                actions: appBarActions,
+                leading: leading,
+                centerTitle: centerTitle,
+                backgroundColor: appBarBackgroundColor,
+                foregroundColor: appBarForegroundColor,
+                elevation: appBarElevation,
+                bottom: bottom,
+              )
+              : null,
       body: body,
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
@@ -126,7 +127,7 @@ class DSAppScaffold {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
-  
+
   /// Application scaffold with drawer navigation
   static Widget withDrawer({
     required BuildContext context,
@@ -157,19 +158,20 @@ class DSAppScaffold {
     bool resizeToAvoidBottomInset = true,
   }) {
     return Scaffold(
-      appBar: title != null || appBarTitle != null
-          ? DSAppBars.appStandardAppBar(
-              context: context,
-              title: title ?? '',
-              actions: appBarActions,
-              leading: leading,
-              centerTitle: centerTitle,
-              backgroundColor: appBarBackgroundColor,
-              foregroundColor: appBarForegroundColor,
-              elevation: appBarElevation,
-              bottom: bottom,
-            )
-          : null,
+      appBar:
+          title != null || appBarTitle != null
+              ? DSAppBars.appStandardAppBar(
+                context: context,
+                title: title ?? '',
+                actions: appBarActions,
+                leading: leading,
+                centerTitle: centerTitle,
+                backgroundColor: appBarBackgroundColor,
+                foregroundColor: appBarForegroundColor,
+                elevation: appBarElevation,
+                bottom: bottom,
+              )
+              : null,
       body: body,
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
@@ -191,7 +193,7 @@ class DSAppScaffold {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
-  
+
   /// Responsive application scaffold
   static Widget responsive({
     required BuildContext context,
@@ -231,7 +233,7 @@ class DSAppScaffold {
       bottomNavBarTrailing: bottomNavBarTrailing,
     );
   }
-  
+
   /// Application scaffold with tabbed navigation
   static Widget withTabs({
     required BuildContext context,
@@ -271,6 +273,7 @@ class DSAppScaffold {
         leading: leading,
         centerTitle: centerTitle,
         backgroundColor: appBarBackgroundColor ?? DSColors.primaryApp,
+        surfaceTintColor: appBarBackgroundColor ?? DSColors.primaryApp,
         foregroundColor: appBarForegroundColor ?? DSColors.textOnPrimary,
         elevation: appBarElevation,
         bottom: PreferredSize(
@@ -290,10 +293,7 @@ class DSAppScaffold {
           ),
         ),
       ),
-      body: TabBarView(
-        controller: tabController,
-        children: tabViews,
-      ),
+      body: TabBarView(controller: tabController, children: tabViews),
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
@@ -305,7 +305,7 @@ class DSAppScaffold {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
-  
+
   /// Application scaffold with sliver app bar
   static Widget withSliverAppBar({
     required BuildContext context,
@@ -366,7 +366,7 @@ class DSAppScaffold {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
-  
+
   /// Application scaffold with search app bar
   static Widget withSearchAppBar({
     required BuildContext context,
@@ -419,7 +419,7 @@ class DSAppScaffold {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
     );
   }
-  
+
   /// Application scaffold with transparent app bar
   static Widget withTransparentAppBar({
     required BuildContext context,

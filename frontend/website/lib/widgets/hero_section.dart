@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
@@ -16,12 +16,17 @@ class HeroSection extends StatelessWidget {
         text: 'Get Started',
         onPressed: () {
           // Implement call-to-action
+          launchUrlString("/app", webOnlyWindowName: "_self");
         },
       ),
       secondaryAction: DSButtons.secondaryLandingButton(
         text: 'Learn More',
         onPressed: () {
           // Implement secondary action
+          launchUrlString(
+            "https://github.com/b-fontaine/saaster_kit",
+            webOnlyWindowName: "_self",
+          );
         },
       ),
       image: Image.asset('assets/images/logo.png', fit: BoxFit.contain),

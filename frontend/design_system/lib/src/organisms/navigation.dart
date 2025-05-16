@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
+
 import '../atoms/colors.dart';
-import '../atoms/typography.dart';
-import '../atoms/spacing.dart';
 import '../atoms/icons.dart';
-import '../atoms/borders.dart';
-import '../utils/responsive_utils.dart';
+import '../atoms/spacing.dart';
+import '../atoms/typography.dart';
 import '../utils/breakpoints.dart';
 
 /// Design System Navigation Components
 class DSNavigation {
   // Private constructor to prevent instantiation
   DSNavigation._();
-  
+
   /// Bottom navigation bar for the application theme
   static Widget appBottomNavBar({
     required BuildContext context,
@@ -28,13 +27,19 @@ class DSNavigation {
     BottomNavigationBarType type = BottomNavigationBarType.fixed,
   }) {
     return BottomNavigationBar(
-      items: items.map((item) => BottomNavigationBarItem(
-        icon: Icon(item.icon),
-        activeIcon: item.activeIcon != null ? Icon(item.activeIcon) : null,
-        label: item.label,
-        tooltip: item.tooltip,
-        backgroundColor: item.backgroundColor,
-      )).toList(),
+      items:
+          items
+              .map(
+                (item) => BottomNavigationBarItem(
+                  icon: Icon(item.icon),
+                  activeIcon:
+                      item.activeIcon != null ? Icon(item.activeIcon) : null,
+                  label: item.label,
+                  tooltip: item.tooltip,
+                  backgroundColor: item.backgroundColor,
+                ),
+              )
+              .toList(),
       currentIndex: currentIndex,
       onTap: onTap,
       backgroundColor: backgroundColor ?? Colors.white,
@@ -53,7 +58,7 @@ class DSNavigation {
       type: type,
     );
   }
-  
+
   /// Navigation rail for the application theme (tablet/desktop)
   static Widget appNavigationRail({
     required BuildContext context,
@@ -71,12 +76,18 @@ class DSNavigation {
     NavigationRailLabelType labelType = NavigationRailLabelType.selected,
   }) {
     return NavigationRail(
-      destinations: items.map((item) => NavigationRailDestination(
-        icon: Icon(item.icon),
-        selectedIcon: item.activeIcon != null ? Icon(item.activeIcon) : null,
-        label: Text(item.label),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-      )).toList(),
+      destinations:
+          items
+              .map(
+                (item) => NavigationRailDestination(
+                  icon: Icon(item.icon),
+                  selectedIcon:
+                      item.activeIcon != null ? Icon(item.activeIcon) : null,
+                  label: Text(item.label),
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                ),
+              )
+              .toList(),
       selectedIndex: selectedIndex,
       onDestinationSelected: onDestinationSelected,
       leading: leading,
@@ -102,10 +113,12 @@ class DSNavigation {
       ),
       labelType: labelType,
       useIndicator: true,
-      indicatorColor: (selectedItemColor ?? DSColors.primaryApp).withOpacity(0.1),
+      indicatorColor: (selectedItemColor ?? DSColors.primaryApp).withOpacity(
+        0.1,
+      ),
     );
   }
-  
+
   /// Drawer for the application theme
   static Widget appDrawer({
     required BuildContext context,
@@ -119,7 +132,7 @@ class DSNavigation {
     double width = 304,
   }) {
     final effectivePadding = padding ?? EdgeInsets.zero;
-    
+
     return Drawer(
       width: width,
       backgroundColor: backgroundColor ?? Colors.white,
@@ -136,14 +149,14 @@ class DSNavigation {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  subtitle: headerSubtitle != null
-                      ? Text(
-                          headerSubtitle,
-                          style: DSTypography.appTextTheme.bodyMedium?.copyWith(
-                            color: DSColors.textSecondary,
-                          ),
-                        )
-                      : null,
+                  subtitle:
+                      headerSubtitle != null
+                          ? Text(
+                            headerSubtitle,
+                            style: DSTypography.appTextTheme.bodyMedium
+                                ?.copyWith(color: DSColors.textSecondary),
+                          )
+                          : null,
                   leading: headerLeading,
                   trailing: headerTrailing,
                   contentPadding: const EdgeInsets.symmetric(
@@ -159,11 +172,11 @@ class DSNavigation {
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    
+
                     if (item.isDivider) {
                       return const Divider();
                     }
-                    
+
                     if (item.isHeader) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -177,10 +190,11 @@ class DSNavigation {
                         ),
                       );
                     }
-                    
+
                     return ListTile(
                       title: Text(item.title),
-                      subtitle: item.subtitle != null ? Text(item.subtitle!) : null,
+                      subtitle:
+                          item.subtitle != null ? Text(item.subtitle!) : null,
                       leading: item.icon != null ? Icon(item.icon) : null,
                       trailing: item.trailing,
                       selected: item.isSelected,
@@ -201,7 +215,7 @@ class DSNavigation {
       ),
     );
   }
-  
+
   /// Tab bar for the application theme
   static Widget appTabBar({
     required BuildContext context,
@@ -217,11 +231,10 @@ class DSNavigation {
     EdgeInsets? labelPadding,
   }) {
     final effectivePadding = padding ?? EdgeInsets.zero;
-    final effectiveLabelPadding = labelPadding ?? const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 12,
-    );
-    
+    final effectiveLabelPadding =
+        labelPadding ??
+        const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
+
     return Padding(
       padding: effectivePadding,
       child: TabBar(
@@ -241,7 +254,7 @@ class DSNavigation {
       ),
     );
   }
-  
+
   /// Responsive navigation for the application theme
   static Widget appResponsiveNavigation({
     required BuildContext context,
@@ -261,7 +274,7 @@ class DSNavigation {
     final isDesktop = DSBreakpoints.isDesktop(context);
     final isTablet = DSBreakpoints.isTablet(context);
     final isMobile = DSBreakpoints.isMobile(context);
-    
+
     if (isDesktop) {
       // Desktop: Navigation Rail (extended)
       return Scaffold(
@@ -269,11 +282,16 @@ class DSNavigation {
           children: [
             appNavigationRail(
               context: context,
-              items: items.map((item) => NavigationRailItem(
-                icon: item.icon,
-                activeIcon: item.activeIcon,
-                label: item.label,
-              )).toList(),
+              items:
+                  items
+                      .map(
+                        (item) => NavigationRailItem(
+                          icon: item.icon,
+                          activeIcon: item.activeIcon,
+                          label: item.label,
+                        ),
+                      )
+                      .toList(),
               selectedIndex: selectedIndex,
               onDestinationSelected: onItemSelected,
               extended: extendedRail,
@@ -304,11 +322,16 @@ class DSNavigation {
           children: [
             appNavigationRail(
               context: context,
-              items: items.map((item) => NavigationRailItem(
-                icon: item.icon,
-                activeIcon: item.activeIcon,
-                label: item.label,
-              )).toList(),
+              items:
+                  items
+                      .map(
+                        (item) => NavigationRailItem(
+                          icon: item.icon,
+                          activeIcon: item.activeIcon,
+                          label: item.label,
+                        ),
+                      )
+                      .toList(),
               selectedIndex: selectedIndex,
               onDestinationSelected: onItemSelected,
               extended: false,
@@ -344,11 +367,16 @@ class DSNavigation {
         body: body,
         bottomNavigationBar: appBottomNavBar(
           context: context,
-          items: items.map((item) => BottomNavigationItem(
-            icon: item.icon,
-            activeIcon: item.activeIcon,
-            label: item.label,
-          )).toList(),
+          items:
+              items
+                  .map(
+                    (item) => BottomNavigationItem(
+                      icon: item.icon,
+                      activeIcon: item.activeIcon,
+                      label: item.label,
+                    ),
+                  )
+                  .toList(),
           currentIndex: selectedIndex,
           onTap: onItemSelected,
         ),
@@ -356,7 +384,7 @@ class DSNavigation {
       );
     }
   }
-  
+
   /// Mobile drawer for the landing theme
   static Widget landingMobileDrawer({
     required BuildContext context,
@@ -369,7 +397,7 @@ class DSNavigation {
     double width = 304,
   }) {
     final effectivePadding = padding ?? EdgeInsets.zero;
-    
+
     return Drawer(
       width: width,
       backgroundColor: backgroundColor ?? Colors.white,
@@ -390,9 +418,8 @@ class DSNavigation {
                       Expanded(
                         child: Text(
                           headerTitle,
-                          style: DSTypography.landingTextTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: DSTypography.landingTextTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ),
                     IconButton(
@@ -409,39 +436,47 @@ class DSNavigation {
                   padding: EdgeInsets.zero,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    
+
                     if (item.isDivider) {
                       return const Divider();
                     }
-                    
+
                     if (item.isHeader) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                         child: Text(
                           item.title,
-                          style: DSTypography.landingTextTheme.labelSmall?.copyWith(
-                            color: DSColors.textSecondary,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1.2,
-                          ),
+                          style: DSTypography.landingTextTheme.labelSmall
+                              ?.copyWith(
+                                color: DSColors.textSecondary,
+                                fontWeight: FontWeight.w500,
+                                letterSpacing: 1.2,
+                              ),
                         ),
                       );
                     }
-                    
+
                     return ListTile(
                       title: Text(
                         item.title,
-                        style: DSTypography.landingTextTheme.titleSmall?.copyWith(
-                          fontWeight: item.isSelected ? FontWeight.w600 : FontWeight.w400,
-                        ),
+                        style: DSTypography.landingTextTheme.titleSmall
+                            ?.copyWith(
+                              fontWeight:
+                                  item.isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                            ),
                       ),
-                      subtitle: item.subtitle != null ? Text(item.subtitle!) : null,
+                      subtitle:
+                          item.subtitle != null ? Text(item.subtitle!) : null,
                       leading: item.icon != null ? Icon(item.icon) : null,
                       trailing: item.trailing,
                       selected: item.isSelected,
                       onTap: item.onTap,
                       selectedColor: DSColors.primaryLanding,
-                      selectedTileColor: DSColors.primaryLanding.withOpacity(0.1),
+                      selectedTileColor: DSColors.primaryLanding.withOpacity(
+                        0.1,
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 4,
@@ -452,10 +487,7 @@ class DSNavigation {
               ),
               if (actionButton != null) ...[
                 const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: actionButton,
-                ),
+                Padding(padding: const EdgeInsets.all(16), child: actionButton),
               ],
             ],
           ),
@@ -463,7 +495,7 @@ class DSNavigation {
       ),
     );
   }
-  
+
   /// Breadcrumbs for the application theme
   static Widget appBreadcrumbs({
     required BuildContext context,
@@ -476,14 +508,14 @@ class DSNavigation {
     TextStyle? textStyle,
     EdgeInsets? padding,
   }) {
-    final effectivePadding = padding ?? const EdgeInsets.symmetric(
-      vertical: 8,
-      horizontal: 16,
-    );
-    final effectiveTextStyle = textStyle ?? DSTypography.appTextTheme.bodySmall?.copyWith(
-      color: DSColors.textSecondary,
-    );
-    
+    final effectivePadding =
+        padding ?? const EdgeInsets.symmetric(vertical: 8, horizontal: 16);
+    final effectiveTextStyle =
+        textStyle ??
+        DSTypography.appTextTheme.bodySmall?.copyWith(
+          color: DSColors.textSecondary,
+        );
+
     return Padding(
       padding: effectivePadding,
       child: Wrap(
@@ -526,7 +558,7 @@ class BottomNavigationItem {
   final String label;
   final String? tooltip;
   final Color? backgroundColor;
-  
+
   BottomNavigationItem({
     required this.icon,
     this.activeIcon,
@@ -541,7 +573,7 @@ class NavigationRailItem {
   final IconData icon;
   final IconData? activeIcon;
   final String label;
-  
+
   NavigationRailItem({
     required this.icon,
     this.activeIcon,
@@ -559,7 +591,7 @@ class DrawerItem {
   final bool isSelected;
   final bool isDivider;
   final bool isHeader;
-  
+
   DrawerItem({
     required this.title,
     this.subtitle,
@@ -570,21 +602,15 @@ class DrawerItem {
     this.isDivider = false,
     this.isHeader = false,
   });
-  
+
   /// Creates a divider item
   factory DrawerItem.divider() {
-    return DrawerItem(
-      title: '',
-      isDivider: true,
-    );
+    return DrawerItem(title: '', isDivider: true);
   }
-  
+
   /// Creates a header item
   factory DrawerItem.header(String title) {
-    return DrawerItem(
-      title: title,
-      isHeader: true,
-    );
+    return DrawerItem(title: title, isHeader: true);
   }
 }
 
@@ -593,21 +619,14 @@ class NavigationItem {
   final IconData icon;
   final IconData? activeIcon;
   final String label;
-  
-  NavigationItem({
-    required this.icon,
-    this.activeIcon,
-    required this.label,
-  });
+
+  NavigationItem({required this.icon, this.activeIcon, required this.label});
 }
 
 /// Breadcrumb item
 class BreadcrumbItem {
   final String label;
   final VoidCallback? onTap;
-  
-  BreadcrumbItem({
-    required this.label,
-    this.onTap,
-  });
+
+  BreadcrumbItem({required this.label, this.onTap});
 }

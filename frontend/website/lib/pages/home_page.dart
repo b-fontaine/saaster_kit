@@ -1,5 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../widgets/cta_section.dart';
 import '../widgets/features_section.dart';
@@ -16,21 +17,24 @@ class HomePage extends StatelessWidget {
     // Navigation items for the app bar
     final navigationItems = [
       AppBarNavigationItem(
-        label: 'Features',
+        label: 'Widgetbook',
         onTap: () {
           // Implement scroll to features section
+          launchUrlString("/widgetbook", webOnlyWindowName: "_self");
         },
       ),
       AppBarNavigationItem(
-        label: 'Pricing',
+        label: 'Grafana',
         onTap: () {
           // Implement scroll to pricing section
+          launchUrlString("/grafana", webOnlyWindowName: "_self");
         },
       ),
       AppBarNavigationItem(
-        label: 'Documentation',
+        label: 'Temporal',
         onTap: () {
           // Implement link to documentation
+          launchUrlString("/temporal", webOnlyWindowName: "_self");
         },
       ),
     ];
@@ -55,6 +59,7 @@ class HomePage extends StatelessWidget {
       text: 'Get Started',
       onPressed: () {
         // Implement call-to-action
+        launchUrlString("/app", webOnlyWindowName: "_self");
       },
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       height: 44,

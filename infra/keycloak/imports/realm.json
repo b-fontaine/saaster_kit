@@ -1,6 +1,6 @@
 {
   "id": "33e2dc79-c19d-40d7-9e62-5bf83e83ae70",
-  "realm": "mocked-responses",
+  "realm": "saaster",
   "notBefore": 0,
   "defaultSignatureAlgorithm": "RS256",
   "revokeRefreshToken": false,
@@ -47,7 +47,7 @@
   "failureFactor": 30,
   "defaultRole": {
     "id": "cb094b26-165c-481f-a91a-9ba6822405c1",
-    "name": "default-roles-mocked-responses",
+    "name": "default-roles-saaster",
     "description": "${role_default-roles}",
     "composite": true,
     "clientRole": false,
@@ -100,12 +100,12 @@
   "users": [
     {
       "id": "0fba3a3f-678b-434d-97bf-9fe3f6a718e5",
-      "username": "service-account-mocked-responses-client",
+      "username": "service-account-saaster-client",
       "emailVerified": false,
       "createdTimestamp": 1738225260433,
       "enabled": true,
       "totp": false,
-      "serviceAccountClientId": "mocked-responses-client",
+      "serviceAccountClientId": "saaster-client",
       "disableableCredentialTypes": [],
       "requiredActions": [],
       "notBefore": 0
@@ -136,13 +136,13 @@
       "clientId": "account",
       "name": "${client_account}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/mocked-responses/account/",
+      "baseUrl": "/realms/saaster/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/mocked-responses/account/*"
+        "/realms/saaster/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -183,13 +183,13 @@
       "clientId": "account-console",
       "name": "${client_account-console}",
       "rootUrl": "${authBaseUrl}",
-      "baseUrl": "/realms/mocked-responses/account/",
+      "baseUrl": "/realms/saaster/account/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/realms/mocked-responses/account/*"
+        "/realms/saaster/account/*"
       ],
       "webOrigins": [],
       "notBefore": 0,
@@ -323,7 +323,7 @@
     },
     {
       "id": "508e733c-bfc6-43e7-b117-27ea2bf19ffc",
-      "clientId": "mocked-responses-client",
+      "clientId": "saaster-client",
       "name": "Default New Client",
       "description": "",
       "rootUrl": "",
@@ -474,13 +474,13 @@
       "clientId": "security-admin-console",
       "name": "${client_security-admin-console}",
       "rootUrl": "${authAdminUrl}",
-      "baseUrl": "/admin/mocked-responses/console/",
+      "baseUrl": "/admin/saaster/console/",
       "surrogateAuthRequired": false,
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "/admin/mocked-responses/console/*"
+        "/admin/saaster/console/*"
       ],
       "webOrigins": [
         "+"

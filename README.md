@@ -324,8 +324,8 @@ available documentation:
 - [SafeLine WAF](./infra/safeline/README.md) - Guide for SafeLine Web Application Firewall configuration and usage.
 - [Temporal](./infra/temporal/README.md) - Comprehensive documentation for Temporal workflow engine, including
   configuration, workflows, and activities.
-- [Temporal Dynamic Config](./infra/temporal/dynamicconfig/README.md) - Guide for configuring Temporal's dynamic
-  configuration settings for different namespaces and task queues.
+  - [Temporal Dynamic Config](./infra/temporal/dynamicconfig/README.md) - Guide for configuring Temporal's dynamic
+    configuration settings for different namespaces and task queues.
 
 ## License
 
