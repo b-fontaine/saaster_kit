@@ -442,7 +442,7 @@ class _FormFieldVariantsShowcaseState extends State<FormFieldVariantsShowcase> {
               value: true,
               onChanged: (value) {},
               activeColor: DSColors.secondaryApp,
-              activeTrackColor: DSColors.secondaryApp.withOpacity(0.4),
+              activeTrackColor: DSColors.secondaryApp.withValues(alpha: (0.4 * 255).toDouble()),
             ),
           ],
         ),
