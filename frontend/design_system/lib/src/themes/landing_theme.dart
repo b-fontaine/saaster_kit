@@ -22,8 +22,6 @@ class LandingTheme {
         onSecondary: DSColors.textOnSecondary,
         error: DSColors.errorLanding,
         onError: Colors.white,
-        background: DSColors.backgroundLanding,
-        onBackground: DSColors.textPrimary,
         surface: DSColors.surfaceLanding,
         onSurface: DSColors.textPrimary,
       ),
@@ -112,7 +110,7 @@ class LandingTheme {
       chipTheme: ChipThemeData(
         backgroundColor: Colors.white,
         disabledColor: Colors.grey[200],
-        selectedColor: DSColors.primaryLanding.withOpacity(0.1),
+        selectedColor: DSColors.primaryLanding.withValues(alpha: (0.1 * 255).toDouble()),
         secondarySelectedColor: DSColors.primaryLanding,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         labelStyle: DSTypography.landingTextTheme.bodySmall,
@@ -186,8 +184,6 @@ class LandingTheme {
         onSecondary: DSColors.textOnSecondary,
         error: DSColors.errorLanding,
         onError: Colors.white,
-        background: const Color(0xFF121212), // Dark background
-        onBackground: Colors.white,
         surface: const Color(0xFF1E1E1E), // Dark surface
         onSurface: Colors.white,
       ),
@@ -290,7 +286,7 @@ class LandingTheme {
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFF2C2C2C),
         disabledColor: const Color(0xFF1E1E1E),
-        selectedColor: DSColors.primaryLanding.withOpacity(0.3),
+        selectedColor: DSColors.primaryLanding.withValues(alpha: (0.3 * 255).toDouble()),
         secondarySelectedColor: DSColors.primaryLanding,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         labelStyle: DSTypography.landingTextTheme.bodySmall?.copyWith(

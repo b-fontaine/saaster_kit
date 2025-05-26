@@ -119,7 +119,7 @@ class DSAppBars {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: DSTypography.appTextTheme.bodyLarge?.copyWith(
-            color: (foregroundColor ?? DSColors.textOnPrimary).withOpacity(0.7),
+            color: (foregroundColor ?? DSColors.textOnPrimary).withValues(alpha: (0.7 * 255).toDouble()),
           ),
           border: InputBorder.none,
           contentPadding: EdgeInsets.zero,
@@ -205,7 +205,7 @@ class DSAppBars {
                   Text(
                     subtitle,
                     style: DSTypography.appTextTheme.bodySmall?.copyWith(
-                      color: DSColors.textOnPrimary.withOpacity(0.8),
+                      color: DSColors.textOnPrimary.withValues(alpha: (0.8 * 255).toDouble()),
                     ),
                   ),
                 ],

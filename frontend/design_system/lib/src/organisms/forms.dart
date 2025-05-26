@@ -272,7 +272,7 @@ class DSForms {
           ),
           Expanded(
             child: GestureDetector(
-              onTap: (enabled && onChanged != null) ? () => onChanged!(!value) : null,
+              onTap: (enabled && onChanged != null) ? () => onChanged(!value) : null,
               child: Row(
                 children: [
                   Flexible(
@@ -331,7 +331,7 @@ class DSForms {
           ),
           Expanded(
             child: GestureDetector(
-              onTap: (enabled && onChanged != null) ? () => onChanged!(value) : null,
+              onTap: (enabled && onChanged != null) ? () => onChanged(value) : null,
               child: Row(
                 children: [
                   Flexible(
@@ -467,7 +467,7 @@ class DSForms {
             value: value,
             onChanged: enabled ? onChanged : null,
             activeColor: activeColor ?? DSColors.primaryApp,
-            activeTrackColor: activeTrackColor ?? DSColors.primaryApp.withOpacity(0.4),
+            activeTrackColor: activeTrackColor ?? DSColors.primaryApp.withValues(alpha: (0.4 * 255).toDouble()),
           ),
         ],
       ),

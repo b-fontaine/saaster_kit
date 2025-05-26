@@ -113,8 +113,8 @@ class DSNavigation {
       ),
       labelType: labelType,
       useIndicator: true,
-      indicatorColor: (selectedItemColor ?? DSColors.primaryApp).withOpacity(
-        0.1,
+      indicatorColor: (selectedItemColor ?? DSColors.primaryApp).withValues(
+        alpha: (0.1 * 255).toDouble(),
       ),
     );
   }
@@ -200,7 +200,7 @@ class DSNavigation {
                       selected: item.isSelected,
                       onTap: item.onTap,
                       selectedColor: DSColors.primaryApp,
-                      selectedTileColor: DSColors.primaryApp.withOpacity(0.1),
+                      selectedTileColor: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 0,
@@ -273,7 +273,6 @@ class DSNavigation {
   }) {
     final isDesktop = DSBreakpoints.isDesktop(context);
     final isTablet = DSBreakpoints.isTablet(context);
-    final isMobile = DSBreakpoints.isMobile(context);
 
     if (isDesktop) {
       // Desktop: Navigation Rail (extended)
@@ -474,8 +473,8 @@ class DSNavigation {
                       selected: item.isSelected,
                       onTap: item.onTap,
                       selectedColor: DSColors.primaryLanding,
-                      selectedTileColor: DSColors.primaryLanding.withOpacity(
-                        0.1,
+                      selectedTileColor: DSColors.primaryLanding.withValues(
+                        alpha: (0.1 * 255).toDouble(),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,

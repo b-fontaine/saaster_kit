@@ -22,8 +22,6 @@ class AppTheme {
         onSecondary: DSColors.textOnSecondary,
         error: DSColors.errorApp,
         onError: Colors.white,
-        background: DSColors.backgroundApp,
-        onBackground: DSColors.textPrimary,
         surface: DSColors.surfaceApp,
         onSurface: DSColors.textPrimary,
       ),
@@ -106,7 +104,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: Colors.white,
         disabledColor: Colors.grey[200],
-        selectedColor: DSColors.primaryApp.withOpacity(0.1),
+        selectedColor: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
         secondarySelectedColor: DSColors.primaryApp,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         labelStyle: DSTypography.appTextTheme.bodySmall,
@@ -180,8 +178,6 @@ class AppTheme {
         onSecondary: DSColors.textOnSecondary,
         error: DSColors.errorApp,
         onError: Colors.white,
-        background: const Color(0xFF121212), // Dark background
-        onBackground: Colors.white,
         surface: const Color(0xFF1E1E1E), // Dark surface
         onSurface: Colors.white,
       ),
@@ -278,7 +274,7 @@ class AppTheme {
       chipTheme: ChipThemeData(
         backgroundColor: const Color(0xFF2C2C2C),
         disabledColor: const Color(0xFF1E1E1E),
-        selectedColor: DSColors.primaryApp.withOpacity(0.3),
+        selectedColor: DSColors.primaryApp.withValues(alpha: (0.3 * 255).toDouble()),
         secondarySelectedColor: DSColors.primaryApp,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
         labelStyle: DSTypography.appTextTheme.bodySmall?.copyWith(

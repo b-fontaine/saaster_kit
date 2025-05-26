@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../atoms/colors.dart';
 import '../atoms/typography.dart';
 import '../atoms/borders.dart';
-import '../atoms/spacing.dart';
 import '../atoms/icons.dart';
 
 /// Design System Chips
@@ -83,7 +82,7 @@ class DSChips {
       ),
       padding: effectivePadding,
       backgroundColor: backgroundColor ?? Colors.white,
-      selectedColor: selectedBackgroundColor ?? DSColors.primaryApp.withOpacity(0.1),
+      selectedColor: selectedBackgroundColor ?? DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
       shape: RoundedRectangleBorder(
         borderRadius: effectiveBorderRadius,
         side: border?.top ?? BorderSide(
@@ -198,7 +197,7 @@ class DSChips {
       child: Container(
         padding: effectivePadding,
         decoration: BoxDecoration(
-          color: backgroundColor ?? DSColors.primaryLanding.withOpacity(0.1),
+          color: backgroundColor ?? DSColors.primaryLanding.withValues(alpha: (0.1 * 255).toDouble()),
           borderRadius: effectiveBorderRadius,
           border: border,
         ),

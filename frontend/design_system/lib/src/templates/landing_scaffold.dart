@@ -30,8 +30,6 @@ class DSLandingScaffold {
     bool resizeToAvoidBottomInset = true,
   }) {
     final isDesktop = DSBreakpoints.isDesktop(context);
-    final isTablet = DSBreakpoints.isTablet(context);
-    final isMobile = DSBreakpoints.isMobile(context);
 
     // Create navigation items for the app bar and drawer
     final navItems = navigationItems ?? [];
@@ -93,8 +91,6 @@ class DSLandingScaffold {
     bool reverseOnMobile = false,
   }) {
     final effectivePadding = padding ?? DSSpacing.getPagePadding(context);
-    final isDesktop = DSBreakpoints.isDesktop(context);
-    final isMobile = DSBreakpoints.isMobile(context);
 
     return Container(
       color: backgroundColor,
@@ -557,7 +553,7 @@ class DSLandingScaffold {
           Text(
             effectiveCopyrightText,
             style: DSTypography.landingTextTheme.bodySmall?.copyWith(
-              color: effectiveTextColor.withOpacity(0.7),
+              color: effectiveTextColor.withValues(alpha: (0.7 * 255).toDouble()),
             ),
           ),
         ],
@@ -604,7 +600,7 @@ class DSLandingScaffold {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: (0.1 * 255).toDouble()),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -667,7 +663,7 @@ class DSLandingScaffold {
             : Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: (0.1 * 255).toDouble()),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -820,7 +816,7 @@ class DSLandingScaffold {
                 child: Text(
                   link.label,
                   style: DSTypography.landingTextTheme.bodyMedium?.copyWith(
-                    color: textColor.withOpacity(0.8),
+                    color: textColor.withValues(alpha: (0.8 * 255).toDouble()),
                   ),
                 ),
               ),
