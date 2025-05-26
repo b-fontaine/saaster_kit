@@ -10,10 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.1.0
-  flutter_svg: ^2.0.9
-  device_info_plus: ^9.1.1
-  responsive_framework: ^1.1.1
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.1.0
+  device_info_plus: ^11.4.0
+  responsive_framework: ^1.5.1
 
 dev_dependencies:
   flutter_test:
