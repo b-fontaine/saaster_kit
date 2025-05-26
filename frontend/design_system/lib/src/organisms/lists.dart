@@ -248,7 +248,7 @@ class DSLists {
     ScrollController? controller,
     double? childAspectRatio,
   }) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     int crossAxisCount = breakpointCounts['xs'] ?? 1;
     
     if (width >= 1280 && breakpointCounts.containsKey('lg')) {
