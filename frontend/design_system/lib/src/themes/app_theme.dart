@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+
+import '../atoms/borders.dart';
 import '../atoms/colors.dart';
 import '../atoms/typography.dart';
-import '../atoms/borders.dart';
-import '../atoms/shadows.dart';
 import 'theme_extensions.dart';
 
 /// Application Theme
 class AppTheme {
   // Private constructor to prevent instantiation
   AppTheme._();
-  
+
   /// Light theme for the application
   static ThemeData get lightTheme {
     return ThemeData(
@@ -42,13 +42,11 @@ class AppTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: DSColors.surfaceApp,
         elevation: 2,
         shadowColor: DSColors.shadow,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusMD,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
         margin: const EdgeInsets.all(8),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -58,9 +56,7 @@ class AppTheme {
           elevation: 2,
           shadowColor: DSColors.shadow,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
@@ -69,9 +65,7 @@ class AppTheme {
           foregroundColor: DSColors.primaryApp,
           side: const BorderSide(color: DSColors.primaryApp),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
@@ -79,16 +73,17 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: DSColors.primaryApp,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: DSBorders.inputBorderApp,
         enabledBorder: DSBorders.inputBorderApp,
         focusedBorder: DSBorders.inputBorderAppFocused,
@@ -146,7 +141,7 @@ class AppTheme {
         elevation: 8,
         type: BottomNavigationBarType.fixed,
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: DSColors.primaryApp,
         unselectedLabelColor: DSColors.textSecondary,
         labelStyle: DSTypography.appTextTheme.labelMedium?.copyWith(
@@ -156,12 +151,10 @@ class AppTheme {
         indicatorColor: DSColors.primaryApp,
         indicatorSize: TabBarIndicatorSize.tab,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: DSColors.surfaceApp,
         elevation: 24,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusLG,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusLG),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Colors.grey[800],
@@ -169,14 +162,12 @@ class AppTheme {
           color: Colors.white,
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusMD,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
       ),
       extensions: const [AppThemeExtension.light],
     );
   }
-  
+
   /// Dark theme for the application
   static ThemeData get darkTheme {
     return ThemeData(
@@ -212,13 +203,11 @@ class AppTheme {
           fontWeight: FontWeight.w500,
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: const Color(0xFF1E1E1E),
         elevation: 2,
         shadowColor: Colors.black,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusMD,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
         margin: const EdgeInsets.all(8),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -228,9 +217,7 @@ class AppTheme {
           elevation: 2,
           shadowColor: Colors.black,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
@@ -239,9 +226,7 @@ class AppTheme {
           foregroundColor: DSColors.primaryApp,
           side: const BorderSide(color: DSColors.primaryApp),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
@@ -249,16 +234,17 @@ class AppTheme {
         style: TextButton.styleFrom(
           foregroundColor: DSColors.primaryApp,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: DSBorders.borderRadiusMD,
-          ),
+          shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.appTextTheme.labelLarge,
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: const Color(0xFF2C2C2C),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         border: OutlineInputBorder(
           borderRadius: DSBorders.borderRadiusMD,
           borderSide: const BorderSide(color: Color(0xFF424242)),
@@ -329,7 +315,7 @@ class AppTheme {
         elevation: 8,
         type: BottomNavigationBarType.fixed,
       ),
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: TabBarThemeData(
         labelColor: DSColors.primaryApp,
         unselectedLabelColor: Colors.grey[400],
         labelStyle: DSTypography.appTextTheme.labelMedium?.copyWith(
@@ -339,12 +325,10 @@ class AppTheme {
         indicatorColor: DSColors.primaryApp,
         indicatorSize: TabBarIndicatorSize.tab,
       ),
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: const Color(0xFF1E1E1E),
         elevation: 24,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusLG,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusLG),
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: Colors.grey[900],
@@ -352,9 +336,7 @@ class AppTheme {
           color: Colors.white,
         ),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: DSBorders.borderRadiusMD,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
       ),
       extensions: const [AppThemeExtension.dark],
     );

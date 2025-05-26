@@ -13,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/reflection"
 	"google.golang.org/grpc/status"
@@ -110,11 +109,11 @@ func (s *Server) validateToken(ctx context.Context, token string) (string, error
 	// In a production environment, you might want to use a more robust solution
 
 	// Create a gRPC connection to the auth service
-	conn, err := grpc.Dial(s.keycloakURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	/*conn, err := grpc.Dial(s.keycloakURL, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return "", fmt.Errorf("failed to connect to auth service: %w", err)
 	}
-	defer conn.Close()
+	defer conn.Close()*/
 
 	// TODO: Implement actual token validation with Keycloak
 	// For now, we'll just extract a user ID from the token for demonstration

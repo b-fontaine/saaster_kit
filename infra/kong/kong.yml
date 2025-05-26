@@ -267,22 +267,6 @@ services:
         config:
           add:
             headers: ["Authorization:${headers.authorization}"]
-      - name: oauth2
-        config:
-          enable_authorization_code: true
-          enable_client_credentials: true
-          enable_password_grant: false
-          global_credentials: false
-          token_expiration: 7200
-          scopes: ["read", "write"]
-          mandatory_scope: false
-          hide_credentials: false
-          enable_implicit_grant: false
-          accept_http_if_already_terminated: true
-          reuse_refresh_token: true
-          auth_header_name: "Authorization"
-          refresh_token_ttl: 1209600
-          provision_key: "your-provision-key"
     routes:
       - name: customer-list-route
         protocols: ["http", "https"]
