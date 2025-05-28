@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'animated_section.dart';
 import 'parallax_background.dart';
+import 'hover_animated_widget.dart';
+import 'continuous_animation.dart';
 
 class FeaturesSection extends StatelessWidget {
   final ScrollController? scrollController;
@@ -136,11 +138,40 @@ class FeaturesSection extends StatelessWidget {
   }
 
   Widget _buildFeatureCard(BuildContext context, FeatureItem feature) {
-    return DSCards.landingFeatureCard(
-      title: feature.title,
-      description: feature.description,
-      icon: feature.icon,
-      context: context,
+    return ScaleOnHover(
+      hoverScale: 1.03,
+      addShadowOnHover: true,
+      child: DSCards.landingCard(
+        padding: DSSpacing.paddingLG,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Animated icon
+            ContinuousAnimationWidget(
+              animationType: ContinuousAnimationType.pulse,
+              amplitude: 1.5,
+              duration: const Duration(seconds: 3),
+              child: Icon(
+                feature.icon,
+                size: 48,
+                color: DSColors.primaryLanding,
+              ),
+            ),
+            DSSpacing.verticalSpacerMD,
+            Text(
+              feature.title,
+              style: DSTypography.landingTextTheme.titleLarge!.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            DSSpacing.verticalSpacerSM,
+            Text(
+              feature.description,
+              style: DSTypography.landingTextTheme.bodyLarge,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

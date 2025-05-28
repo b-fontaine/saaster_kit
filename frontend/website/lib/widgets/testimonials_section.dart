@@ -2,6 +2,8 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'animated_section.dart';
 import 'parallax_background.dart';
+import 'hover_animated_widget.dart';
+import 'continuous_animation.dart';
 
 class TestimonialsSection extends StatelessWidget {
   final ScrollController? scrollController;
@@ -114,15 +116,31 @@ class TestimonialsSection extends StatelessWidget {
   }
 
   Widget _buildTestimonialCard(BuildContext context, Testimonial testimonial) {
-    return DSCards.landingCard(
-      padding: DSSpacing.paddingLG,
-      child: Column(
+    return ScaleOnHover(
+      hoverScale: 1.03,
+      addShadowOnHover: true,
+      child: DSCards.landingCard(
+        padding: DSSpacing.paddingLG,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: (0.08 * 255).toDouble()),
+            blurRadius: 10,
+            spreadRadius: 1,
+            offset: const Offset(0, 3),
+          )
+        ],
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            DSIcons.formatQuote,
-            size: 40,
-            color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
+          ContinuousAnimationWidget(
+            animationType: ContinuousAnimationType.breathe,
+            amplitude: 2.0,
+            duration: const Duration(seconds: 4),
+            child: Icon(
+              DSIcons.formatQuote,
+              size: 40,
+              color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
+            ),
           ),
           const SizedBox(height: 16),
           Text(

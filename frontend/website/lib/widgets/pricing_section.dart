@@ -2,6 +2,8 @@ import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'animated_section.dart';
 import 'parallax_background.dart';
+import 'hover_animated_widget.dart';
+import 'continuous_animation.dart';
 
 class PricingSection extends StatelessWidget {
   final ScrollController? scrollController;
@@ -132,17 +134,33 @@ class PricingSection extends StatelessWidget {
   }
 
   Widget _buildPricingCard(BuildContext context, PricingPlan plan) {
-    return DSCards.landingPricingCard(
-      title: plan.title,
-      price: plan.price,
-      period: plan.period,
-      features: plan.features,
-      onButtonPressed: () {
-        // Implement pricing action
-      },
-      buttonText: plan.title == 'Enterprise' ? 'Contact Us' : 'Get Started',
-      isPopular: plan.isPopular,
-      context: context,
+    return ScaleOnHover(
+      hoverScale: 1.02,
+      addShadowOnHover: true,
+      hoverElevation: 8.0,
+      child: DSCards.landingPricingCard(
+        title: plan.title,
+        price: plan.price,
+        period: plan.period,
+        features: plan.features,
+        onButtonPressed: () {
+          // Implement pricing action
+        },
+        buttonText: plan.title == 'Enterprise' ? 'Contact Us' : 'Get Started',
+        isPopular: plan.isPopular,
+        context: context,
+        // Add more pronounced shadow for popular plan
+        boxShadow: plan.isPopular 
+            ? [
+                BoxShadow(
+                  color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
+                  blurRadius: 15,
+                  spreadRadius: 1,
+                  offset: const Offset(0, 4),
+                )
+              ]
+            : null,
+      ),
     );
   }
 }
