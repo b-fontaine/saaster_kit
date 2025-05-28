@@ -63,7 +63,7 @@ class AppCardsShowcase extends StatelessWidget {
           _buildCardSection(
             'Card with Custom Background',
             DSCards.appCard(
-              backgroundColor: DSColors.primaryApp.withOpacity(0.1),
+              backgroundColor: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
               child: const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text('Card with Custom Background'),
@@ -145,7 +145,7 @@ class LandingCardsShowcase extends StatelessWidget {
           _buildCardSection(
             'Card with Custom Background',
             DSCards.landingCard(
-              backgroundColor: DSColors.primaryLanding.withOpacity(0.1),
+              backgroundColor: DSColors.primaryLanding.withValues(alpha: (0.1 * 255).toDouble()),
               child: const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text('Card with Custom Background'),

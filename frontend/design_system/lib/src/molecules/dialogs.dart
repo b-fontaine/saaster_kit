@@ -301,7 +301,7 @@ class DSDialogs {
       builder: (BuildContext context) {
         return Container(
           constraints: BoxConstraints(
-            maxHeight: maxHeight ?? MediaQuery.of(context).size.height * 0.85,
+            maxHeight: maxHeight ?? MediaQuery.sizeOf(context).height * 0.85,
           ),
           decoration: BoxDecoration(
             color: backgroundColor ?? DSColors.surfaceApp,

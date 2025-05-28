@@ -53,7 +53,7 @@ class BorderRadiusShowcase extends StatelessWidget {
             width: 100,
             height: 100,
             decoration: BoxDecoration(
-              color: DSColors.primaryApp.withOpacity(0.2),
+              color: DSColors.primaryApp.withValues(alpha: (0.2 * 255).toDouble()),
               border: Border.all(
                 color: DSColors.primaryApp,
                 width: 2,

@@ -52,7 +52,7 @@ class BasicListItemsShowcase extends StatelessWidget {
               leading: const Icon(DSIcons.star),
               trailing: const Icon(DSIcons.arrowForward),
               onTap: () {},
-              backgroundColor: DSColors.secondaryApp.withOpacity(0.1),
+              backgroundColor: DSColors.secondaryApp.withValues(alpha: (0.1 * 255).toDouble()),
               context: context,
             ),
             const SizedBox(height: 16),
@@ -676,7 +676,7 @@ class ExpandableListsShowcase extends StatelessWidget {
               title: 'Custom Background',
               subtitle: 'With custom background color',
               leading: const Icon(DSIcons.dashboard),
-              backgroundColor: DSColors.secondaryApp.withOpacity(0.1),
+              backgroundColor: DSColors.secondaryApp.withValues(alpha: (0.1 * 255).toDouble()),
               content: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(

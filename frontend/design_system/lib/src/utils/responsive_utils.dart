@@ -33,7 +33,7 @@ class ResponsiveUtils {
     T? lg,
     T? xl,
   }) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     if (screenWidth >= DSBreakpoints.xl && xl != null) return xl;
     if (screenWidth >= DSBreakpoints.lg && lg != null) return lg;
@@ -106,7 +106,7 @@ class ResponsiveUtils {
     required double percentOfScreen,
     double? maxWidth,
   }) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final calculatedWidth = screenWidth * percentOfScreen;
 
     if (maxWidth != null && calculatedWidth > maxWidth) {
@@ -122,7 +122,7 @@ class ResponsiveUtils {
     required double percentOfScreen,
     double? maxHeight,
   }) {
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = MediaQuery.sizeOf(context).height;
     final calculatedHeight = screenHeight * percentOfScreen;
 
     if (maxHeight != null && calculatedHeight > maxHeight) {

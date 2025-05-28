@@ -231,7 +231,10 @@ class DesignSystemWidgetbook extends StatelessWidget {
           ],
         ),
         // Text scale addon for accessibility testing
-        TextScaleAddon(scales: [1.0, 1.2, 1.5, 2.0]),
+        TextScaleAddon(
+          min: 1.0,
+          max: 2.0,
+        ),
         // Localization addon
         LocalizationAddon(
           locales: const [Locale('en', 'US'), Locale('fr', 'FR')],

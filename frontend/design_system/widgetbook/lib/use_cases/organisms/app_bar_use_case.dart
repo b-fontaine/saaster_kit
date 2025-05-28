@@ -199,8 +199,8 @@ class TransparentAppBarShowcase extends StatelessWidget {
         ),
         Container(
           height: 56,
-          color: Colors.grey.withOpacity(
-            0.1,
+          color: Colors.grey.withValues(
+            alpha: (0.1 * 255).toDouble(),
           ), // Background to show transparency
           child: appBar,
         ),
@@ -485,7 +485,7 @@ class LandingAppBarShowcase extends StatelessWidget {
             DSAppBars.landingAppBar(
               context: context,
               title: 'With Background',
-              backgroundColor: DSColors.primaryLanding.withOpacity(0.1),
+              backgroundColor: DSColors.primaryLanding.withValues(alpha: (0.1 * 255).toDouble()),
             ),
           ),
 
@@ -514,8 +514,8 @@ class LandingAppBarShowcase extends StatelessWidget {
         ),
         Container(
           height: 56,
-          color: Colors.grey.withOpacity(
-            0.1,
+          color: Colors.grey.withValues(
+            alpha: (0.1 * 255).toDouble(),
           ), // Background to show transparency
           child: appBar,
         ),
@@ -656,8 +656,8 @@ class LandingNavAppBarShowcase extends StatelessWidget {
         ),
         Container(
           height: 80,
-          color: Colors.grey.withOpacity(
-            0.1,
+          color: Colors.grey.withValues(
+            alpha: (0.1 * 255).toDouble(),
           ), // Background to show transparency
           child: appBar,
         ),

@@ -80,7 +80,7 @@ class _BottomNavBarShowcaseState extends State<BottomNavBarShowcase> {
                 },
                 backgroundColor: DSColors.primaryApp,
                 selectedItemColor: Colors.white,
-                unselectedItemColor: Colors.white.withOpacity(0.6),
+                unselectedItemColor: Colors.white.withValues(alpha: (0.6 * 255).toDouble()),
               ),
             ),
             const SizedBox(height: 32),
@@ -338,7 +338,7 @@ class DrawerShowcase extends StatefulWidget {
 }
 
 class _DrawerShowcaseState extends State<DrawerShowcase> {
-  int _selectedIndex = 0;
+  // No need for selectedIndex as it's handled by the drawer itself
   bool _showAppDrawer = true;
 
   final List<DrawerItem> _appDrawerItems = [

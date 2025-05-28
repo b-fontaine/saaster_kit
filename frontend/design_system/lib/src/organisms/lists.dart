@@ -30,7 +30,7 @@ class DSLists {
     final effectiveBorderRadius = borderRadius ?? BorderRadius.zero;
     
     return Material(
-      color: backgroundColor ?? (selected ? DSColors.primaryApp.withOpacity(0.1) : Colors.transparent),
+      color: backgroundColor ?? (selected ? DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()) : Colors.transparent),
       borderRadius: effectiveBorderRadius,
       child: InkWell(
         onTap: onTap,
@@ -196,7 +196,7 @@ class DSLists {
                 if (showDividers && section.items.last != item)
                   const Divider(indent: 16, endIndent: 16),
               ],
-            )).toList(),
+            )),
             if (index < sections.length - 1)
               DSSpacing.verticalSpacerMD,
           ],
@@ -248,7 +248,7 @@ class DSLists {
     ScrollController? controller,
     double? childAspectRatio,
   }) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     int crossAxisCount = breakpointCounts['xs'] ?? 1;
     
     if (width >= 1280 && breakpointCounts.containsKey('lg')) {

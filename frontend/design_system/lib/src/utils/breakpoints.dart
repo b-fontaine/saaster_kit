@@ -19,7 +19,7 @@ class DSBreakpoints {
 
   /// Returns the current breakpoint based on screen width
   static String getBreakpoint(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     
     if (width < sm) return 'xs';
     if (width < md) return 'sm';
@@ -30,17 +30,17 @@ class DSBreakpoints {
 
   /// Returns true if the current screen width is less than or equal to the small breakpoint
   static bool isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < md;
+    return MediaQuery.sizeOf(context).width < md;
   }
 
   /// Returns true if the current screen width is between medium and large breakpoints
   static bool isTablet(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     return width >= md && width < lg;
   }
 
   /// Returns true if the current screen width is greater than or equal to the large breakpoint
   static bool isDesktop(BuildContext context) {
-    return MediaQuery.of(context).size.width >= lg;
+    return MediaQuery.sizeOf(context).width >= lg;
   }
 }

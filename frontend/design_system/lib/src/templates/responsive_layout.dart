@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+
 import '../utils/breakpoints.dart';
 
 /// Design System Responsive Layout
@@ -14,7 +14,7 @@ class DSResponsiveLayout {
     Widget? tablet,
     Widget? desktop,
   }) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     if (screenWidth >= DSBreakpoints.lg && desktop != null) {
       return desktop;
@@ -62,7 +62,7 @@ class DSResponsiveLayout {
     EdgeInsets? padding,
   }) {
     final effectivePadding = padding ?? const EdgeInsets.all(16);
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     int columns;
     if (screenWidth >= DSBreakpoints.lg) {
@@ -125,7 +125,7 @@ class DSResponsiveLayout {
     MainAxisSize mainAxisSize = MainAxisSize.max,
     double spacing = 16,
   }) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final isRow = screenWidth >= breakpoint;
 
     if (isRow) {
@@ -167,7 +167,7 @@ class DSResponsiveLayout {
     EdgeInsets? padding,
   }) {
     final effectivePadding = padding ?? EdgeInsets.zero;
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
     final isRow = screenWidth >= breakpoint;
 
     return Padding(
@@ -213,7 +213,7 @@ class DSResponsiveLayout {
     EdgeInsets? padding,
   }) {
     final effectivePadding = padding ?? EdgeInsets.zero;
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return Padding(
       padding: effectivePadding,

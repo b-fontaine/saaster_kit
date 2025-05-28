@@ -56,7 +56,7 @@ class SpacingValuesShowcase extends StatelessWidget {
                   width: double.infinity,
                   padding: DSSpacing.getPagePadding(context),
                   decoration: BoxDecoration(
-                    color: DSColors.primaryApp.withOpacity(0.1),
+                    color: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
                     border: Border.all(
                       color: DSColors.primaryApp,
                       width: 2,
@@ -77,7 +77,7 @@ class SpacingValuesShowcase extends StatelessWidget {
                   width: double.infinity,
                   padding: DSSpacing.getContentPadding(context),
                   decoration: BoxDecoration(
-                    color: DSColors.secondaryApp.withOpacity(0.1),
+                    color: DSColors.secondaryApp.withValues(alpha: (0.1 * 255).toDouble()),
                     border: Border.all(
                       color: DSColors.secondaryApp,
                       width: 2,
@@ -98,7 +98,7 @@ class SpacingValuesShowcase extends StatelessWidget {
                   width: double.infinity,
                   padding: DSSpacing.getSectionPadding(context),
                   decoration: BoxDecoration(
-                    color: DSColors.accentApp.withOpacity(0.1),
+                    color: DSColors.accentApp.withValues(alpha: (0.1 * 255).toDouble()),
                     border: Border.all(
                       color: DSColors.accentApp,
                       width: 2,
@@ -349,7 +349,7 @@ class SpacingWidgetsShowcase extends StatelessWidget {
             child: Container(
               padding: padding,
               decoration: BoxDecoration(
-                color: DSColors.primaryApp.withOpacity(0.1),
+                color: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
                 border: Border.all(
                   color: DSColors.primaryApp,
                   width: 2,
