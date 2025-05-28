@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'animated_section.dart';
+import 'parallax_background.dart';
 
 class FeaturesSection extends StatelessWidget {
-  const FeaturesSection({super.key});
+  final ScrollController? scrollController;
+  
+  const FeaturesSection({
+    super.key,
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,10 +52,27 @@ class FeaturesSection extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
       delay: const Duration(milliseconds: 100),
-      child: Container(
-        padding: DSSpacing.getPagePadding(context),
-        color: Colors.white,
-        child: Column(
+      child: Stack(
+        children: [
+          // Parallax background with tech-themed SVG patterns
+          Positioned.fill(
+            child: ParallaxBackground(
+              svgAssets: const [
+                'assets/images/svg/tech_elements.svg',
+                'assets/images/svg/dots_grid.svg',
+              ],
+              scrollController: scrollController ?? PrimaryScrollController.of(context),
+              parallaxSpeeds: const [-0.03, -0.01],
+              opacityLevels: const [0.03, 0.02],
+              colorFilters: const [Colors.white, Colors.white],
+            ),
+          ),
+          
+          // Content container
+          Container(
+            padding: DSSpacing.getPagePadding(context),
+            color: Colors.white.withOpacity(0.85),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 40),

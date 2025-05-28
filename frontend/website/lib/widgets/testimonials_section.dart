@@ -1,9 +1,15 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'animated_section.dart';
+import 'parallax_background.dart';
 
 class TestimonialsSection extends StatelessWidget {
-  const TestimonialsSection({super.key});
+  final ScrollController? scrollController;
+  
+  const TestimonialsSection({
+    super.key,
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +43,27 @@ class TestimonialsSection extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
       delay: const Duration(milliseconds: 100),
-      child: Container(
-        padding: DSSpacing.getPagePadding(context),
-        color: Colors.white,
-        child: Column(
+      child: Stack(
+        children: [
+          // Parallax background with wave patterns
+          Positioned.fill(
+            child: ParallaxBackground(
+              svgAssets: const [
+                'assets/images/svg/wave_patterns.svg',
+                'assets/images/svg/dots_grid.svg',
+              ],
+              scrollController: scrollController ?? PrimaryScrollController.of(context),
+              parallaxSpeeds: const [-0.04, -0.02],
+              opacityLevels: const [0.03, 0.02],
+              colorFilters: const [Colors.white, Colors.white],
+            ),
+          ),
+          
+          // Content container
+          Container(
+            padding: DSSpacing.getPagePadding(context),
+            color: Colors.white.withOpacity(0.9),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 60),

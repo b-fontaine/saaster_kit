@@ -1,9 +1,15 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 import 'animated_section.dart';
+import 'parallax_background.dart';
 
 class PricingSection extends StatelessWidget {
-  const PricingSection({super.key});
+  final ScrollController? scrollController;
+  
+  const PricingSection({
+    super.key,
+    this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +49,27 @@ class PricingSection extends StatelessWidget {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeOutCubic,
       delay: const Duration(milliseconds: 100),
-      child: Container(
-        padding: DSSpacing.getPagePadding(context),
-        color: DSColors.backgroundLanding.withValues(alpha: (0.5 * 255).toDouble()),
-        child: Column(
+      child: Stack(
+        children: [
+          // Parallax background with geometric patterns
+          Positioned.fill(
+            child: ParallaxBackground(
+              svgAssets: const [
+                'assets/images/svg/geometric_shapes.svg',
+                'assets/images/svg/wave_patterns.svg',
+              ],
+              scrollController: scrollController ?? PrimaryScrollController.of(context),
+              parallaxSpeeds: const [-0.02, -0.04],
+              opacityLevels: const [0.04, 0.03],
+              colorFilters: const [Colors.white, Colors.white],
+            ),
+          ),
+          
+          // Content container
+          Container(
+            padding: DSSpacing.getPagePadding(context),
+            color: DSColors.backgroundLanding.withValues(alpha: (0.7 * 255).toDouble()),
+            child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 60),
