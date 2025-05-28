@@ -1,0 +1,26 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Abstract geometric shapes for parallax background -->
+  
+  <!-- Circles -->
+  <circle cx="100" cy="100" r="50" fill="#6200EE" fill-opacity="0.05" />
+  <circle cx="300" cy="200" r="30" fill="#03DAC6" fill-opacity="0.05" />
+  <circle cx="500" cy="150" r="70" fill="#6200EE" fill-opacity="0.03" />
+  <circle cx="700" cy="300" r="40" fill="#03DAC6" fill-opacity="0.04" />
+  <circle cx="200" cy="400" r="60" fill="#6200EE" fill-opacity="0.02" />
+  <circle cx="600" cy="500" r="80" fill="#03DAC6" fill-opacity="0.03" />
+  
+  <!-- Triangles -->
+  <polygon points="150,50 100,150 200,150" fill="#6200EE" fill-opacity="0.04" />
+  <polygon points="450,250 400,350 500,350" fill="#03DAC6" fill-opacity="0.03" />
+  <polygon points="650,450 600,550 700,550" fill="#6200EE" fill-opacity="0.02" />
+  
+  <!-- Squares -->
+  <rect x="250" y="50" width="80" height="80" fill="#03DAC6" fill-opacity="0.03" />
+  <rect x="550" y="250" width="60" height="60" fill="#6200EE" fill-opacity="0.02" />
+  <rect x="350" y="450" width="100" height="100" fill="#03DAC6" fill-opacity="0.04" />
+  
+  <!-- Rotated squares -->
+  <rect x="150" y="250" width="50" height="50" transform="rotate(45 175 275)" fill="#6200EE" fill-opacity="0.03" />
+  <rect x="450" y="150" width="70" height="70" transform="rotate(30 485 185)" fill="#03DAC6" fill-opacity="0.02" />
+  <rect x="650" y="350" width="40" height="40" transform="rotate(15 670 370)" fill="#6200EE" fill-opacity="0.04" />
+</svg>

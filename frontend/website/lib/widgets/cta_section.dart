@@ -60,11 +60,41 @@ class CTASection extends StatelessWidget {
                     },
                   ),
                   const SizedBox(width: 16),
-                  DSButtons.secondaryLandingButton(
-                    text: 'View Documentation',
-                    onPressed: () {
-                      // Implement secondary CTA
-                    },
+                  // Custom button with white background for better contrast on gradient
+                  Container(
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: (0.1 * 255).toDouble()),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Implement secondary CTA
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: DSColors.primaryLanding,
+                        elevation: 0,
+                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'View Documentation',
+                        style: DSTypography.landingTextTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: DSColors.primaryLanding,
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),

@@ -41,6 +41,9 @@ class _AnimatedSectionState extends State<AnimatedSection> with SingleTickerProv
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late Animation<double> _rotateAnimation;
+  late Animation<double> _bounceAnimation;
+  late Animation<double> _shimmerAnimation;
   bool _isVisible = false;
 
   @override
@@ -63,6 +66,30 @@ class _AnimatedSectionState extends State<AnimatedSection> with SingleTickerProv
     _slideAnimation = Tween<Offset>(
       begin: _getBeginOffset(),
       end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: widget.curve,
+    ));
+    
+    _rotateAnimation = Tween<double>(
+      begin: -0.1,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: widget.curve,
+    ));
+    
+    _bounceAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.elasticOut,
+    ));
+    
+    _shimmerAnimation = Tween<double>(
+      begin: -1.0,
+      end: 2.0,
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: widget.curve,
@@ -156,6 +183,77 @@ class _AnimatedSectionState extends State<AnimatedSection> with SingleTickerProv
             child: widget.child,
           ),
         );
+      case AnimationType.bounce:
+        return AnimatedBuilder(
+          animation: _bounceAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: 0.9 + (_bounceAnimation.value * 0.1),
+              child: child,
+            );
+          },
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: widget.child,
+          ),
+        );
+      case AnimationType.elastic:
+        return AnimatedBuilder(
+          animation: _bounceAnimation,
+          builder: (context, child) {
+            return Transform.translate(
+              offset: Offset(0, 20 * (1 - _bounceAnimation.value)),
+              child: child,
+            );
+          },
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: widget.child,
+          ),
+        );
+      case AnimationType.rotate:
+        return AnimatedBuilder(
+          animation: _rotateAnimation,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: _rotateAnimation.value,
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: child,
+              ),
+            );
+          },
+          child: widget.child,
+        );
+      case AnimationType.shimmer:
+        return AnimatedBuilder(
+          animation: _shimmerAnimation,
+          builder: (context, child) {
+            return ShaderMask(
+              shaderCallback: (bounds) {
+                return LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.white.withValues(alpha: 50),
+                    Colors.white,
+                    Colors.white.withValues(alpha: 50),
+                  ],
+                  stops: [
+                    0.0,
+                    _shimmerAnimation.value,
+                    1.0,
+                  ],
+                ).createShader(bounds);
+              },
+              child: child,
+            );
+          },
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: widget.child,
+          ),
+        );
     }
   }
 }
@@ -176,6 +274,18 @@ enum AnimationType {
   
   /// Combined fade and scale animation.
   fadeScale,
+  
+  /// Bounce animation.
+  bounce,
+  
+  /// Elastic animation.
+  elastic,
+  
+  /// Rotate animation.
+  rotate,
+  
+  /// Shimmer animation.
+  shimmer,
 }
 
 /// The direction of the slide animation.

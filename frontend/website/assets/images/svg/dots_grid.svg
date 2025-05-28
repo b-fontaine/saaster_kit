@@ -1,0 +1,145 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dot patterns for subtle backgrounds -->
+  
+  <!-- Regular grid of dots -->
+  <g fill="#6200EE" fill-opacity="0.05">
+    <!-- First row -->
+    <circle cx="50" cy="50" r="3" />
+    <circle cx="100" cy="50" r="3" />
+    <circle cx="150" cy="50" r="3" />
+    <circle cx="200" cy="50" r="3" />
+    <circle cx="250" cy="50" r="3" />
+    <circle cx="300" cy="50" r="3" />
+    <circle cx="350" cy="50" r="3" />
+    <circle cx="400" cy="50" r="3" />
+    <circle cx="450" cy="50" r="3" />
+    <circle cx="500" cy="50" r="3" />
+    <circle cx="550" cy="50" r="3" />
+    <circle cx="600" cy="50" r="3" />
+    <circle cx="650" cy="50" r="3" />
+    <circle cx="700" cy="50" r="3" />
+    <circle cx="750" cy="50" r="3" />
+    
+    <!-- Additional rows -->
+    <circle cx="50" cy="100" r="3" />
+    <circle cx="150" cy="100" r="3" />
+    <circle cx="250" cy="100" r="3" />
+    <circle cx="350" cy="100" r="3" />
+    <circle cx="450" cy="100" r="3" />
+    <circle cx="550" cy="100" r="3" />
+    <circle cx="650" cy="100" r="3" />
+    <circle cx="750" cy="100" r="3" />
+    
+    <circle cx="50" cy="150" r="3" />
+    <circle cx="100" cy="150" r="3" />
+    <circle cx="150" cy="150" r="3" />
+    <circle cx="200" cy="150" r="3" />
+    <circle cx="250" cy="150" r="3" />
+    <circle cx="300" cy="150" r="3" />
+    <circle cx="350" cy="150" r="3" />
+    <circle cx="400" cy="150" r="3" />
+    <circle cx="450" cy="150" r="3" />
+    <circle cx="500" cy="150" r="3" />
+    <circle cx="550" cy="150" r="3" />
+    <circle cx="600" cy="150" r="3" />
+    <circle cx="650" cy="150" r="3" />
+    <circle cx="700" cy="150" r="3" />
+    <circle cx="750" cy="150" r="3" />
+    
+    <circle cx="50" cy="200" r="3" />
+    <circle cx="150" cy="200" r="3" />
+    <circle cx="250" cy="200" r="3" />
+    <circle cx="350" cy="200" r="3" />
+    <circle cx="450" cy="200" r="3" />
+    <circle cx="550" cy="200" r="3" />
+    <circle cx="650" cy="200" r="3" />
+    <circle cx="750" cy="200" r="3" />
+  </g>
+  
+  <!-- Alternating grid with different sizes -->
+  <g fill="#03DAC6" fill-opacity="0.05">
+    <circle cx="75" cy="250" r="2" />
+    <circle cx="125" cy="250" r="4" />
+    <circle cx="175" cy="250" r="2" />
+    <circle cx="225" cy="250" r="4" />
+    <circle cx="275" cy="250" r="2" />
+    <circle cx="325" cy="250" r="4" />
+    <circle cx="375" cy="250" r="2" />
+    <circle cx="425" cy="250" r="4" />
+    <circle cx="475" cy="250" r="2" />
+    <circle cx="525" cy="250" r="4" />
+    <circle cx="575" cy="250" r="2" />
+    <circle cx="625" cy="250" r="4" />
+    <circle cx="675" cy="250" r="2" />
+    <circle cx="725" cy="250" r="4" />
+    
+    <circle cx="75" cy="300" r="4" />
+    <circle cx="125" cy="300" r="2" />
+    <circle cx="175" cy="300" r="4" />
+    <circle cx="225" cy="300" r="2" />
+    <circle cx="275" cy="300" r="4" />
+    <circle cx="325" cy="300" r="2" />
+    <circle cx="375" cy="300" r="4" />
+    <circle cx="425" cy="300" r="2" />
+    <circle cx="475" cy="300" r="4" />
+    <circle cx="525" cy="300" r="2" />
+    <circle cx="575" cy="300" r="4" />
+    <circle cx="625" cy="300" r="2" />
+    <circle cx="675" cy="300" r="4" />
+    <circle cx="725" cy="300" r="2" />
+  </g>
+  
+  <!-- Scattered dots with varying sizes -->
+  <g fill="#6200EE" fill-opacity="0.03">
+    <circle cx="50" cy="350" r="5" />
+    <circle cx="120" cy="380" r="3" />
+    <circle cx="200" cy="360" r="4" />
+    <circle cx="280" cy="390" r="2" />
+    <circle cx="350" cy="370" r="6" />
+    <circle cx="420" cy="350" r="3" />
+    <circle cx="500" cy="380" r="5" />
+    <circle cx="580" cy="360" r="2" />
+    <circle cx="650" cy="390" r="4" />
+    <circle cx="720" cy="370" r="3" />
+  </g>
+  
+  <!-- Gradient-sized dots -->
+  <g fill="#03DAC6" fill-opacity="0.04">
+    <circle cx="50" cy="450" r="2" />
+    <circle cx="100" cy="450" r="2.5" />
+    <circle cx="150" cy="450" r="3" />
+    <circle cx="200" cy="450" r="3.5" />
+    <circle cx="250" cy="450" r="4" />
+    <circle cx="300" cy="450" r="4.5" />
+    <circle cx="350" cy="450" r="5" />
+    <circle cx="400" cy="450" r="5.5" />
+    <circle cx="450" cy="450" r="6" />
+    <circle cx="500" cy="450" r="5.5" />
+    <circle cx="550" cy="450" r="5" />
+    <circle cx="600" cy="450" r="4.5" />
+    <circle cx="650" cy="450" r="4" />
+    <circle cx="700" cy="450" r="3.5" />
+    <circle cx="750" cy="450" r="3" />
+  </g>
+  
+  <!-- Diagonal pattern -->
+  <g fill="#6200EE" fill-opacity="0.03">
+    <circle cx="50" cy="500" r="3" />
+    <circle cx="100" cy="520" r="3" />
+    <circle cx="150" cy="540" r="3" />
+    <circle cx="200" cy="560" r="3" />
+    <circle cx="250" cy="580" r="3" />
+    
+    <circle cx="300" cy="500" r="3" />
+    <circle cx="350" cy="520" r="3" />
+    <circle cx="400" cy="540" r="3" />
+    <circle cx="450" cy="560" r="3" />
+    <circle cx="500" cy="580" r="3" />
+    
+    <circle cx="550" cy="500" r="3" />
+    <circle cx="600" cy="520" r="3" />
+    <circle cx="650" cy="540" r="3" />
+    <circle cx="700" cy="560" r="3" />
+    <circle cx="750" cy="580" r="3" />
+  </g>
+</svg>

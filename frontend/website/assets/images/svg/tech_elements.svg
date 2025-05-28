@@ -1,0 +1,44 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tech-themed elements for parallax background -->
+  
+  <!-- Code brackets -->
+  <path d="M100,100 L150,150 L100,200" stroke="#6200EE" stroke-width="3" fill="none" stroke-opacity="0.05" />
+  <path d="M200,100 L150,150 L200,200" stroke="#6200EE" stroke-width="3" fill="none" stroke-opacity="0.05" />
+  <path d="M500,300 L550,350 L500,400" stroke="#03DAC6" stroke-width="3" fill="none" stroke-opacity="0.05" />
+  <path d="M600,300 L550,350 L600,400" stroke="#03DAC6" stroke-width="3" fill="none" stroke-opacity="0.05" />
+  
+  <!-- Nodes and connections -->
+  <circle cx="300" cy="150" r="10" fill="#6200EE" fill-opacity="0.1" />
+  <circle cx="400" cy="250" r="10" fill="#6200EE" fill-opacity="0.1" />
+  <circle cx="500" cy="150" r="10" fill="#6200EE" fill-opacity="0.1" />
+  <line x1="300" y1="150" x2="400" y2="250" stroke="#6200EE" stroke-width="2" stroke-opacity="0.05" />
+  <line x1="400" y1="250" x2="500" y2="150" stroke="#6200EE" stroke-width="2" stroke-opacity="0.05" />
+  
+  <circle cx="200" cy="350" r="8" fill="#03DAC6" fill-opacity="0.1" />
+  <circle cx="300" cy="450" r="8" fill="#03DAC6" fill-opacity="0.1" />
+  <circle cx="400" cy="350" r="8" fill="#03DAC6" fill-opacity="0.1" />
+  <circle cx="500" cy="450" r="8" fill="#03DAC6" fill-opacity="0.1" />
+  <line x1="200" y1="350" x2="300" y2="450" stroke="#03DAC6" stroke-width="2" stroke-opacity="0.05" />
+  <line x1="300" y1="450" x2="400" y2="350" stroke="#03DAC6" stroke-width="2" stroke-opacity="0.05" />
+  <line x1="400" y1="350" x2="500" y2="450" stroke="#03DAC6" stroke-width="2" stroke-opacity="0.05" />
+  
+  <!-- Circuit-like patterns -->
+  <path d="M600,100 L650,100 L650,150 L700,150" stroke="#6200EE" stroke-width="2" fill="none" stroke-opacity="0.05" />
+  <path d="M600,200 L620,200 L620,250 L700,250" stroke="#6200EE" stroke-width="2" fill="none" stroke-opacity="0.05" />
+  <circle cx="650" cy="100" r="5" fill="#6200EE" fill-opacity="0.1" />
+  <circle cx="620" cy="200" r="5" fill="#6200EE" fill-opacity="0.1" />
+  
+  <path d="M100,400 L150,400 L150,450 L200,450" stroke="#03DAC6" stroke-width="2" fill="none" stroke-opacity="0.05" />
+  <path d="M100,500 L120,500 L120,550 L200,550" stroke="#03DAC6" stroke-width="2" fill="none" stroke-opacity="0.05" />
+  <circle cx="150" cy="400" r="5" fill="#03DAC6" fill-opacity="0.1" />
+  <circle cx="120" cy="500" r="5" fill="#03DAC6" fill-opacity="0.1" />
+  
+  <!-- Binary code representation -->
+  <text x="650" y="500" font-family="monospace" font-size="12" fill="#6200EE" fill-opacity="0.05">10110</text>
+  <text x="650" y="520" font-family="monospace" font-size="12" fill="#6200EE" fill-opacity="0.05">01001</text>
+  <text x="650" y="540" font-family="monospace" font-size="12" fill="#6200EE" fill-opacity="0.05">11010</text>
+  
+  <text x="100" y="300" font-family="monospace" font-size="12" fill="#03DAC6" fill-opacity="0.05">01101</text>
+  <text x="100" y="320" font-family="monospace" font-size="12" fill="#03DAC6" fill-opacity="0.05">10010</text>
+  <text x="100" y="340" font-family="monospace" font-size="12" fill="#03DAC6" fill-opacity="0.05">01100</text>
+</svg>
