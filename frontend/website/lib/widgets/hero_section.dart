@@ -1,5 +1,6 @@
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'continuous_animation.dart';
 import 'hover_animated_widget.dart';
@@ -94,7 +95,7 @@ class _HeroSectionState extends State<HeroSection> {
                 child: SizedBox(
                   width: 200,
                   height: 200,
-                  child: Image.asset('assets/images/svg/tech_elements.svg'),
+                  child: SvgPicture.asset('assets/images/svg/tech_elements.svg'),
                 ),
               ),
             ),

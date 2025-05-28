@@ -108,7 +108,8 @@ class FooterSection extends StatelessWidget {
           Text(
             '© ${DateTime.now().year} SaaSter Kit. All rights reserved.',
             style: DSTypography.landingTextTheme.bodySmall?.copyWith(
-              color: Colors.white.withValues(alpha: (0.5 * 255).toDouble()),
+              color: Colors.white.withValues(alpha: (0.8 * 255).toDouble()),
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 24),
