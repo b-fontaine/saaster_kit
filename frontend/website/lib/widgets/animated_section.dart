@@ -235,9 +235,9 @@ class _AnimatedSectionState extends State<AnimatedSection> with SingleTickerProv
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    Colors.white.withValues(alpha: 50),
+                    Colors.white.withOpacity(0.2),
                     Colors.white,
-                    Colors.white.withValues(alpha: 50),
+                    Colors.white.withOpacity(0.2),
                   ],
                   stops: [
                     0.0,
@@ -474,6 +474,17 @@ class _ScrollAnimatedSectionState extends State<ScrollAnimatedSection> with Sing
             scale: _fadeAnimation,
             child: widget.child,
           ),
+        );
+        break;
+      case AnimationType.bounce:
+      case AnimationType.elastic:
+      case AnimationType.rotate:
+      case AnimationType.shimmer:
+        // For these more complex animations, we'll use a simpler fallback
+        // in the ScrollAnimatedSection for now
+        animatedChild = FadeTransition(
+          opacity: _fadeAnimation,
+          child: widget.child,
         );
         break;
     }

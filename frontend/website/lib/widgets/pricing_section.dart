@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'animated_section.dart';
 import 'parallax_background.dart';
 import 'hover_animated_widget.dart';
-import 'continuous_animation.dart';
 
 class PricingSection extends StatelessWidget {
   final ScrollController? scrollController;
@@ -70,65 +69,67 @@ class PricingSection extends StatelessWidget {
           // Content container
           Container(
             padding: DSSpacing.getPagePadding(context),
-            color: DSColors.backgroundLanding.withValues(alpha: (0.7 * 255).toDouble()),
+            color: DSColors.backgroundLanding.withOpacity(0.7),
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 60),
-            AnimatedSection(
-              animationType: AnimationType.fade,
-              duration: const Duration(milliseconds: 400),
-              delay: const Duration(milliseconds: 200),
-              child: Text(
-                'Adapted for Every Need',
-                style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: DSColors.textPrimary,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 60),
+                AnimatedSection(
+                  animationType: AnimationType.fade,
+                  duration: const Duration(milliseconds: 400),
+                  delay: const Duration(milliseconds: 200),
+                  child: Text(
+                    'Adapted for Every Need',
+                    style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: DSColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            const SizedBox(height: 16),
-            AnimatedSection(
-              animationType: AnimationType.fade,
-              duration: const Duration(milliseconds: 400),
-              delay: const Duration(milliseconds: 300),
-              child: Text(
-                'Choose the plan that fits your needs',
-                style: DSTypography.landingTextTheme.titleMedium?.copyWith(
-                  color: DSColors.textSecondary,
+                const SizedBox(height: 16),
+                AnimatedSection(
+                  animationType: AnimationType.fade,
+                  duration: const Duration(milliseconds: 400),
+                  delay: const Duration(milliseconds: 300),
+                  child: Text(
+                    'Choose the plan that fits your needs',
+                    style: DSTypography.landingTextTheme.titleMedium?.copyWith(
+                      color: DSColors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+                const SizedBox(height: 60),
+                AnimatedSection(
+                  animationType: AnimationType.fadeSlide,
+                  slideDirection: SlideDirection.up,
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 400),
+                  child: DSResponsiveLayout.responsiveGrid(
+                    context: context,
+                    children: pricingPlans.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final plan = entry.value;
+                      return AnimatedSection(
+                        animationType: AnimationType.fadeScale,
+                        duration: const Duration(milliseconds: 400),
+                        delay: Duration(milliseconds: 500 + (index * 150)),
+                        child: _buildPricingCard(context, plan),
+                      );
+                    }).toList(),
+                    mobileColumns: 1,
+                    tabletColumns: 3,
+                    desktopColumns: 3,
+                    spacing: 24,
+                    runSpacing: 24,
+                  ),
+                ),
+                const SizedBox(height: 60),
+              ],
             ),
-            const SizedBox(height: 60),
-            AnimatedSection(
-              animationType: AnimationType.fadeSlide,
-              slideDirection: SlideDirection.up,
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 400),
-              child: DSResponsiveLayout.responsiveGrid(
-                context: context,
-                children: pricingPlans.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final plan = entry.value;
-                  return AnimatedSection(
-                    animationType: AnimationType.fadeScale,
-                    duration: const Duration(milliseconds: 400),
-                    delay: Duration(milliseconds: 500 + (index * 150)),
-                    child: _buildPricingCard(context, plan),
-                  );
-                }).toList(),
-                mobileColumns: 1,
-                tabletColumns: 3,
-                desktopColumns: 3,
-                spacing: 24,
-                runSpacing: 24,
-              ),
-            ),
-            const SizedBox(height: 60),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -153,7 +154,7 @@ class PricingSection extends StatelessWidget {
         boxShadow: plan.isPopular 
             ? [
                 BoxShadow(
-                  color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
+                  color: DSColors.primaryLanding.withOpacity(0.2),
                   blurRadius: 15,
                   spreadRadius: 1,
                   offset: const Offset(0, 4),

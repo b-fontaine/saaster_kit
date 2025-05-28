@@ -42,8 +42,6 @@ class ParallaxBackground extends StatefulWidget {
     this.colorFilters,
   }) : assert(svgAssets.length == parallaxSpeeds.length,
             'svgAssets and parallaxSpeeds must have the same length'),
-       assert(opacityLevels.isEmpty || opacityLevels.length == svgAssets.length,
-            'If provided, opacityLevels must have the same length as svgAssets'),
        assert(blendModes == null || blendModes.length == svgAssets.length,
             'If provided, blendModes must have the same length as svgAssets'),
        assert(colorFilters == null || colorFilters.length == svgAssets.length,

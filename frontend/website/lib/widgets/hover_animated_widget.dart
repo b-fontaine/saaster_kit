@@ -88,7 +88,7 @@ class ScaleOnHover extends StatelessWidget {
                 ? BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: (0.2 * 255).toDouble()),
+                        color: Colors.black.withOpacity(0.2),
                         blurRadius: hoverElevation,
                         spreadRadius: 1,
                       ),

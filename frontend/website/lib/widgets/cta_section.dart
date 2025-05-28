@@ -40,7 +40,7 @@ class CTASection extends StatelessWidget {
               child: Text(
                 'Start building your next big idea with SaaSter Kit today.',
                 style: DSTypography.landingTextTheme.titleMedium?.copyWith(
-                  color: Colors.white.withValues(alpha: (0.9 * 255).toDouble()),
+                  color: Colors.white.withOpacity(0.9),
                 ),
                 textAlign: TextAlign.center,
               ),

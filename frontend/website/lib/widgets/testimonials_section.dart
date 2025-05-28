@@ -17,25 +17,19 @@ class TestimonialsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final testimonials = [
       Testimonial(
-        quote:
-            'SaaSter Kit saved us months of development time. We were able to focus on our core business logic instead of infrastructure.',
-        author: 'Sarah Johnson',
-        role: 'CTO, TechStart Inc.',
-        avatarUrl: 'assets/images/avatar_1.jpeg',
+        quote: 'SaaSter Kit saved us months of development time. The architecture is solid and the documentation is excellent.',
+        author: 'Jane Smith',
+        company: 'Tech Innovators',
       ),
       Testimonial(
-        quote:
-            'The microservices architecture is incredibly well-designed. It made scaling our application so much easier than we anticipated.',
-        author: 'Michael Chen',
-        role: 'Lead Developer, ScaleUp Solutions',
-        avatarUrl: 'assets/images/avatar_2.jpeg',
+        quote: 'The multi-tenant architecture and security features are exactly what we needed for our enterprise clients.',
+        author: 'John Doe',
+        company: 'Enterprise Solutions',
       ),
       Testimonial(
-        quote:
-            'We evaluated several SaaS starter kits, and SaaSter Kit was by far the most complete and well-documented solution.',
-        author: 'Emily Rodriguez',
-        role: 'Product Manager, InnovateCorp',
-        avatarUrl: 'assets/images/avatar_3.jpeg',
+        quote: 'We launched our SaaS product in record time thanks to SaaSter Kit. Highly recommended!',
+        author: 'Alex Johnson',
+        company: 'Startup Accelerator',
       ),
     ];
 
@@ -66,51 +60,53 @@ class TestimonialsSection extends StatelessWidget {
             padding: DSSpacing.getPagePadding(context),
             color: Colors.white.withOpacity(0.9),
             child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const SizedBox(height: 60),
-            AnimatedSection(
-              animationType: AnimationType.fade,
-              duration: const Duration(milliseconds: 400),
-              delay: const Duration(milliseconds: 200),
-              child: Text(
-                'What Our Customers Say',
-                style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: DSColors.textPrimary,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 60),
+                AnimatedSection(
+                  animationType: AnimationType.fade,
+                  duration: const Duration(milliseconds: 400),
+                  delay: const Duration(milliseconds: 200),
+                  child: Text(
+                    'What Our Customers Say',
+                    style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: DSColors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
+                const SizedBox(height: 60),
+                AnimatedSection(
+                  animationType: AnimationType.fadeSlide,
+                  slideDirection: SlideDirection.up,
+                  duration: const Duration(milliseconds: 500),
+                  delay: const Duration(milliseconds: 300),
+                  child: DSResponsiveLayout.responsiveGrid(
+                    context: context,
+                    children: testimonials.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final testimonial = entry.value;
+                      return AnimatedSection(
+                        animationType: AnimationType.fadeSlide,
+                        slideDirection: SlideDirection.up,
+                        duration: const Duration(milliseconds: 400),
+                        delay: Duration(milliseconds: 400 + (index * 150)),
+                        child: _buildTestimonialCard(context, testimonial),
+                      );
+                    }).toList(),
+                    mobileColumns: 1,
+                    tabletColumns: 3,
+                    desktopColumns: 3,
+                    spacing: 24,
+                    runSpacing: 24,
+                  ),
+                ),
+                const SizedBox(height: 60),
+              ],
             ),
-            const SizedBox(height: 60),
-            AnimatedSection(
-              animationType: AnimationType.fadeSlide,
-              slideDirection: SlideDirection.up,
-              duration: const Duration(milliseconds: 500),
-              delay: const Duration(milliseconds: 300),
-              child: DSResponsiveLayout.responsiveGrid(
-                context: context,
-                children: testimonials.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final testimonial = entry.value;
-                  return AnimatedSection(
-                    animationType: AnimationType.fadeSlide,
-                    slideDirection: SlideDirection.up,
-                    duration: const Duration(milliseconds: 400),
-                    delay: Duration(milliseconds: 400 + (index * 150)),
-                    child: _buildTestimonialCard(context, testimonial),
-                  );
-                }).toList(),
-                mobileColumns: 1,
-                tabletColumns: 3,
-                desktopColumns: 3,
-                spacing: 24,
-                runSpacing: 24,
-              ),
-            ),
-            const SizedBox(height: 60),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -123,61 +119,65 @@ class TestimonialsSection extends StatelessWidget {
         padding: DSSpacing.paddingLG,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: (0.08 * 255).toDouble()),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 10,
             spreadRadius: 1,
             offset: const Offset(0, 3),
           )
         ],
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ContinuousAnimationWidget(
-            animationType: ContinuousAnimationType.breathe,
-            amplitude: 2.0,
-            duration: const Duration(seconds: 4),
-            child: Icon(
-              DSIcons.formatQuote,
-              size: 40,
-              color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            testimonial.quote,
-            style: DSTypography.landingTextTheme.bodyLarge?.copyWith(
-              fontStyle: FontStyle.italic,
-              color: DSColors.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              CircleAvatar(backgroundImage: AssetImage(testimonial.avatarUrl)),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      testimonial.author,
-                      style: DSTypography.landingTextTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      testimonial.role,
-                      style: DSTypography.landingTextTheme.bodySmall?.copyWith(
-                        color: DSColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ContinuousAnimationWidget(
+              animationType: ContinuousAnimationType.breathe,
+              amplitude: 2.0,
+              duration: const Duration(seconds: 4),
+              child: Icon(
+                DSIcons.formatQuote,
+                size: 40,
+                color: DSColors.primaryLanding.withOpacity(0.2),
               ),
-            ],
-          ),
-        ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              testimonial.quote,
+              style: DSTypography.landingTextTheme.bodyLarge,
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: DSColors.primaryLanding.withOpacity(0.1),
+                  child: Icon(
+                    DSIcons.profile,
+                    color: DSColors.primaryLanding,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        testimonial.author,
+                        style: DSTypography.landingTextTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        testimonial.company,
+                        style: DSTypography.landingTextTheme.bodySmall?.copyWith(
+                          color: DSColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -186,13 +186,11 @@ class TestimonialsSection extends StatelessWidget {
 class Testimonial {
   final String quote;
   final String author;
-  final String role;
-  final String avatarUrl;
+  final String company;
 
   Testimonial({
     required this.quote,
     required this.author,
-    required this.role,
-    required this.avatarUrl,
+    required this.company,
   });
 }
