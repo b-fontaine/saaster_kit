@@ -82,7 +82,7 @@ class FooterSection extends StatelessWidget {
                     child: Text(
                       'A complete, production-ready SaaS starter kit with microservices architecture.',
                       style: DSTypography.landingTextTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: (0.7 * 255).toDouble()),
                       ),
                     ),
                   ),
@@ -108,7 +108,7 @@ class FooterSection extends StatelessWidget {
           Text(
             '© ${DateTime.now().year} SaaSter Kit. All rights reserved.',
             style: DSTypography.landingTextTheme.bodySmall?.copyWith(
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: (0.5 * 255).toDouble()),
             ),
           ),
           const SizedBox(height: 24),
@@ -122,7 +122,7 @@ class FooterSection extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withValues(alpha: (0.1 * 255).toDouble()),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Icon(
@@ -150,7 +150,7 @@ class FooterSection extends StatelessWidget {
               child: Text(
                 link.title,
                 style: DSTypography.landingTextTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.7),
+                  color: Colors.white.withValues(alpha: (0.7 * 255).toDouble()),
                 ),
               ),
             )),

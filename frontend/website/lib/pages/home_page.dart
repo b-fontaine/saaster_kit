@@ -9,8 +9,21 @@ import '../widgets/hero_section.dart';
 import '../widgets/pricing_section.dart';
 import '../widgets/testimonials_section.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,14 +87,15 @@ class HomePage extends StatelessWidget {
       backgroundColor: DSColors.backgroundLanding,
       extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
-          children: const [
-            HeroSection(),
-            FeaturesSection(),
-            PricingSection(),
-            TestimonialsSection(),
-            CTASection(),
-            FooterSection(),
+          children: [
+            HeroSection(scrollController: _scrollController),
+            const FeaturesSection(),
+            const PricingSection(),
+            const TestimonialsSection(),
+            const CTASection(),
+            const FooterSection(),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import '../atoms/colors.dart';
 import '../atoms/typography.dart';
 import '../atoms/spacing.dart';
 import '../atoms/icons.dart';
+import '../atoms/shadows.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/breakpoints.dart';
 
@@ -294,9 +295,10 @@ class DSAppBars {
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: backgroundColor ?? Colors.transparent,
+        backgroundColor: backgroundColor ?? DSColors.surfaceLanding.withValues(alpha: (0.9 * 255).toDouble()),
         foregroundColor: foregroundColor ?? DSColors.textPrimary,
-        elevation: elevation,
+        elevation: elevation == 0 ? 4 : elevation,
+        shadowColor: Colors.black,
         toolbarHeight: toolbarHeight ?? 80,
         centerTitle: false,
         actions: [
@@ -331,9 +333,10 @@ class DSAppBars {
             fontWeight: FontWeight.w600,
           ),
         ),
-        backgroundColor: backgroundColor ?? Colors.transparent,
+        backgroundColor: backgroundColor ?? DSColors.surfaceLanding.withValues(alpha: (0.9 * 255).toDouble()),
         foregroundColor: foregroundColor ?? DSColors.textPrimary,
-        elevation: elevation,
+        elevation: elevation == 0 ? 4 : elevation,
+        shadowColor: Colors.black,
         toolbarHeight: toolbarHeight ?? 56,
         centerTitle: false,
         actions: [

@@ -1,6 +1,6 @@
 import 'package:design_system/design_system.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'animated_section.dart';
 
 class TestimonialsSection extends StatelessWidget {
   const TestimonialsSection({super.key});
@@ -31,39 +31,61 @@ class TestimonialsSection extends StatelessWidget {
       ),
     ];
 
-    return Container(
-      padding: DSSpacing.getPagePadding(context),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 60),
-          Text(
-            'What Our Customers Say',
-            style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: DSColors.textPrimary,
+    return AnimatedSection(
+      animationType: AnimationType.fadeSlide,
+      slideDirection: SlideDirection.up,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+      delay: const Duration(milliseconds: 100),
+      child: Container(
+        padding: DSSpacing.getPagePadding(context),
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 60),
+            AnimatedSection(
+              animationType: AnimationType.fade,
+              duration: const Duration(milliseconds: 400),
+              delay: const Duration(milliseconds: 200),
+              child: Text(
+                'What Our Customers Say',
+                style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: DSColors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          DSResponsiveLayout.responsiveGrid(
-            context: context,
-            children:
-                testimonials
-                    .map(
-                      (testimonial) =>
-                          _buildTestimonialCard(context, testimonial),
-                    )
-                    .toList(),
-            mobileColumns: 1,
-            tabletColumns: 3,
-            desktopColumns: 3,
-            spacing: 24,
-            runSpacing: 24,
-          ),
-          const SizedBox(height: 60),
-        ],
+            const SizedBox(height: 60),
+            AnimatedSection(
+              animationType: AnimationType.fadeSlide,
+              slideDirection: SlideDirection.up,
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 300),
+              child: DSResponsiveLayout.responsiveGrid(
+                context: context,
+                children: testimonials.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final testimonial = entry.value;
+                  return AnimatedSection(
+                    animationType: AnimationType.fadeSlide,
+                    slideDirection: SlideDirection.up,
+                    duration: const Duration(milliseconds: 400),
+                    delay: Duration(milliseconds: 400 + (index * 150)),
+                    child: _buildTestimonialCard(context, testimonial),
+                  );
+                }).toList(),
+                mobileColumns: 1,
+                tabletColumns: 3,
+                desktopColumns: 3,
+                spacing: 24,
+                runSpacing: 24,
+              ),
+            ),
+            const SizedBox(height: 60),
+          ],
+        ),
       ),
     );
   }
@@ -77,7 +99,7 @@ class TestimonialsSection extends StatelessWidget {
           Icon(
             DSIcons.formatQuote,
             size: 40,
-            color: DSColors.primaryLanding.withOpacity(0.2),
+            color: DSColors.primaryLanding.withValues(alpha: (0.2 * 255).toDouble()),
           ),
           const SizedBox(height: 16),
           Text(

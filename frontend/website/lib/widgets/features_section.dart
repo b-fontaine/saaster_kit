@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
+import 'animated_section.dart';
 
 class FeaturesSection extends StatelessWidget {
   const FeaturesSection({super.key});
@@ -40,41 +40,74 @@ class FeaturesSection extends StatelessWidget {
       ),
     ];
 
-    return Container(
-      padding: DSSpacing.getPagePadding(context),
-      color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(height: 40),
-          Text(
-            'Key Features',
-            style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: DSColors.textPrimary,
+    return AnimatedSection(
+      animationType: AnimationType.fadeSlide,
+      slideDirection: SlideDirection.up,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOutCubic,
+      delay: const Duration(milliseconds: 100),
+      child: Container(
+        padding: DSSpacing.getPagePadding(context),
+        color: Colors.white,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 40),
+            AnimatedSection(
+              animationType: AnimationType.fade,
+              duration: const Duration(milliseconds: 400),
+              delay: const Duration(milliseconds: 200),
+              child: Text(
+                'Key Features',
+                style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: DSColors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Everything you need to build a production-ready SaaS application',
-            style: DSTypography.landingTextTheme.titleMedium?.copyWith(
-              color: DSColors.textSecondary,
+            const SizedBox(height: 16),
+            AnimatedSection(
+              animationType: AnimationType.fade,
+              duration: const Duration(milliseconds: 400),
+              delay: const Duration(milliseconds: 300),
+              child: Text(
+                'Everything you need to build a production-ready SaaS application',
+                style: DSTypography.landingTextTheme.titleMedium?.copyWith(
+                  color: DSColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          DSResponsiveLayout.responsiveGrid(
-            context: context,
-            children: features.map((feature) => _buildFeatureCard(context, feature)).toList(),
-            mobileColumns: 1,
-            tabletColumns: 2,
-            desktopColumns: 3,
-            spacing: 24,
-            runSpacing: 24,
-          ),
-          const SizedBox(height: 60),
-        ],
+            const SizedBox(height: 60),
+            AnimatedSection(
+              animationType: AnimationType.fadeSlide,
+              slideDirection: SlideDirection.up,
+              duration: const Duration(milliseconds: 500),
+              delay: const Duration(milliseconds: 400),
+              child: DSResponsiveLayout.responsiveGrid(
+                context: context,
+                children: features.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final feature = entry.value;
+                  return AnimatedSection(
+                    animationType: AnimationType.fadeSlide,
+                    slideDirection: SlideDirection.up,
+                    duration: const Duration(milliseconds: 400),
+                    delay: Duration(milliseconds: 500 + (index * 100)),
+                    child: _buildFeatureCard(context, feature),
+                  );
+                }).toList(),
+                mobileColumns: 1,
+                tabletColumns: 2,
+                desktopColumns: 3,
+                spacing: 24,
+                runSpacing: 24,
+              ),
+            ),
+            const SizedBox(height: 60),
+          ],
+        ),
       ),
     );
   }
