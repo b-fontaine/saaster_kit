@@ -16,15 +16,15 @@ class SpacingValuesShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildSpacingItem('XXXS (2px)', DSSpacing.xxxs),
-          _buildSpacingItem('XXS (4px)', DSSpacing.xxs),
-          _buildSpacingItem('XS (8px)', DSSpacing.xs),
-          _buildSpacingItem('SM (12px)', DSSpacing.sm),
-          _buildSpacingItem('MD (16px)', DSSpacing.md),
-          _buildSpacingItem('LG (24px)', DSSpacing.lg),
-          _buildSpacingItem('XL (32px)', DSSpacing.xl),
-          _buildSpacingItem('XXL (48px)', DSSpacing.xxl),
-          _buildSpacingItem('XXXL (64px)', DSSpacing.xxxl),
+          SpacingItem(name: 'XXXS (2px)', value: DSSpacing.xxxs),
+          SpacingItem(name: 'XXS (4px)', value: DSSpacing.xxs),
+          SpacingItem(name: 'XS (8px)', value: DSSpacing.xs),
+          SpacingItem(name: 'SM (12px)', value: DSSpacing.sm),
+          SpacingItem(name: 'MD (16px)', value: DSSpacing.md),
+          SpacingItem(name: 'LG (24px)', value: DSSpacing.lg),
+          SpacingItem(name: 'XL (32px)', value: DSSpacing.xl),
+          SpacingItem(name: 'XXL (48px)', value: DSSpacing.xxl),
+          SpacingItem(name: 'XXXL (64px)', value: DSSpacing.xxxl),
           const SizedBox(height: 32),
           Text(
             'Responsive Spacing',
@@ -174,48 +174,48 @@ class SpacingWidgetsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildHorizontalSpacerItem('horizontalSpacerXXXS', DSSpacing.horizontalSpacerXXXS),
-          _buildHorizontalSpacerItem('horizontalSpacerXXS', DSSpacing.horizontalSpacerXXS),
-          _buildHorizontalSpacerItem('horizontalSpacerXS', DSSpacing.horizontalSpacerXS),
-          _buildHorizontalSpacerItem('horizontalSpacerSM', DSSpacing.horizontalSpacerSM),
-          _buildHorizontalSpacerItem('horizontalSpacerMD', DSSpacing.horizontalSpacerMD),
-          _buildHorizontalSpacerItem('horizontalSpacerLG', DSSpacing.horizontalSpacerLG),
-          _buildHorizontalSpacerItem('horizontalSpacerXL', DSSpacing.horizontalSpacerXL),
-          _buildHorizontalSpacerItem('horizontalSpacerXXL', DSSpacing.horizontalSpacerXXL),
-          _buildHorizontalSpacerItem('horizontalSpacerXXXL', DSSpacing.horizontalSpacerXXXL),
+          HorizontalSpacerItem(name: 'horizontalSpacerXXXS', spacer: DSSpacing.horizontalSpacerXXXS),
+          HorizontalSpacerItem(name: 'horizontalSpacerXXS', spacer: DSSpacing.horizontalSpacerXXS),
+          HorizontalSpacerItem(name: 'horizontalSpacerXS', spacer: DSSpacing.horizontalSpacerXS),
+          HorizontalSpacerItem(name: 'horizontalSpacerSM', spacer: DSSpacing.horizontalSpacerSM),
+          HorizontalSpacerItem(name: 'horizontalSpacerMD', spacer: DSSpacing.horizontalSpacerMD),
+          HorizontalSpacerItem(name: 'horizontalSpacerLG', spacer: DSSpacing.horizontalSpacerLG),
+          HorizontalSpacerItem(name: 'horizontalSpacerXL', spacer: DSSpacing.horizontalSpacerXL),
+          HorizontalSpacerItem(name: 'horizontalSpacerXXL', spacer: DSSpacing.horizontalSpacerXXL),
+          HorizontalSpacerItem(name: 'horizontalSpacerXXXL', spacer: DSSpacing.horizontalSpacerXXXL),
           const SizedBox(height: 32),
           Text(
             'Vertical Spacers',
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildVerticalSpacerItem('verticalSpacerXXXS', DSSpacing.verticalSpacerXXXS),
-          _buildVerticalSpacerItem('verticalSpacerXXS', DSSpacing.verticalSpacerXXS),
-          _buildVerticalSpacerItem('verticalSpacerXS', DSSpacing.verticalSpacerXS),
-          _buildVerticalSpacerItem('verticalSpacerSM', DSSpacing.verticalSpacerSM),
-          _buildVerticalSpacerItem('verticalSpacerMD', DSSpacing.verticalSpacerMD),
-          _buildVerticalSpacerItem('verticalSpacerLG', DSSpacing.verticalSpacerLG),
-          _buildVerticalSpacerItem('verticalSpacerXL', DSSpacing.verticalSpacerXL),
-          _buildVerticalSpacerItem('verticalSpacerXXL', DSSpacing.verticalSpacerXXL),
-          _buildVerticalSpacerItem('verticalSpacerXXXL', DSSpacing.verticalSpacerXXXL),
+          VerticalSpacerItem(name: 'verticalSpacerXXXS', spacer: DSSpacing.verticalSpacerXXXS),
+          VerticalSpacerItem(name: 'verticalSpacerXXS', spacer: DSSpacing.verticalSpacerXXS),
+          VerticalSpacerItem(name: 'verticalSpacerXS', spacer: DSSpacing.verticalSpacerXS),
+          VerticalSpacerItem(name: 'verticalSpacerSM', spacer: DSSpacing.verticalSpacerSM),
+          VerticalSpacerItem(name: 'verticalSpacerMD', spacer: DSSpacing.verticalSpacerMD),
+          VerticalSpacerItem(name: 'verticalSpacerLG', spacer: DSSpacing.verticalSpacerLG),
+          VerticalSpacerItem(name: 'verticalSpacerXL', spacer: DSSpacing.verticalSpacerXL),
+          VerticalSpacerItem(name: 'verticalSpacerXXL', spacer: DSSpacing.verticalSpacerXXL),
+          VerticalSpacerItem(name: 'verticalSpacerXXXL', spacer: DSSpacing.verticalSpacerXXXL),
           const SizedBox(height: 32),
           Text(
             'Padding Presets',
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildPaddingItem('paddingXXXS', DSSpacing.paddingXXXS),
-          _buildPaddingItem('paddingXXS', DSSpacing.paddingXXS),
-          _buildPaddingItem('paddingXS', DSSpacing.paddingXS),
-          _buildPaddingItem('paddingSM', DSSpacing.paddingSM),
-          _buildPaddingItem('paddingMD', DSSpacing.paddingMD),
-          _buildPaddingItem('paddingLG', DSSpacing.paddingLG),
-          _buildPaddingItem('paddingXL', DSSpacing.paddingXL),
-          _buildPaddingItem('paddingXXL', DSSpacing.paddingXXL),
-          _buildPaddingItem('paddingXXXL', DSSpacing.paddingXXXL),
+          PaddingItem(name: 'paddingXXXS', padding: DSSpacing.paddingXXXS),
+          PaddingItem(name: 'paddingXXS', padding: DSSpacing.paddingXXS),
+          PaddingItem(name: 'paddingXS', padding: DSSpacing.paddingXS),
+          PaddingItem(name: 'paddingSM', padding: DSSpacing.paddingSM),
+          PaddingItem(name: 'paddingMD', padding: DSSpacing.paddingMD),
+          PaddingItem(name: 'paddingLG', padding: DSSpacing.paddingLG),
+          PaddingItem(name: 'paddingXL', padding: DSSpacing.paddingXL),
+          PaddingItem(name: 'paddingXXL', padding: DSSpacing.paddingXXL),
+          PaddingItem(name: 'paddingXXXL', padding: DSSpacing.paddingXXXL),
           const SizedBox(height: 16),
-          _buildPaddingItem('paddingHMD', DSSpacing.paddingHMD),
-          _buildPaddingItem('paddingVMD', DSSpacing.paddingVMD),
+          PaddingItem(name: 'paddingHMD', padding: DSSpacing.paddingHMD),
+          PaddingItem(name: 'paddingVMD', padding: DSSpacing.paddingVMD),
         ],
       ),
     );
@@ -321,6 +321,259 @@ class SpacingWidgetsShowcase extends StatelessWidget {
   }
 
   Widget _buildPaddingItem(String name, EdgeInsets padding) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Container(
+              padding: padding,
+              decoration: BoxDecoration(
+                color: DSColors.primaryApp.withValues(alpha: (0.1 * 255).toDouble()),
+                border: Border.all(
+                  color: DSColors.primaryApp,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: const SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: Center(
+                  child: Text(
+                    'Content',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Top: ${padding.top}, Right: ${padding.right}, Bottom: ${padding.bottom}, Left: ${padding.left}',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class SpacingItem extends StatelessWidget {
+  final String name;
+  final double value;
+
+  const SpacingItem({
+    super.key,
+    required this.name,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        children: [
+          Container(
+            width: 120,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              height: 24,
+              width: value,
+              color: DSColors.primaryApp,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                '${value.toInt()}px',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HorizontalSpacerItem extends StatelessWidget {
+  final String name;
+  final Widget spacer;
+
+  const HorizontalSpacerItem({
+    super.key,
+    required this.name,
+    required this.spacer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 24,
+                  color: DSColors.primaryApp,
+                ),
+                spacer,
+                Container(
+                  width: 50,
+                  height: 24,
+                  color: DSColors.primaryApp,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class VerticalSpacerItem extends StatelessWidget {
+  final String name;
+  final Widget spacer;
+
+  const VerticalSpacerItem({
+    super.key,
+    required this.name,
+    required this.spacer,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 150,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 24,
+                    color: DSColors.primaryApp,
+                  ),
+                  spacer,
+                  Container(
+                    width: double.infinity,
+                    height: 24,
+                    color: DSColors.primaryApp,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PaddingItem extends StatelessWidget {
+  final String name;
+  final EdgeInsets padding;
+
+  const PaddingItem({
+    super.key,
+    required this.name,
+    required this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
