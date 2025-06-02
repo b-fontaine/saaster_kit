@@ -16,16 +16,16 @@ class ElevationShadowsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildShadowItem('Elevation 0', DSShadows.elevation0),
-          _buildShadowItem('Elevation 1', DSShadows.elevation1),
-          _buildShadowItem('Elevation 2', DSShadows.elevation2),
-          _buildShadowItem('Elevation 3', DSShadows.elevation3),
-          _buildShadowItem('Elevation 4', DSShadows.elevation4),
-          _buildShadowItem('Elevation 6', DSShadows.elevation6),
-          _buildShadowItem('Elevation 8', DSShadows.elevation8),
-          _buildShadowItem('Elevation 12', DSShadows.elevation12),
-          _buildShadowItem('Elevation 16', DSShadows.elevation16),
-          _buildShadowItem('Elevation 24', DSShadows.elevation24),
+          ShadowItem(name: 'Elevation 0', shadows: DSShadows.elevation0),
+          ShadowItem(name: 'Elevation 1', shadows: DSShadows.elevation1),
+          ShadowItem(name: 'Elevation 2', shadows: DSShadows.elevation2),
+          ShadowItem(name: 'Elevation 3', shadows: DSShadows.elevation3),
+          ShadowItem(name: 'Elevation 4', shadows: DSShadows.elevation4),
+          ShadowItem(name: 'Elevation 6', shadows: DSShadows.elevation6),
+          ShadowItem(name: 'Elevation 8', shadows: DSShadows.elevation8),
+          ShadowItem(name: 'Elevation 12', shadows: DSShadows.elevation12),
+          ShadowItem(name: 'Elevation 16', shadows: DSShadows.elevation16),
+          ShadowItem(name: 'Elevation 24', shadows: DSShadows.elevation24),
         ],
       ),
     );
@@ -77,6 +77,117 @@ class ElevationShadowsShowcase extends StatelessWidget {
   }
 }
 
+class ShadowItem extends StatelessWidget {
+  final String name;
+  final List<BoxShadow> shadows;
+
+  const ShadowItem({
+    super.key,
+    required this.name,
+    required this.shadows,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Row(
+        children: [
+          Container(
+            width: 120,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: shadows,
+              ),
+              child: const Center(
+                child: Text(
+                  'Shadow Preview',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ComponentShadowItem extends StatelessWidget {
+  final String name;
+  final List<BoxShadow> shadows;
+
+  const ComponentShadowItem({
+    super.key,
+    required this.name,
+    required this.shadows,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Text(
+              name,
+              style: const TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: shadows,
+            ),
+            child: const Center(
+              child: Text(
+                'Component Shadow Preview',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ComponentShadowsShowcase extends StatelessWidget {
   const ComponentShadowsShowcase({super.key});
 
@@ -92,31 +203,31 @@ class ComponentShadowsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildComponentShadowItem('Card Shadow', DSShadows.appCardShadow),
-          _buildComponentShadowItem('Button Shadow', DSShadows.appButtonShadow),
-          _buildComponentShadowItem('Dialog Shadow', DSShadows.appDialogShadow),
-          _buildComponentShadowItem('Nav Bar Shadow', DSShadows.appNavBarShadow),
-          _buildComponentShadowItem('FAB Shadow', DSShadows.appFloatingActionButtonShadow),
+          ComponentShadowItem(name: 'Card Shadow', shadows: DSShadows.appCardShadow),
+          ComponentShadowItem(name: 'Button Shadow', shadows: DSShadows.appButtonShadow),
+          ComponentShadowItem(name: 'Dialog Shadow', shadows: DSShadows.appDialogShadow),
+          ComponentShadowItem(name: 'Nav Bar Shadow', shadows: DSShadows.appNavBarShadow),
+          ComponentShadowItem(name: 'FAB Shadow', shadows: DSShadows.appFloatingActionButtonShadow),
           const SizedBox(height: 32),
           Text(
             'Landing Theme Component Shadows',
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildComponentShadowItem('Card Shadow', DSShadows.landingCardShadow),
-          _buildComponentShadowItem('Button Shadow', DSShadows.landingButtonShadow),
-          _buildComponentShadowItem('Dialog Shadow', DSShadows.landingDialogShadow),
-          _buildComponentShadowItem('Nav Bar Shadow', DSShadows.landingNavBarShadow),
-          _buildComponentShadowItem('Hero Shadow', DSShadows.landingHeroShadow),
+          ComponentShadowItem(name: 'Card Shadow', shadows: DSShadows.landingCardShadow),
+          ComponentShadowItem(name: 'Button Shadow', shadows: DSShadows.landingButtonShadow),
+          ComponentShadowItem(name: 'Dialog Shadow', shadows: DSShadows.landingDialogShadow),
+          ComponentShadowItem(name: 'Nav Bar Shadow', shadows: DSShadows.landingNavBarShadow),
+          ComponentShadowItem(name: 'Hero Shadow', shadows: DSShadows.landingHeroShadow),
           const SizedBox(height: 32),
           Text(
             'Special Effects',
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 24),
-          _buildComponentShadowItem('Hover Effect', DSShadows.hoverEffect),
-          _buildComponentShadowItem('Focus Effect', DSShadows.focusEffect),
-          _buildComponentShadowItem('Landing Hover Effect', DSShadows.landingHoverEffect),
+          ComponentShadowItem(name: 'Hover Effect', shadows: DSShadows.hoverEffect),
+          ComponentShadowItem(name: 'Focus Effect', shadows: DSShadows.focusEffect),
+          ComponentShadowItem(name: 'Landing Hover Effect', shadows: DSShadows.landingHoverEffect),
         ],
       ),
     );

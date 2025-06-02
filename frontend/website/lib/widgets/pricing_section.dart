@@ -64,7 +64,7 @@ class PricingSection extends StatelessWidget {
             context: context,
             children:
                 pricingPlans
-                    .map((plan) => _buildPricingCard(context, plan))
+                    .map((plan) => PricingCard(plan: plan))
                     .toList(),
             mobileColumns: 1,
             tabletColumns: 3,
@@ -78,7 +78,19 @@ class PricingSection extends StatelessWidget {
     );
   }
 
-  Widget _buildPricingCard(BuildContext context, PricingPlan plan) {
+
+}
+
+class PricingCard extends StatelessWidget {
+  final PricingPlan plan;
+
+  const PricingCard({
+    super.key,
+    required this.plan,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return DSCards.landingPricingCard(
       title: plan.title,
       price: plan.price,
@@ -101,7 +113,7 @@ class PricingPlan {
   final List<String> features;
   final bool isPopular;
 
-  PricingPlan({
+  const PricingPlan({
     required this.title,
     required this.price,
     required this.period,

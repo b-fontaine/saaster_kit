@@ -66,7 +66,7 @@ class FeaturesSection extends StatelessWidget {
           const SizedBox(height: 60),
           DSResponsiveLayout.responsiveGrid(
             context: context,
-            children: features.map((feature) => _buildFeatureCard(context, feature)).toList(),
+            children: features.map((feature) => FeatureCard(feature: feature)).toList(),
             mobileColumns: 1,
             tabletColumns: 2,
             desktopColumns: 3,
@@ -79,7 +79,19 @@ class FeaturesSection extends StatelessWidget {
     );
   }
 
-  Widget _buildFeatureCard(BuildContext context, FeatureItem feature) {
+
+}
+
+class FeatureCard extends StatelessWidget {
+  final FeatureItem feature;
+
+  const FeatureCard({
+    super.key,
+    required this.feature,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return DSCards.landingFeatureCard(
       title: feature.title,
       description: feature.description,
@@ -94,7 +106,7 @@ class FeatureItem {
   final String description;
   final IconData icon;
 
-  FeatureItem({
+  const FeatureItem({
     required this.title,
     required this.description,
     required this.icon,

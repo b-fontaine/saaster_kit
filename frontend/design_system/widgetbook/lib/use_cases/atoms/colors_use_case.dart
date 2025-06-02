@@ -16,7 +16,7 @@ class AppColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('Primary', DSColors.primaryApp),
             _ColorItem('Secondary', DSColors.secondaryApp),
             _ColorItem('Accent', DSColors.accentApp),
@@ -33,7 +33,7 @@ class AppColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('Text Primary', DSColors.textPrimary),
             _ColorItem('Text Secondary', DSColors.textSecondary),
             _ColorItem('Text Disabled', DSColors.textDisabled),
@@ -46,7 +46,7 @@ class AppColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('Divider', DSColors.divider),
             _ColorItem('Shadow', DSColors.shadow),
             _ColorItem('Overlay', DSColors.overlay),
@@ -57,7 +57,7 @@ class AppColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('50', DSColors.appPrimarySwatch[50]!),
             _ColorItem('100', DSColors.appPrimarySwatch[100]!),
             _ColorItem('200', DSColors.appPrimarySwatch[200]!),
@@ -74,26 +74,7 @@ class AppColorsShowcase extends StatelessWidget {
     );
   }
 
-  Widget _buildColorGrid(List<_ColorItem> colors) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: colors.length,
-      itemBuilder: (context, index) {
-        final color = colors[index];
-        return _ColorCard(
-          name: color.name,
-          color: color.color,
-        );
-      },
-    );
-  }
+
 }
 
 class LandingColorsShowcase extends StatelessWidget {
@@ -111,7 +92,7 @@ class LandingColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('Primary', DSColors.primaryLanding),
             _ColorItem('Secondary', DSColors.secondaryLanding),
             _ColorItem('Accent', DSColors.accentLanding),
@@ -128,7 +109,7 @@ class LandingColorsShowcase extends StatelessWidget {
             style: DSTypography.appTextTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          _buildColorGrid([
+          ColorGrid(colors: [
             _ColorItem('50', DSColors.landingPrimarySwatch[50]!),
             _ColorItem('100', DSColors.landingPrimarySwatch[100]!),
             _ColorItem('200', DSColors.landingPrimarySwatch[200]!),
@@ -168,7 +149,19 @@ class LandingColorsShowcase extends StatelessWidget {
     );
   }
 
-  Widget _buildColorGrid(List<_ColorItem> colors) {
+
+}
+
+class ColorGrid extends StatelessWidget {
+  final List<_ColorItem> colors;
+
+  const ColorGrid({
+    super.key,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -194,7 +187,7 @@ class _ColorItem {
   final String name;
   final Color color;
 
-  _ColorItem(this.name, this.color);
+  const _ColorItem(this.name, this.color);
 }
 
 class _ColorCard extends StatelessWidget {
