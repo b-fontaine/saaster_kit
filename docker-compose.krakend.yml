@@ -1,0 +1,83 @@
+version: '3.8'
+
+# Example KrakenD configuration for saaster_kit
+# This would replace Kong but requires significant architecture changes
+
+services:
+  # KrakenD API Gateway (replacing Kong)
+  krakend:
+    image: devopsfaith/krakend:2.10
+    ports:
+      - "80:8080"
+      - "8090:8090"  # Metrics endpoint
+    volumes:
+      - ./krakend-config-example.json:/etc/krakend/krakend.json:ro
+    depends_on:
+      - website
+      - webapp
+      - widgetbook
+      - keycloak
+      - temporal-ui
+      - grafana
+      - customer-rest-adapter
+    networks:
+      - saaster-network
+
+  # Required: REST adapter for gRPC customer service
+  # This would need to be implemented to replace gRPC-Gateway functionality
+  customer-rest-adapter:
+    build:
+      context: ./adapters/customer-rest-adapter
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      - GRPC_CUSTOMER_SERVICE_URL=customer_service:50051
+      - KEYCLOAK_URL=http://keycloak:8080
+    depends_on:
+      - customer_service
+      - keycloak
+    networks:
+      - saaster-network
+
+  # External WAF would be required (example with ModSecurity)
+  modsecurity-waf:
+    image: owasp/modsecurity-crs:nginx
+    ports:
+      - "443:443"
+    volumes:
+      - ./waf-config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./waf-config/modsecurity.conf:/etc/modsecurity/modsecurity.conf:ro
+    environment:
+      - BACKEND=http://krakend:8080
+    networks:
+      - saaster-network
+
+  # Existing services would remain the same
+  website:
+    # ... existing configuration
+    
+  webapp:
+    # ... existing configuration
+    
+  widgetbook:
+    # ... existing configuration
+    
+  keycloak:
+    # ... existing configuration
+    
+  temporal-ui:
+    # ... existing configuration
+    
+  grafana:
+    # ... existing configuration
+    
+  customer_service:
+    # ... existing configuration
+
+networks:
+  saaster-network:
+    driver: bridge
+
+# Note: This configuration demonstrates the complexity required
+# to replicate Kong + SafeLine functionality with KrakenD

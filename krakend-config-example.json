@@ -1,0 +1,114 @@
+{
+  "$schema": "https://www.krakend.io/schema/v2.10/krakend.json",
+  "version": 3,
+  "name": "SaaSter Kit API Gateway (KrakenD Example)",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "port": 8080,
+  "endpoints": [
+    {
+      "endpoint": "/",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/",
+          "host": ["http://website:80"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/app",
+      "method": "GET", 
+      "backend": [
+        {
+          "url_pattern": "/app",
+          "host": ["http://webapp:80"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/widgetbook",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/widgetbook", 
+          "host": ["http://widgetbook:80"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/auth/{path}",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/auth/{path}",
+          "host": ["http://keycloak:8080"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/temporal/{path}",
+      "method": "GET",
+      "backend": [
+        {
+          "url_pattern": "/temporal/{path}",
+          "host": ["http://temporal-ui:8080"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/grafana/{path}",
+      "method": "GET", 
+      "backend": [
+        {
+          "url_pattern": "/grafana/{path}",
+          "host": ["http://grafana:3000"]
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/customer",
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+          "alg": "RS256",
+          "jwk_url": "http://keycloak:8080/auth/realms/saaster/protocol/openid_connect/certs",
+          "disable_jwk_security": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/customer",
+          "host": ["http://customer-rest-adapter:8080"],
+          "extra_config": {
+            "modifier/martian": {
+              "header.Modifier": {
+                "scope": ["request"],
+                "name": "Authorization",
+                "value": "{JWT}"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "extra_config": {
+    "security/cors": {
+      "allow_origins": ["*"],
+      "allow_methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allow_headers": ["Authorization", "Content-Type", "X-Requested-With"],
+      "allow_credentials": true,
+      "max_age": "12h"
+    },
+    "telemetry/metrics": {
+      "collection_time": "60s",
+      "proxy_disabled": false,
+      "router_disabled": false,
+      "backend_disabled": false,
+      "endpoint_disabled": false,
+      "listen_address": ":8090"
+    }
+  }
+}
