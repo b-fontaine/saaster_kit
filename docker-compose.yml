@@ -11,10 +11,24 @@ services:
       KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
       KONG_DECLARATIVE_CONFIG_MERGE: "true"
       KONG_DECLARATIVE_CONFIG_MERGE_LIST: /etc/kong/routes.yml
-      KONG_PLUGINS: bundled,grpc-gateway,cors,request-transformer,safeline
+      KONG_PLUGINS: bundled,grpc-gateway,cors,request-transformer,safeline,proxy-cache,rate-limiting,request-size-limiting,ip-restriction
       KONG_SSL: "on"
       KONG_SSL_CERT: /etc/kong/localhost.crt
       KONG_SSL_CERT_KEY: /etc/kong/localhost.key
+      # Performance optimizations
+      KONG_WORKER_PROCESSES: "auto"
+      KONG_WORKER_CONNECTIONS: "4096"
+      KONG_NGINX_HTTP_KEEPALIVE_TIMEOUT: "75s"
+      KONG_NGINX_HTTP_KEEPALIVE_REQUESTS: "1000"
+      # Monitoring and observability
+      KONG_STATUS_LISTEN: "0.0.0.0:8100"
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      # Cache configuration
+      KONG_MEM_CACHE_SIZE: "128m"
+      # Logging optimization
+      KONG_LOG_LEVEL: "notice"
+      KONG_ACCESS_LOG: "/dev/stdout"
+      KONG_ERROR_LOG: "/dev/stderr"
     volumes:
       - ./infra/kong/kong.yml:/etc/kong/kong.yml
       - ./infra/kong/routes.yml:/etc/kong/routes.yml
@@ -30,6 +44,7 @@ services:
       - "443:8443"   # HTTPS proxy
       - "8001:8001"   # Admin API
       - "8444:8444"   # Admin HTTPS
+      - "8100:8100"   # Status API
     depends_on:
       keycloak:
         condition: service_started
