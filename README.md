@@ -1,26 +1,33 @@
-# Starter Kit SaaS B2B
+# SaaS B2B Starter Kit
 
-This **starter kit** provides a robust, extensible, and secure foundation for developing a full-stack B2B SaaS, ready to
-run locally. It includes:
+This **production-ready starter kit** provides a comprehensive, enterprise-grade foundation for developing scalable B2B SaaS applications. Built with modern security, authentication, and orchestration technologies, it accelerates your development process while ensuring robust protection and reliability.
 
-- **Frontend**: Flutter (Web / Mobile / Desktop)
-    - Landing Page: Built with Flutter Web, Material UI, and atomic design pattern
-    - SaaS App: Built with Flutter Web, Material UI, and atomic design pattern, connected to Auth and microservices
-    - Design System: Atomic design pattern with responsive and adaptive components
-- **API Gateway & WAF**: Kong + SafeLine
-    - Kong: API Gateway for routing, authentication, rate limiting, and request transformation
-    - SafeLine: Web Application Firewall for protecting against web attacks
-- **IAM**: Keycloak (OAuth2 / OIDC)
-- **Orchestration**: Temporal (event-driven workflows)
-    - Temporal: Workflow engine for managing long-running business processes
-    - Temporal UI: Web interface for monitoring and managing workflows
-- **Microservices**: Go, each with its own PostgreSQL database
-    - Customer Service: Manages customer information and profiles
-- **Observability**: OpenTelemetry with Prometheus, Grafana and Elasticsearch
-    - Prometheus: Collects and stores metrics
-    - Grafana: Visualizes metrics and logs
-    - Elasticsearch: Stores and indexes logs/traces from all microservices
-  
+## Key Features & Recent Enhancements
+
+- **Enhanced Security Stack**: SafeLine Web Application Firewall (WAF) integration provides advanced protection against SQL injection, XSS, DoS attacks, bot threats, and OWASP Top 10 vulnerabilities
+- **Frontend Applications**: Flutter-based cross-platform solutions (Web / Mobile / Desktop)
+    - Landing Page: Marketing website with Material UI and atomic design pattern
+    - SaaS Application: Full-featured business application with authentication and microservices integration
+    - Design System: Comprehensive component library with responsive and adaptive design
+- **API Gateway & Security**: Kong + SafeLine WAF
+    - Kong: Enterprise API Gateway for routing, authentication, rate limiting, and protocol translation
+    - SafeLine: Advanced Web Application Firewall with real-time threat detection and mitigation
+- **Identity & Access Management**: Keycloak (OAuth2 / OIDC)
+    - Enterprise-grade authentication and authorization
+    - Multi-tenant user management and role-based access control
+- **Workflow Orchestration**: Temporal (fault-tolerant business processes)
+    - Temporal: Reliable workflow engine for complex business logic
+    - Temporal UI: Comprehensive monitoring and management interface
+- **Microservices Architecture**: Go-based services with hexagonal architecture
+    - Customer Service: Example microservice with complete CRUD operations
+    - Database-per-service pattern with PostgreSQL
+    - gRPC communication with REST API translation
+- **Complete Observability**: Production-ready monitoring and logging
+    - Prometheus: Metrics collection and storage
+    - Grafana: Advanced visualization and alerting
+    - Elasticsearch: Centralized logging and trace analysis
+
+>>>>>>> efac76b (doc: refactor main README.md)
 ---
 
 ## Installation and Startup
@@ -36,232 +43,426 @@ docker compose -p SaaSter up -d
 
 ## Architecture Overview
 
+The SaaSter Kit follows a modern, cloud-native architecture designed for scalability, security, and maintainability. The system is built around three core architectural patterns: microservices with hexagonal architecture, atomic design for the frontend, and a comprehensive security-first approach.
+
+### Infrastructure Architecture
+
 ```mermaid
----
-config:
-  theme: neo
-  layout: elk
-  look: neo
----
-flowchart TD
-    subgraph client["fa:fa-user User"]
-        mobile(["fa:fa-mobile Flutter Mobile"])
-        desktop(["fa:fa-desktop Flutter Desktop"])
-        chrome(["fa:fa-wifi Browser"])
+graph TB
+    subgraph "Client Layer"
+        Users[👥 Users]
+        Mobile[📱 Flutter Mobile]
+        Desktop[🖥️ Flutter Desktop]
+        Browser[🌐 Web Browser]
     end
-    subgraph kong["Kong with Plugins"]
-        oidc["OIDC"]
-        grpc-gateway["gRPC Gateway"]
-        cors["CORS"]
+
+    subgraph "Security & Gateway Layer"
+        SafeLine[🛡️ SafeLine WAF<br/>• SQL Injection Protection<br/>• XSS Prevention<br/>• DoS Mitigation<br/>• Bot Detection]
+        Kong[🚪 Kong API Gateway<br/>• Authentication<br/>• Rate Limiting<br/>• Protocol Translation<br/>• Load Balancing]
     end
-    safeline-detector -.-> kong
-    kong --> safeline-mgt
-    subgraph safeline["SafeLine WAF"]
-        safeline-mgt["SafeLine Management"]
-        safeline-detector["SafeLine Detector"]
-        safeline-tengine["SafeLine Tengine"]
-        safeline-db[("SafeLine DB")]
-        safeline-luigi["SafeLine Luigi"]
-        safeline-fvm["SafeLine FVM"]
-        safeline-chaos["SafeLine Chaos"]
-        safeline-chaos & safeline-luigi & safeline-mgt --> safeline-db
-        safeline-mgt --> safeline-fvm
-        safeline-luigi --> safeline-detector
-        safeline-tengine --> safeline-detector
+
+    subgraph "Frontend Applications"
+        Website[🏠 Landing Page<br/>Marketing Website]
+        MainApp[💼 SaaS Application<br/>Business Logic]
+        Widgetbook[📚 Design System<br/>Component Documentation]
     end
-    subgraph front["fa:fa-globe Web Frontend"]
-        web["Flutter Web App"]
-        landing["Flutter Landing Page"]
-        temporal["Temporal UI"]
-        grafana["Grafana"]
+
+    subgraph "Identity & Access"
+        Keycloak[🔐 Keycloak<br/>• OAuth2/OIDC<br/>• User Management<br/>• Role-Based Access]
     end
-    subgraph orch["Orchestration"]
-        D["Temporal (Workflow Engine)"]
-        D1["Temporal (Admin Tools)"]
-        D3[("Temporal (Database)")]
+
+    subgraph "Workflow Orchestration"
+        Temporal[⚡ Temporal<br/>• Workflow Engine<br/>• Fault Tolerance<br/>• Event Sourcing]
+        TemporalUI[📊 Temporal UI<br/>Workflow Monitoring]
+        TemporalDB[(🗄️ Temporal Database)]
     end
-    subgraph customer["Customer"]
-        customer-service["customer_service (Go)"]
-        customer-db[("customer_service_db")]
+
+    subgraph "Microservices Layer"
+        CustomerService[👤 Customer Service<br/>• Go + gRPC<br/>• Hexagonal Architecture<br/>• BDD Testing]
+        CustomerDB[(🗄️ Customer DB<br/>PostgreSQL)]
+        FutureServices[➕ Future Services<br/>Extensible Architecture]
     end
-    subgraph ms["Micro Services"]
-        customer
+
+    subgraph "Observability Stack"
+        Prometheus[📈 Prometheus<br/>Metrics Collection]
+        Grafana[📊 Grafana<br/>Visualization & Alerting]
+        Elasticsearch[🔍 Elasticsearch<br/>Centralized Logging]
     end
-    subgraph obs["Observability"]
-        promoteus["Prometheus"]
-        elasticsearch["Elasticsearch"]
-    end
-    D --> D3
-    D1 -.-> D
-    customer-service --> customer-db & iam["Keycloak"] & D & obs
-    obs -.-> grafana
-    D1 -.-> temporal
-    ms -.-> web
-    D --> obs
-    client --> kong
-    kong --> front & ms
-    kong <--> iam
-    client <--> iam
+
+    %% Connections
+    Users --> Browser
+    Users --> Mobile
+    Users --> Desktop
+
+    Browser --> SafeLine
+    Mobile --> SafeLine
+    Desktop --> SafeLine
+
+    SafeLine --> Kong
+    Kong --> Website
+    Kong --> MainApp
+    Kong --> Widgetbook
+    Kong --> TemporalUI
+    Kong --> Grafana
+
+    Kong <--> Keycloak
+    Kong --> CustomerService
+    Kong --> FutureServices
+
+    CustomerService --> CustomerDB
+    CustomerService --> Temporal
+    CustomerService --> Keycloak
+    CustomerService --> Prometheus
+    CustomerService --> Elasticsearch
+
+    Temporal --> TemporalDB
+    Temporal --> Prometheus
+
+    Prometheus --> Grafana
+    Elasticsearch --> Grafana
+
+    %% Styling
+    classDef security fill:#ff6b6b,stroke:#d63031,stroke-width:2px,color:#fff
+    classDef frontend fill:#74b9ff,stroke:#0984e3,stroke-width:2px,color:#fff
+    classDef backend fill:#55a3ff,stroke:#2d3436,stroke-width:2px,color:#fff
+    classDef data fill:#fdcb6e,stroke:#e17055,stroke-width:2px,color:#000
+    classDef observability fill:#6c5ce7,stroke:#5f3dc4,stroke-width:2px,color:#fff
+
+    class SafeLine,Kong security
+    class Website,MainApp,Widgetbook frontend
+    class CustomerService,FutureServices,Keycloak,Temporal backend
+    class CustomerDB,TemporalDB data
+    class Prometheus,Grafana,Elasticsearch observability
 ```
 
-All user requests pass through **Kong** (API Gateway) with **SafeLine** (Web Application Firewall) protection, which
-routes to **Temporal** for orchestrating workflows (registration, authentication, etc.) without direct coupling between
-microservices. **Keycloak** manages IAM, and **Linkerd** ensures mutual TLS, load balancing, and inter-service
-resilience. Finally, **Prometheus**, **Grafana**, and **Elasticsearch** deliver comprehensive observability.
+**Architectural Rationale:**
+
+- **Security-First Design**: SafeLine WAF provides the first line of defense against web attacks, while Kong handles authentication and authorization. This layered security approach ensures comprehensive protection.
+
+- **API Gateway Pattern**: Kong centralizes cross-cutting concerns like authentication, rate limiting, and protocol translation, reducing complexity in individual microservices.
+
+- **Database-per-Service**: Each microservice owns its data, ensuring loose coupling and independent scalability.
+
+- **Workflow Orchestration**: Temporal manages complex business processes with built-in fault tolerance and retry mechanisms, eliminating the need for custom workflow logic.
+
+- **Comprehensive Observability**: The combination of Prometheus (metrics), Grafana (visualization), and Elasticsearch (logging) provides complete system visibility.
+
+### Go Microservices Architecture (Hexagonal Pattern)
+
+```mermaid
+graph TB
+    subgraph "External Actors"
+        Client[🌐 API Clients<br/>REST/gRPC Requests]
+        Database[(🗄️ PostgreSQL<br/>Data Persistence)]
+        TemporalExt[⚡ Temporal<br/>Workflow Engine]
+        AuthService[🔐 Keycloak<br/>Authentication]
+        LogService[📝 Elasticsearch<br/>Centralized Logging]
+    end
+
+    subgraph "Hexagonal Architecture"
+        subgraph "Adapters Layer (Infrastructure)"
+            GRPCAdapter[🔌 gRPC Server<br/>• Authentication Interceptor<br/>• Request Validation<br/>• Error Handling]
+            RepoAdapter[🔌 Repository Adapter<br/>• SQL Queries<br/>• Connection Pooling<br/>• Migrations]
+            TemporalAdapter[🔌 Temporal Adapter<br/>• Workflow Client<br/>• Activity Implementation<br/>• Fallback Logic]
+            LogAdapter[🔌 Logger Adapter<br/>• Structured Logging<br/>• Error Tracking<br/>• Performance Metrics]
+        end
+
+        subgraph "Ports Layer (Interfaces)"
+            InPorts[📥 Input Ports<br/>• CustomerService Interface<br/>• Use Case Definitions<br/>• Command Handlers]
+            OutPorts[📤 Output Ports<br/>• Repository Interface<br/>• External Service Interfaces<br/>• Event Publishers]
+        end
+
+        subgraph "Domain Layer (Business Logic)"
+            Entities[🏛️ Domain Entities<br/>• Customer Entity<br/>• Business Rules<br/>• Validation Logic]
+            ValueObjects[💎 Value Objects<br/>• Email Address<br/>• Phone Number<br/>• Immutable Data]
+            DomainServices[⚙️ Domain Services<br/>• Business Logic<br/>• Domain Events<br/>• Invariant Enforcement]
+        end
+
+        subgraph "Application Layer (Orchestration)"
+            AppServices[🎭 Application Services<br/>• Use Case Orchestration<br/>• Transaction Management<br/>• Cross-Cutting Concerns]
+        end
+    end
+
+    %% External connections
+    Client --> GRPCAdapter
+    GRPCAdapter --> Database
+    RepoAdapter --> Database
+    TemporalAdapter --> TemporalExt
+    LogAdapter --> LogService
+    GRPCAdapter --> AuthService
+
+    %% Internal connections
+    GRPCAdapter --> InPorts
+    InPorts --> AppServices
+    AppServices --> DomainServices
+    AppServices --> OutPorts
+    OutPorts --> RepoAdapter
+    OutPorts --> TemporalAdapter
+    OutPorts --> LogAdapter
+
+    DomainServices --> Entities
+    DomainServices --> ValueObjects
+
+    %% Styling
+    classDef external fill:#ddd,stroke:#999,stroke-width:2px
+    classDef adapter fill:#ff7675,stroke:#d63031,stroke-width:2px,color:#fff
+    classDef port fill:#74b9ff,stroke:#0984e3,stroke-width:2px,color:#fff
+    classDef domain fill:#00b894,stroke:#00a085,stroke-width:2px,color:#fff
+    classDef application fill:#fdcb6e,stroke:#e17055,stroke-width:2px
+
+    class Client,Database,TemporalExt,AuthService,LogService external
+    class GRPCAdapter,RepoAdapter,TemporalAdapter,LogAdapter adapter
+    class InPorts,OutPorts port
+    class Entities,ValueObjects,DomainServices domain
+    class AppServices application
+```
+
+**Hexagonal Architecture Benefits:**
+
+- **Testability**: Domain logic can be tested in isolation without external dependencies
+- **Flexibility**: External systems can be replaced without affecting business logic
+- **Maintainability**: Clear separation of concerns makes the codebase easier to understand
+- **Technology Independence**: Domain is not tied to specific frameworks or databases
+
+### Flutter Frontend Architecture (Atomic Design)
+
+```mermaid
+graph TB
+    subgraph "Applications Layer"
+        Website[🏠 Website App<br/>• Marketing Pages<br/>• Landing Theme<br/>• SEO Optimized]
+        MainApp[💼 Main SaaS App<br/>• Business Logic<br/>• App Theme<br/>• Authentication]
+        Widgetbook[📚 Widgetbook<br/>• Component Docs<br/>• Interactive Testing<br/>• Design Validation]
+    end
+
+    subgraph "Design System (Atomic Design)"
+        subgraph "Templates"
+            AppScaffold[📱 App Scaffold<br/>• Standard Layout<br/>• Navigation Structure]
+            LandingScaffold[🌐 Landing Scaffold<br/>• Marketing Layout<br/>• CTA Placement]
+            ResponsiveLayout[📐 Responsive Layout<br/>• Breakpoint Management<br/>• Adaptive Design]
+        end
+
+        subgraph "Organisms"
+            AppBars[🎯 App Bars<br/>• Navigation<br/>• Actions<br/>• Branding]
+            Navigation[🧭 Navigation<br/>• Bottom Nav<br/>• Drawer<br/>• Breadcrumbs]
+            Forms[📝 Forms<br/>• Login Form<br/>• Registration<br/>• Validation]
+            Lists[📋 Lists<br/>• Data Display<br/>• Infinite Scroll<br/>• Filtering]
+        end
+
+        subgraph "Molecules"
+            Buttons[🔘 Buttons<br/>• Primary/Secondary<br/>• Icon Buttons<br/>• FAB]
+            TextFields[📝 Text Fields<br/>• Input Validation<br/>• Error States<br/>• Accessibility]
+            Cards[🃏 Cards<br/>• Content Cards<br/>• Feature Cards<br/>• Elevated Cards]
+            Dialogs[💬 Dialogs<br/>• Alert Dialogs<br/>• Confirmation<br/>• Bottom Sheets]
+            Chips[🏷️ Chips<br/>• Filter Chips<br/>• Choice Chips<br/>• Action Chips]
+        end
+
+        subgraph "Atoms"
+            Colors[🎨 Colors<br/>• App Palette<br/>• Landing Palette<br/>• Semantic Colors]
+            Typography[📝 Typography<br/>• Text Themes<br/>• Font Scales<br/>• Responsive Text]
+            Spacing[📏 Spacing<br/>• Consistent Spacing<br/>• Responsive Padding<br/>• Grid System]
+            Icons[🎯 Icons<br/>• Material Icons<br/>• Custom Icons<br/>• Semantic Usage]
+            Borders[🔲 Borders<br/>• Border Radius<br/>• Border Styles<br/>• Consistent Styling]
+            Shadows[🌫️ Shadows<br/>• Elevation System<br/>• Depth Hierarchy<br/>• Material Design]
+        end
+    end
+
+    subgraph "Themes & Configuration"
+        AppTheme[🎨 App Theme<br/>• Light/Dark Mode<br/>• Business Colors<br/>• Professional Look]
+        LandingTheme[🌈 Landing Theme<br/>• Marketing Colors<br/>• Brand Identity<br/>• Conversion Focus]
+        ResponsiveConfig[📱 Responsive Config<br/>• Breakpoints<br/>• Device Adaptation<br/>• Platform Specific]
+    end
+
+    subgraph "Infrastructure"
+        Docker[🐳 Docker<br/>• Multi-stage Build<br/>• Nginx Serving<br/>• Production Ready]
+        Kong[🚪 Kong Gateway<br/>• Routing<br/>• Authentication<br/>• Load Balancing]
+    end
+
+    %% Application dependencies
+    Website --> LandingScaffold
+    Website --> LandingTheme
+    MainApp --> AppScaffold
+    MainApp --> AppTheme
+    Widgetbook --> AppTheme
+
+    %% Template dependencies
+    AppScaffold --> AppBars
+    AppScaffold --> Navigation
+    LandingScaffold --> Navigation
+    ResponsiveLayout --> ResponsiveConfig
+
+    %% Organism dependencies
+    AppBars --> Buttons
+    Navigation --> Buttons
+    Forms --> TextFields
+    Forms --> Buttons
+    Lists --> Cards
+
+    %% Molecule dependencies
+    Buttons --> Colors
+    Buttons --> Typography
+    TextFields --> Colors
+    TextFields --> Typography
+    Cards --> Colors
+    Cards --> Shadows
+    Dialogs --> Colors
+    Dialogs --> Typography
+
+    %% Atom relationships
+    Colors --> AppTheme
+    Colors --> LandingTheme
+    Typography --> AppTheme
+    Typography --> LandingTheme
+    Spacing --> ResponsiveConfig
+
+    %% Infrastructure
+    Website --> Docker
+    MainApp --> Docker
+    Widgetbook --> Docker
+    Docker --> Kong
+
+    %% Styling
+    classDef app fill:#74b9ff,stroke:#0984e3,stroke-width:2px,color:#fff
+    classDef template fill:#00b894,stroke:#00a085,stroke-width:2px,color:#fff
+    classDef organism fill:#fdcb6e,stroke:#e17055,stroke-width:2px
+    classDef molecule fill:#fd79a8,stroke:#e84393,stroke-width:2px,color:#fff
+    classDef atom fill:#6c5ce7,stroke:#5f3dc4,stroke-width:2px,color:#fff
+    classDef theme fill:#ff7675,stroke:#d63031,stroke-width:2px,color:#fff
+    classDef infra fill:#636e72,stroke:#2d3436,stroke-width:2px,color:#fff
+
+    class Website,MainApp,Widgetbook app
+    class AppScaffold,LandingScaffold,ResponsiveLayout template
+    class AppBars,Navigation,Forms,Lists organism
+    class Buttons,TextFields,Cards,Dialogs,Chips molecule
+    class Colors,Typography,Spacing,Icons,Borders,Shadows atom
+    class AppTheme,LandingTheme,ResponsiveConfig theme
+    class Docker,Kong infra
+```
+
+**Atomic Design Benefits:**
+
+- **Consistency**: Shared design tokens ensure visual consistency across all applications
+- **Reusability**: Components can be used across website, main app, and future applications
+- **Maintainability**: Changes to atoms automatically propagate to all dependent components
+- **Documentation**: Widgetbook provides interactive documentation for all components
+- **Responsive Design**: Built-in responsive behavior adapts to all screen sizes and devices
 
 ---
 
-## API Gateway
+## API Gateway & Security Layer
 
-The gateway architecture consists of two main components:
+The SaaSter Kit implements a robust, multi-layered security architecture combining Kong API Gateway with SafeLine Web Application Firewall for comprehensive protection and traffic management.
 
-1. **Kong**: API Gateway for managing API access
-    - TLS termination
-    - Routing based on hostnames
-    - Load balancing
-    - Basic traffic management
-    - Authentication with OAuth2 for API endpoints
-    - Frontend applications access without authentication
-    - Request/response transformation
-    - Service aggregation
-    - Protocol translation (REST to gRPC)
-    - gRPC-Gateway for REST to gRPC conversion
+### Kong API Gateway
 
-2. **SafeLine**: Web Application Firewall (WAF) for security
-    - Protection against SQL injection, XSS, and other OWASP Top 10 vulnerabilities
-    - Anti-bot protection with interactive challenges
-    - Rate limiting to prevent DoS attacks
-    - Dynamic HTML/JS protection to prevent client-side attacks
-    - Authentication challenges for restricted areas
-    - Real-time traffic monitoring and attack detection
-    - Customizable protection rules and policies
+Kong serves as the central entry point for all API traffic, providing enterprise-grade features:
 
-### Integration
+- **Security & Authentication**: OAuth2/OIDC integration with Keycloak for API endpoints
+- **Traffic Management**: Intelligent routing, load balancing, and rate limiting
+- **Protocol Translation**: Seamless REST to gRPC conversion using gRPC-Gateway plugin
+- **Request Processing**: Request/response transformation and service aggregation
+- **TLS Termination**: Centralized SSL/TLS certificate management
 
-SafeLine is integrated with Kong using the `kong-safeline` plugin, which is applied globally to all routes. This ensures
-that all traffic passing through Kong is inspected and protected by SafeLine's security features.
+### SafeLine Web Application Firewall
 
-The following endpoints are available:
+SafeLine provides advanced security protection against modern web threats:
 
-- **API Gateway**: http://localhost
-    - `/api/v1/customer` - Customer API (GET, PUT, POST)
-    - `/api/v1/customers` - List Customers API (GET)
-    - `/temporal/*` - Temporal UI (no authentication required)
-    - `/auth/*` - Keycloak authentication (no authentication required)
-    - `/grafana/*` - Grafana dashboard (no authentication required)
+- **Attack Prevention**: Comprehensive protection against SQL injection, XSS, code injection, command injection, CRLF injection, XXE, SSRF, and path traversal attacks
+- **Bot Protection**: Advanced anti-bot challenges with interactive verification to distinguish human users from automated threats
+- **DoS Mitigation**: Intelligent rate limiting and traffic surge protection to prevent denial-of-service attacks
+- **Dynamic Security**: Real-time HTML and JavaScript code encryption to prevent client-side attacks
+- **Access Control**: Configurable authentication challenges for restricted areas and sensitive routes
+- **Monitoring & Analytics**: Real-time traffic analysis, attack detection, and comprehensive security event logging
 
-Access the SafeLine dashboard at: https://localhost:9443
+### Security Integration
 
-### REST to gRPC Mapping
+SafeLine integrates seamlessly with Kong through the `kong-safeline` plugin, creating a unified security layer:
 
-Kong API Gateway is configured to map REST endpoints to gRPC methods for the customer service:
+- **Global Protection**: All traffic passing through Kong is automatically inspected by SafeLine
+- **Layered Defense**: Kong handles authentication and authorization while SafeLine focuses on attack prevention
+- **Performance Optimization**: Minimal latency impact through efficient traffic processing
+- **Centralized Management**: Single point of configuration for both gateway and security policies
 
-| REST Endpoint       | HTTP Method | gRPC Method    |
-|---------------------|-------------|----------------|
-| `/api/v1/customer`  | GET         | GetCustomer    |
-| `/api/v1/customer`  | PUT         | AddCustomer    |
-| `/api/v1/customer`  | POST        | UpdateCustomer |
-| `/api/v1/customers` | GET         | ListCustomers  |
+### Available Endpoints
 
-This mapping is achieved using the gRPC-Gateway plugin in Kong, which translates between REST and gRPC protocols. The
-configuration includes:
+**API Gateway**: http://localhost
+- `/api/v1/customer` - Customer management API (OAuth2 authentication required)
+- `/api/v1/customers` - Customer listing API (OAuth2 authentication required)
+- `/temporal/*` - Temporal workflow monitoring interface
+- `/auth/*` - Keycloak identity management portal
+- `/grafana/*` - Observability and metrics dashboard
 
-1. **Protocol Translation**: Converting REST requests to gRPC calls
-2. **Authentication Propagation**: Passing OAuth2 tokens to backend services
-3. **Content Type Conversion**: Handling JSON to Protocol Buffers conversion
+**Security Management**: https://localhost:9443 (SafeLine WAF dashboard)
 
-### Using from Flutter
 
-Example Flutter code to interact with the API Gateway:
+## Security Features & Protection Modes
 
-```dart
-import 'dart:convert';
-import 'package:http/http.dart' as http;
+### SafeLine WAF Protection Capabilities
 
-class CustomerClient {
-  final String baseUrl;
-  final String token;
-  final http.Client _httpClient = http.Client();
+SafeLine operates in two distinct protection modes to balance security and usability:
 
-  CustomerClient({
-    required this.token,
-    this.baseUrl = 'http://localhost/api/v1',
-  });
+**Balance Mode** (Default Development):
+- Moderate protection with minimal false positives
+- Suitable for development and testing environments
+- Allows legitimate traffic while blocking obvious threats
 
-  Future<Map<String, dynamic>> getCustomer(String id) async {
-    final response = await _httpClient.get(
-      Uri.parse('$baseUrl/customer?id=$id'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-    );
+**Strict Mode** (Recommended Production):
+- Maximum security with comprehensive threat detection
+- Enhanced protection against sophisticated attacks
+- Stricter validation rules and challenge mechanisms
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to get customer: ${response.body}');
-    }
+### Advanced Security Features
 
-    return jsonDecode(response.body);
-  }
+- **OWASP Top 10 Protection**: Complete defense against the most critical web application security risks
+- **Intelligent Bot Detection**: Machine learning-based bot identification with customizable challenge responses
+- **Behavioral Analysis**: Real-time user behavior monitoring to detect anomalous patterns
+- **Geo-blocking**: Location-based access control and threat intelligence integration
+- **Custom Rule Engine**: Flexible rule creation for application-specific security requirements
+- **Zero-Day Protection**: Proactive defense against unknown vulnerabilities through behavioral analysis
 
-  Future<Map<String, dynamic>> addCustomer(Map<String, dynamic> customerData) async {
-    final response = await _httpClient.put(
-      Uri.parse('$baseUrl/customer'),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode(customerData),
-    );
+### Management & Monitoring
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to add customer: ${response.body}');
-    }
+**SafeLine Management Console**: https://localhost:9443
+- **Default Credentials**: admin/admin (change immediately in production)
+- **Real-time Dashboard**: Live traffic monitoring and threat visualization
+- **Attack Analytics**: Detailed attack reports with threat classification and source analysis
+- **Rule Management**: Custom protection rule creation and modification
+- **Performance Metrics**: WAF performance impact and processing statistics
+- **Alert Configuration**: Customizable notifications for security events
 
-    return jsonDecode(response.body);
-  }
-}
-```
+**Integration Benefits**:
+- **Seamless Operation**: Transparent protection without application code changes
+- **High Performance**: Optimized processing with minimal latency impact
+- **Scalable Architecture**: Handles high-traffic applications with horizontal scaling
+- **Compliance Support**: Assists with PCI DSS, GDPR, and other regulatory requirements
 
-## Web Application Firewall (SafeLine)
+For comprehensive configuration guides and advanced features, see the [SafeLine WAF Documentation](./infra/safeline/README.md).
 
-SafeLine is a self-hosted Web Application Firewall (WAF) that protects your web applications from attacks and exploits.
-It is integrated with Kong API Gateway to provide comprehensive security for all traffic.
+## Enterprise Best Practices
 
-### Key Features
+The SaaSter Kit implements industry-standard best practices for building production-ready B2B SaaS applications:
 
-- **Block Web Attacks**: Defends against SQL injection, XSS, code injection, command injection, CRLF injection, XXE,
-  SSRF, path traversal, and more.
-- **Rate Limiting**: Protects against DoS attacks, brute force attempts, and traffic surges.
-- **Anti-Bot Challenge**: Blocks bots while allowing human users through interactive challenges.
-- **Authentication Challenge**: Can require password authentication for visitors to specific routes.
-- **Dynamic Protection**: Dynamically encrypts HTML and JS code to prevent client-side attacks.
+### Architecture Patterns
+- **Database-per-Service**: Each microservice maintains its own PostgreSQL database, ensuring data isolation and independent scaling
+- **Hexagonal Architecture**: Clean separation between business logic and external dependencies for improved testability and maintainability
+- **Event-Driven Orchestration**: Temporal workflows provide reliable, fault-tolerant business process management with automatic retry and recovery
 
-### Management Interface
+### Security & Compliance
+- **Defense in Depth**: Multi-layered security with SafeLine WAF, Kong authentication, and OAuth2/OIDC integration
+- **Zero-Trust Architecture**: No implicit trust between services, with comprehensive authentication and authorization
+- **Security by Design**: Built-in protection against OWASP Top 10 vulnerabilities and modern attack vectors
+- **Compliance Ready**: Architecture supports PCI DSS, GDPR, and other regulatory requirements
 
-SafeLine provides a web-based management interface accessible at `https://localhost:9443` with default credentials (
-admin/admin). Through this interface, you can:
+### Reliability & Resilience
+- **Circuit Breaker Pattern**: Prevents cascade failures and improves system stability
+- **Health Checks**: Comprehensive monitoring of service health and automatic recovery
+- **Graceful Degradation**: Services continue operating with reduced functionality during partial failures
+- **Horizontal Scalability**: Container-based architecture supports elastic scaling based on demand
 
-- View attack logs and analytics
-- Configure protection rules
-- Set up rate limiting policies
-- Enable/disable specific security features
-- Monitor traffic and security events
-
-For detailed configuration options, see the [SafeLine WAF documentation](./infra/safeline/README.md).
-
-## Best Practices Employed
-
-- **Database-per-Service**: each microservice owns its own PostgreSQL database, isolating functional domains.
-- **Event-Driven Orchestration**: Temporal guarantees atomicity and failure recovery for business workflows.
-  See [Temporal Configuration Guide](./doc/temporal_configuration.md) for details on configuring Temporal for new
-  microservices.
-- **Zero-Trust & mTLS**: Linkerd's service mesh enforces mutual authentication and encrypts internal communications.
-- **Security "By Design"**: Advanced WAF protection via SafeLine, rate limiting, OAuth2 authentication for APIs,
-  separate authentication for frontend applications, token propagation, and TLS certificates.
-- **Resilience Patterns**: retries, circuit breakers, health checks, bulkheads, and horizontal scalability.
-- **12-Factor App**: configuration via environment variables, logging to stdout, stateless services, etc.
-- **Observability**: centralized metrics and logs for rapid diagnostics.
+### Development & Operations
+- **12-Factor App Methodology**: Environment-based configuration, stateless services, and proper logging practices
+- **Infrastructure as Code**: Docker Compose configuration enables consistent environments across development and production
+- **Comprehensive Testing**: BDD testing with Gherkin scenarios ensures business requirements are met
+- **Complete Observability**: Integrated monitoring with Prometheus, Grafana, and Elasticsearch for full system visibility
 
 ---
 
