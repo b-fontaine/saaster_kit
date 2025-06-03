@@ -7,14 +7,14 @@ This document provides a comprehensive summary of the Kong Gateway optimizations
 ## Quick Reference
 
 ### Documentation Files
-- **[KONG_OPTIMIZATION_GUIDE.md](./KONG_OPTIMIZATION_GUIDE.md)** - Complete implementation guide with benefits and rollback instructions
-- **[KONG_MONITORING_SETUP.md](./KONG_MONITORING_SETUP.md)** - Monitoring, observability, and health check configuration
-- **[KONG_SECURITY_ENHANCEMENTS.md](./KONG_SECURITY_ENHANCEMENTS.md)** - Security plugins and multi-layer protection strategy
+- **[KONG_OPTIMIZATION_GUIDE.md](KONG_OPTIMIZATION_GUIDE.md)** - Complete implementation guide with benefits and rollback instructions
+- **[KONG_MONITORING_SETUP.md](KONG_MONITORING_SETUP.md)** - Monitoring, observability, and health check configuration
+- **[KONG_SECURITY_ENHANCEMENTS.md](KONG_SECURITY_ENHANCEMENTS.md)** - Security plugins and multi-layer protection strategy
 
 ### Modified Configuration Files
-- **[docker-compose.yml](./docker-compose.yml)** - Updated Kong service with optimization environment variables
-- **[infra/kong/docker/Dockerfile](./infra/kong/docker/Dockerfile)** - Added Prometheus plugin installation
-- **[infra/kong/kong.yml](./infra/kong/kong.yml)** - Enhanced with new plugins, upstreams, and health checks
+- **[docker-compose.yml](../../../docker-compose.yml)** - Updated Kong service with optimization environment variables
+- **[infra/kong/docker/Dockerfile](../docker/Dockerfile)** - Added Prometheus plugin installation
+- **[infra/kong/kong.yml](../kong.yml)** - Enhanced with new plugins, upstreams, and health checks
 
 ## Key Optimizations Implemented
 
