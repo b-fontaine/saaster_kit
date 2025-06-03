@@ -1,5 +1,48 @@
 _format_version: "1.1"
 
+upstreams:
+  - name: website-upstream
+    targets:
+      - target: website:80
+        weight: 100
+    healthchecks:
+      active:
+        type: http
+        http_path: "/"
+        healthy:
+          interval: 10
+          successes: 2
+        unhealthy:
+          interval: 10
+          http_failures: 3
+          timeouts: 3
+      passive:
+        healthy:
+          successes: 3
+        unhealthy:
+          http_failures: 3
+          timeouts: 3
+  - name: customer-service-upstream
+    targets:
+      - target: customer_service:50051
+        weight: 100
+    healthchecks:
+      active:
+        type: tcp
+        healthy:
+          interval: 10
+          successes: 2
+        unhealthy:
+          interval: 10
+          tcp_failures: 3
+          timeouts: 3
+      passive:
+        healthy:
+          successes: 3
+        unhealthy:
+          tcp_failures: 3
+          timeouts: 3
+
 plugins:
   - name: safeline
     config:
@@ -13,10 +56,21 @@ plugins:
       credentials: true
       max_age: 3600
 
+  - name: request-size-limiting
+    config:
+      allowed_payload_size: 10
+      size_unit: megabytes
+      require_content_length: false
+
+
 services:
   - name: kong-admin
     url: http://kong:8001
     plugins:
+      - name: ip-restriction
+        config:
+          allow: ["127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+          deny: []
     routes:
       - name: kong-admin-route
         protocols: ["http","https"]
@@ -105,6 +159,13 @@ services:
   - name: website
     url: http://website:80
     plugins:
+      - name: proxy-cache
+        config:
+          response_code: [200, 301, 404]
+          request_method: ["GET", "HEAD"]
+          content_type: ["text/plain", "application/json", "text/html"]
+          cache_ttl: 300
+          strategy: memory
     routes:
       - name: website-route
         protocols: ["http","https"]
@@ -184,6 +245,13 @@ services:
           auth_header_name: "Authorization"
           refresh_token_ttl: 1209600
           provision_key: "your-provision-key"
+      - name: rate-limiting
+        config:
+          minute: 100
+          hour: 1000
+          policy: local
+          fault_tolerant: true
+          hide_client_headers: false
     routes:
       - name: customer-get-route
         protocols: ["http", "https"]
@@ -217,6 +285,13 @@ services:
           auth_header_name: "Authorization"
           refresh_token_ttl: 1209600
           provision_key: "your-provision-key"
+      - name: rate-limiting
+        config:
+          minute: 50
+          hour: 500
+          policy: local
+          fault_tolerant: true
+          hide_client_headers: false
     routes:
       - name: customer-add-route
         protocols: ["http", "https"]
@@ -250,6 +325,13 @@ services:
           auth_header_name: "Authorization"
           refresh_token_ttl: 1209600
           provision_key: "your-provision-key"
+      - name: rate-limiting
+        config:
+          minute: 30
+          hour: 300
+          policy: local
+          fault_tolerant: true
+          hide_client_headers: false
     routes:
       - name: customer-update-route
         protocols: ["http", "https"]

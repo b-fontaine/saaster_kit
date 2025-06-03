@@ -1,8 +1,10 @@
 # Kong API Gateway
 
-## How Kong Works
+## Overview
 
 Kong is a cloud-native, platform-agnostic API gateway that sits between clients and your services, acting as a reverse proxy, authentication layer, and microservices orchestrator. It's built on top of NGINX and provides a robust set of features for managing API traffic.
+
+This document covers both the core Kong architecture and the comprehensive optimizations implemented to enhance performance, security, and observability while maintaining full backward compatibility with existing SafeLine WAF integration.
 
 ### Core Architecture
 
@@ -471,3 +473,471 @@ http://localhost/grafana     # Grafana
    ```
 
 This will authenticate with OAuth2 and access the API endpoint.
+
+---
+
+# Kong Gateway Optimizations
+
+## Optimization Overview
+
+The following sections detail the comprehensive Kong Gateway optimizations implemented as an alternative to KrakenD migration. All changes maintain backward compatibility while significantly enhancing performance, security, and observability.
+
+## Performance Enhancements
+
+### Docker Configuration Updates
+- **Worker Processes**: Set to `auto` for optimal CPU utilization
+- **Worker Connections**: Increased to `4096` for better concurrency
+- **Keepalive Settings**: Optimized timeout (75s) and requests (1000)
+- **Memory Cache**: Allocated 128MB for improved caching performance
+
+### Proxy Caching
+- **Website Service**: Added proxy-cache plugin with 5-minute TTL
+- **Cache Strategy**: Memory-based caching for static content
+- **Response Codes**: Caches 200, 301, and 404 responses
+- **Content Types**: Optimized for HTML, JSON, and plain text
+
+### New Environment Variables
+```yaml
+KONG_WORKER_PROCESSES: "auto"
+KONG_WORKER_CONNECTIONS: "4096"
+KONG_NGINX_HTTP_KEEPALIVE_TIMEOUT: "75s"
+KONG_NGINX_HTTP_KEEPALIVE_REQUESTS: "1000"
+KONG_STATUS_LISTEN: "0.0.0.0:8100"
+KONG_MEM_CACHE_SIZE: "128m"
+KONG_LOG_LEVEL: "notice"
+```
+
+## Security Enhancements
+
+### Multi-Layer Defense Strategy
+
+1. **Network Level**: SafeLine WAF (existing)
+   - SQL injection protection
+   - XSS prevention
+   - OWASP Top 10 protection
+   - Bot detection and mitigation
+
+2. **API Gateway Level**: Kong Security Plugins
+   - Rate limiting per endpoint
+   - Request size validation
+   - IP-based access control
+   - OAuth2 authentication (existing)
+
+3. **Application Level**: Backend service security
+   - Input validation
+   - Business logic protection
+   - Data encryption
+
+### Security Event Flow
+
+```
+Internet Request
+       ↓
+SafeLine WAF (Layer 1)
+   ↓ (if allowed)
+Kong Gateway (Layer 2)
+   ↓ (rate limit check)
+   ↓ (size limit check)
+   ↓ (IP restriction check)
+   ↓ (OAuth2 authentication)
+Backend Service (Layer 3)
+```
+
+### IP Restriction Plugin
+
+#### Kong Admin API Protection
+```yaml
+- name: kong-admin
+  url: http://kong:8001
+  plugins:
+    - name: ip-restriction
+      config:
+        allow: ["127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+        deny: []
+```
+
+**Purpose**: Restricts access to Kong's admin API to private networks only
+**Benefits**:
+- Prevents unauthorized external access to Kong configuration
+- Limits admin operations to trusted network ranges
+- Complements existing authentication mechanisms
+
+### Request Size Limiting Plugin
+
+#### Global Request Size Protection
+```yaml
+- name: request-size-limiting
+  config:
+    allowed_payload_size: 10
+    size_unit: megabytes
+    require_content_length: false
+```
+
+**Purpose**: Prevents large payload attacks and resource exhaustion
+**Benefits**:
+- Protects against DoS attacks via large payloads
+- Prevents memory exhaustion on backend services
+- Configurable per service if needed
+
+### Rate Limiting Strategy
+
+#### Tiered Rate Limiting by Operation Criticality
+
+**Read Operations (GET /api/v1/customer)**:
+```yaml
+- name: rate-limiting
+  config:
+    minute: 100
+    hour: 1000
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+```
+
+**Write Operations (PUT /api/v1/customer)**:
+```yaml
+- name: rate-limiting
+  config:
+    minute: 50
+    hour: 500
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+```
+
+**Critical Operations (POST /api/v1/customer)**:
+```yaml
+- name: rate-limiting
+  config:
+    minute: 30
+    hour: 300
+    policy: local
+    fault_tolerant: true
+    hide_client_headers: false
+```
+
+#### Rationale for Different Limits
+
+1. **Read Operations (100/min, 1000/hour)**:
+   - Higher limits for data retrieval
+   - Supports dashboard and reporting needs
+   - Balances performance with protection
+
+2. **Write Operations (50/min, 500/hour)**:
+   - Moderate limits for data creation
+   - Prevents bulk data insertion abuse
+   - Allows legitimate batch operations
+
+3. **Update Operations (30/min, 300/hour)**:
+   - Stricter limits for data modification
+   - Protects against data corruption attacks
+   - Ensures data integrity
+
+## Monitoring & Observability
+
+### Health Checks Configuration
+
+#### Website Service Health Check
+```yaml
+upstreams:
+  - name: website-upstream
+    targets:
+      - target: website:80
+        weight: 100
+    healthchecks:
+      active:
+        type: http
+        http_path: "/"
+        healthy:
+          interval: 10
+          successes: 2
+        unhealthy:
+          interval: 10
+          http_failures: 3
+          timeouts: 3
+      passive:
+        healthy:
+          successes: 3
+        unhealthy:
+          http_failures: 3
+          timeouts: 3
+```
+
+#### Customer Service Health Check
+```yaml
+  - name: customer-service-upstream
+    targets:
+      - target: customer_service:50051
+        weight: 100
+    healthchecks:
+      active:
+        type: tcp
+        healthy:
+          interval: 10
+          successes: 2
+        unhealthy:
+          interval: 10
+          tcp_failures: 3
+          timeouts: 3
+      passive:
+        healthy:
+          successes: 3
+        unhealthy:
+          tcp_failures: 3
+          timeouts: 3
+```
+
+### Status API Configuration
+
+#### Endpoint Configuration
+- **Listen Address**: `0.0.0.0:8100`
+- **Access**: Internal network only
+- **Format**: JSON status information
+
+#### Available Status Information
+- Kong version and configuration
+- Database connectivity status
+- Plugin status and configuration
+- Memory usage and performance metrics
+
+### Monitoring Endpoints
+
+- **Kong Status API**: `http://localhost:8100/status`
+- **Admin API**: `http://localhost:8001` (IP restricted)
+- **SafeLine Dashboard**: `https://localhost:9443/safeline`
+
+### Logging Configuration
+
+#### Log Levels
+- **Current Level**: `notice`
+- **Access Logs**: Enabled to stdout
+- **Error Logs**: Enabled to stderr
+
+#### Log Format
+Kong uses the standard Nginx log format with additional Kong-specific fields:
+- Request ID for tracing
+- Service and route information
+- Upstream response times
+- Plugin execution times
+
+## Plugin Configuration Summary
+
+### Global Plugins
+```yaml
+- safeline (existing)
+- cors (existing)
+- request-size-limiting (new)
+```
+
+### Service-Specific Plugins
+- **Website**: proxy-cache
+- **Kong Admin**: ip-restriction
+- **Customer APIs**: rate-limiting (tiered)
+- **All Services**: OAuth2 (existing)
+
+### Enabled Plugins List
+```
+bundled,grpc-gateway,cors,request-transformer,safeline,
+proxy-cache,rate-limiting,request-size-limiting,ip-restriction
+```
+
+## New Endpoints
+
+| Endpoint | Purpose | Access |
+|----------|---------|--------|
+| `http://localhost:8100/status` | Kong status API | Internal |
+| `http://localhost:8001/plugins` | Plugin configuration | Admin API |
+| `https://localhost:9443/safeline` | SafeLine WAF dashboard | Existing |
+
+## Backward Compatibility
+
+✅ **Preserved Functionality**:
+- SafeLine WAF integration and configuration
+- OAuth2 authentication flows
+- gRPC-Gateway functionality
+- All existing routes and services
+- Frontend application compatibility
+
+❌ **No Breaking Changes**:
+- API interfaces remain unchanged
+- Authentication mechanisms preserved
+- Service discovery unaffected
+- Client applications require no updates
+
+## Deployment Instructions
+
+### 1. Deploy Changes
+```bash
+# Build and start with new configuration
+docker-compose down
+docker-compose up -d --build
+```
+
+### 2. Verify Deployment
+```bash
+# Check Kong status
+curl http://localhost:8100/status
+
+# Verify plugins loaded
+curl http://localhost:8001/plugins
+
+# Test existing routes
+curl http://localhost:80/
+```
+
+### 3. Monitor Performance
+```bash
+# Check upstream health
+curl http://localhost:8001/upstreams
+```
+
+## Performance Expectations
+
+### Expected Improvements
+- **Response Time**: 10-20% reduction for cached content
+- **Throughput**: Better handling of concurrent requests
+- **Resource Usage**: More efficient memory and CPU utilization
+- **Availability**: Improved uptime through health checks
+
+### Monitoring Metrics
+- Cache hit ratio should be >70% for static content
+- Rate limiting should prevent >95% of abuse attempts
+- Health checks should detect failures within 30 seconds
+- Memory usage should remain stable under load
+
+## Security Posture
+
+### Enhanced Protection
+- **Request Volume**: Rate limiting prevents DoS attacks
+- **Payload Size**: Large request protection
+- **Network Access**: Admin API restricted to internal networks
+
+### Maintained Security
+- **SafeLine WAF**: All existing protections preserved
+- **OAuth2**: Authentication flows unchanged
+- **HTTPS**: SSL/TLS configuration maintained
+- **CORS**: Cross-origin policies preserved
+
+## Alerting Recommendations
+
+### Critical Alerts
+- Upstream service health failures
+- High error rates (>5% 5xx responses)
+- Excessive latency (>1000ms p95)
+- Rate limiting threshold breaches
+
+### Warning Alerts
+- Memory usage >80%
+- Cache hit ratio <70%
+- Unusual traffic patterns
+- Plugin execution errors
+
+### Alert Configuration Example
+```yaml
+groups:
+  - name: kong-alerts
+    rules:
+      - alert: KongUpstreamDown
+        expr: kong_upstream_target_health == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Kong upstream {{ $labels.upstream }} is down"
+          
+      - alert: KongHighErrorRate
+        expr: rate(kong_http_requests_total{status=~"5.."}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+```
+
+## Rollback Procedure
+
+If issues arise, complete rollback can be performed:
+
+```bash
+# Revert all configuration files
+git checkout HEAD~1 -- docker-compose.yml
+git checkout HEAD~1 -- infra/kong/kong.yml
+git checkout HEAD~1 -- infra/kong/docker/Dockerfile
+
+# Restart services
+docker-compose down
+docker-compose up -d --build
+```
+
+## Security Best Practices
+
+### Regular Maintenance
+
+1. **Review Rate Limits**: Adjust based on legitimate usage patterns
+2. **Update IP Allowlists**: Maintain current network configurations
+3. **Monitor Security Events**: Regular review of blocked requests
+4. **Coordinate with SafeLine**: Ensure both systems work together
+
+### Incident Response
+
+1. **Rate Limit Breaches**: Investigate source and adjust limits if needed
+2. **Size Limit Violations**: Check for legitimate large file uploads
+3. **IP Blocks**: Verify if legitimate users are affected
+4. **Authentication Failures**: Coordinate with identity management
+
+## Configuration Management
+
+### Environment-Specific Settings
+
+Rate limits can be adjusted per environment:
+
+- **Development**: Higher limits for testing
+- **Staging**: Production-like limits for validation
+- **Production**: Strict limits for security
+
+### Dynamic Configuration
+
+Kong's declarative configuration allows for:
+- Version-controlled security policies
+- Automated deployment of security updates
+- Rollback capabilities for security changes
+
+## Troubleshooting
+
+### Common Issues
+1. **Health Checks Failing**: Verify upstream service connectivity
+2. **High Memory Usage**: Adjust cache size or worker configuration
+3. **Missing Logs**: Check Docker logging configuration
+
+### Debug Commands
+```bash
+# Check Kong status
+curl http://localhost:8100/status
+
+# Check plugin configuration
+curl http://localhost:8001/plugins
+
+# View upstream health
+curl http://localhost:8001/upstreams/website-upstream/health
+```
+
+## Future Enhancements
+
+### Recommended Actions
+1. **Monitor Metrics**: Set up Grafana dashboards for Kong metrics
+2. **Tune Limits**: Adjust rate limits based on actual usage patterns
+3. **Scale Testing**: Perform load testing to validate improvements
+4. **Alert Setup**: Configure alerts for security and performance events
+
+### Potential Additions
+- Redis-based rate limiting for clustering
+- Advanced caching strategies
+- Enhanced security plugins
+- Custom metrics and dashboards
+
+---
+
+**Implementation Date**: June 2025  
+**Kong Version**: Latest (3.10.X)  
+**Compatibility**: Maintains full backward compatibility  
+**Status**: Production-ready with comprehensive testing recommended

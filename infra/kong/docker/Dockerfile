@@ -23,5 +23,7 @@ RUN lua5.1 /usr/bin/luarocks install kong-plugin-grpc-gateway
 # Install the Kong SafeLine plugin using PUC-Rio Lua
 RUN lua5.1 /usr/bin/luarocks install kong-safeline
 
+# Note: Using Kong's built-in metrics instead of external prometheus plugin
+
 # Switch back to the kong user
 USER kong
