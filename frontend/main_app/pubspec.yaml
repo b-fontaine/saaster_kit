@@ -50,6 +50,7 @@ dependencies:
   design_system:
     path: ../design_system
   font_awesome_flutter: ^10.8.0
+  gpt_markdown: ^1.0.19
 
 dev_dependencies:
   flutter_test:
