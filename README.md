@@ -20,7 +20,7 @@ run locally. It includes:
     - Prometheus: Collects and stores metrics
     - Grafana: Visualizes metrics and logs
     - Elasticsearch: Stores and indexes logs/traces from all microservices
-
+  
 ---
 
 ## Installation and Startup

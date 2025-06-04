@@ -15,7 +15,7 @@ class UiModule extends StatelessWidget {
       title: "SaaSter kit",
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.system,
       routerConfig: _router.goRouter,
     );
   }

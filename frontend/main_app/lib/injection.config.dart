@@ -92,17 +92,14 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i230.GetIsConnected>(),
       ),
     );
+    gh.singleton<_i766.AppRouter>(
+      () => _i766.AppRouter(gh<_i230.LoginUser>(), gh<_i230.GetIsConnected>()),
+      dispose: (i) => i.dispose(),
+    );
     gh.singleton<_i714.GetUser>(
       () => _i714.GetUser(
         gh<_i947.UserIsAuthenticatedRepository>(),
         gh<_i947.UserInfoRepository>(),
-      ),
-      dispose: (i) => i.dispose(),
-    );
-    gh.singleton<_i766.AppRouter>(
-      () => _i766.AppRouter(
-        gh<_i230.AggregateLoginIfNeeded>(),
-        gh<_i230.GetIsConnected>(),
       ),
       dispose: (i) => i.dispose(),
     );
