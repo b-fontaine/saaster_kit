@@ -27,7 +27,6 @@ This **production-ready starter kit** provides a comprehensive, enterprise-grade
     - Grafana: Advanced visualization and alerting
     - Elasticsearch: Centralized logging and trace analysis
 
->>>>>>> efac76b (doc: refactor main README.md)
 ---
 
 ## Installation and Startup
