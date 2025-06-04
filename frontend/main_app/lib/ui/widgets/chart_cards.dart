@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:design_system/design_system.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
 
 class RadarChartCard extends StatelessWidget {
   const RadarChartCard({super.key});
@@ -47,12 +47,9 @@ class RadarChartCard extends StatelessWidget {
                     'Scalability',
                     'Reliability',
                     'Usability',
-                    'Efficiency'
+                    'Efficiency',
                   ];
-                  return RadarChartTitle(
-                    text: titles[index],
-                    angle: angle,
-                  );
+                  return RadarChartTitle(text: titles[index], angle: angle);
                 },
               ),
             ),
@@ -101,7 +98,14 @@ class CandlestickChartCard extends StatelessWidget {
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) {
-                        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+                        const months = [
+                          'Jan',
+                          'Feb',
+                          'Mar',
+                          'Apr',
+                          'May',
+                          'Jun',
+                        ];
                         if (value.toInt() < months.length) {
                           return Text(
                             months[value.toInt()],
@@ -112,8 +116,12 @@ class CandlestickChartCard extends StatelessWidget {
                       },
                     ),
                   ),
-                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
                 ),
                 borderData: FlBorderData(show: true),
                 lineBarsData: [
@@ -237,16 +245,10 @@ class PieChartCard extends StatelessWidget {
           Container(
             width: 16,
             height: 16,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           DSSpacing.horizontalSpacerSM,
-          Text(
-            label,
-            style: DSTypography.appTextTheme.bodyMedium,
-          ),
+          Text(label, style: DSTypography.appTextTheme.bodyMedium),
         ],
       ),
     );

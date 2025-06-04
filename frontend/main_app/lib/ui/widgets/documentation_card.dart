@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
+import 'package:gpt_markdown/gpt_markdown.dart';
 
 class DocumentationCard extends StatelessWidget {
   const DocumentationCard({super.key});
@@ -147,31 +148,9 @@ AI agents can significantly accelerate your development process when used effect
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'AI Agent Development Guide',
-            style: DSTypography.appTextTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          DSSpacing.verticalSpacerMD,
-          SizedBox(
-            height: 600,
-            child: SingleChildScrollView(
-              child: Container(
-                padding: DSSpacing.paddingMD,
-                decoration: BoxDecoration(
-                  color: DSColors.surfaceApp,
-                  borderRadius: DSBorders.borderRadiusSM,
-                  border: Border.all(color: DSColors.divider),
-                ),
-                child: Text(
-                  _documentationContent,
-                  style: DSTypography.appTextTheme.bodyMedium?.copyWith(
-                    height: 1.6,
-                  ),
-                ),
-              ),
-            ),
+          GptMarkdown(
+            _documentationContent,
+            style: DSTypography.appTextTheme.bodyMedium?.copyWith(height: 1.6),
           ),
         ],
       ),

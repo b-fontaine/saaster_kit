@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
-import 'dashboard_app_bar.dart';
+import 'package:flutter/material.dart';
+
 import 'chart_cards.dart';
+import 'dashboard_app_bar.dart';
 import 'documentation_card.dart';
 
 class Dashboard extends StatelessWidget {
@@ -33,13 +34,13 @@ class DashboardMobileLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        const DocumentationCard(),
+        DSSpacing.verticalSpacerLG,
         const RadarChartCard(),
         DSSpacing.verticalSpacerLG,
         const CandlestickChartCard(),
         DSSpacing.verticalSpacerLG,
         const PieChartCard(),
-        DSSpacing.verticalSpacerLG,
-        const DocumentationCard(),
       ],
     );
   }
@@ -62,9 +63,9 @@ class DashboardTabletLayout extends StatelessWidget {
           ],
         ),
         DSSpacing.verticalSpacerLG,
-        const PieChartCard(),
-        DSSpacing.verticalSpacerLG,
         const DocumentationCard(),
+        DSSpacing.verticalSpacerLG,
+        const PieChartCard(),
       ],
     );
   }
@@ -78,6 +79,8 @@ class DashboardDesktopLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        const DocumentationCard(),
+        DSSpacing.verticalSpacerXL,
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -88,8 +91,6 @@ class DashboardDesktopLayout extends StatelessWidget {
             const Expanded(child: PieChartCard()),
           ],
         ),
-        DSSpacing.verticalSpacerXL,
-        const DocumentationCard(),
       ],
     );
   }

@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
@@ -20,7 +20,7 @@ dependencies:
   injectable: ^2.5.0
   flutter_bloc: ^9.1.1
   oauth2: ^2.0.3
-  localstorage: ^5.0.0
+  localstorage: ^6.0.0
   openid_client: ^0.4.9
   dio: ^5.8.0+1
   url_launcher: ^6.3.1
@@ -44,8 +44,8 @@ dependencies:
   http_parser: ^4.1.2
   file_picker: ^10.1.9
   fl_chart: ^1.0.0
-  skeletonizer: ^1.4.3
-  dio_oidc_interceptor: ^1.2.1+2
+  skeletonizer: ^2.0.1
+  dio_oidc_interceptor: ^1.2.2+2
   dio_mocked_responses: ^1.6.3
   design_system:
     path: ../design_system
@@ -55,7 +55,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   build_runner: ^2.4.15
   injectable_generator: ^2.7.0
   retrofit_generator: ^9.2.0
