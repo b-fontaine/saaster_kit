@@ -6,8 +6,21 @@ import '../widgets/footer_section.dart';
 import '../widgets/hero_section.dart';
 import '../widgets/how_to_use_section.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +29,13 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           // Sticky header - matches "sticky top-0 z-10" from websitejs
-          const CustomHeader(),
+          CustomHeader(scrollController: _scrollController),
           // Main content
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: const [
+              controller: _scrollController,
+              child: const Column(
+                children: [
                   HeroSection(),
                   FeaturesSection(),
                   HowToUseSection(),

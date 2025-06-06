@@ -131,4 +131,22 @@ class ResponsiveUtils {
 
     return calculatedHeight;
   }
+
+  /// Returns true if the current screen size is mobile (below md breakpoint)
+  static bool isMobile(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    return screenWidth < DSBreakpoints.md;
+  }
+
+  /// Returns true if the current screen size is tablet (md to lg breakpoint)
+  static bool isTablet(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    return screenWidth >= DSBreakpoints.md && screenWidth < DSBreakpoints.lg;
+  }
+
+  /// Returns true if the current screen size is desktop (lg breakpoint and above)
+  static bool isDesktop(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    return screenWidth >= DSBreakpoints.lg;
+  }
 }

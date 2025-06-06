@@ -157,6 +157,7 @@ class DSTypography {
   );
 
   /// Returns a responsive text style that scales with the screen size
+  /// Updated to align with Tailwind's responsive typography system
   static TextStyle responsiveTextStyle(
     BuildContext context, {
     required TextStyle defaultStyle,
@@ -174,4 +175,16 @@ class DSTypography {
       xl: xl,
     );
   }
+  
+  /// Tailwind-inspired text size utilities to match websitejs
+  static TextStyle textXs(BuildContext context) => GoogleFonts.openSans(fontSize: 12, letterSpacing: 0.05);
+  static TextStyle textSm(BuildContext context) => GoogleFonts.openSans(fontSize: 14, letterSpacing: 0.025);
+  static TextStyle textBase(BuildContext context) => GoogleFonts.openSans(fontSize: 16);
+  static TextStyle textLg(BuildContext context) => GoogleFonts.openSans(fontSize: 18, letterSpacing: -0.025);
+  static TextStyle textXl(BuildContext context) => GoogleFonts.openSans(fontSize: 20, letterSpacing: -0.025);
+  static TextStyle text2Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 24, letterSpacing: -0.025);
+  static TextStyle text3Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 30, letterSpacing: -0.025);
+  static TextStyle text4Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 36, letterSpacing: -0.025);
+  static TextStyle text5Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 48, letterSpacing: -0.025);
+  static TextStyle text6Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 60, letterSpacing: -0.025);
 }

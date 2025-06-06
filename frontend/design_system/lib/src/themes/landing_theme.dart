@@ -5,18 +5,18 @@ import '../atoms/colors.dart';
 import '../atoms/typography.dart';
 import 'theme_extensions.dart';
 
-/// Landing Page Theme
+/// Landing Page Theme - Updated to match websitejs Tailwind color scheme
 class LandingTheme {
   // Private constructor to prevent instantiation
   LandingTheme._();
 
-  /// Light theme for the landing page
+  /// Light theme for the landing page - Updated with websitejs color consistency
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme(
         brightness: Brightness.light,
-        primary: DSColors.primaryLanding,
+        primary: DSColors.primaryLanding, // Now indigo-600 to match websitejs
         onPrimary: DSColors.textOnPrimary,
         secondary: DSColors.secondaryLanding,
         onSecondary: DSColors.textOnSecondary,
@@ -24,6 +24,10 @@ class LandingTheme {
         onError: Colors.white,
         surface: DSColors.surfaceLanding,
         onSurface: DSColors.textPrimary,
+        // Additional color scheme properties for better websitejs alignment
+        surfaceContainerHighest: DSColors.gray50,
+        outline: DSColors.gray200,
+        outlineVariant: DSColors.gray300,
       ),
       textTheme: DSTypography.landingTextTheme,
       primaryColor: DSColors.primaryLanding,
@@ -46,10 +50,12 @@ class LandingTheme {
         shadowColor: DSColors.shadow,
         shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusLG),
         margin: const EdgeInsets.all(8),
+        // Enhanced shadow for better websitejs parity
+        surfaceTintColor: Colors.transparent,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: DSColors.primaryLanding,
+          backgroundColor: DSColors.primaryLanding, // indigo-600
           foregroundColor: DSColors.textOnPrimary,
           elevation: 2,
           shadowColor: DSColors.shadow,
@@ -58,16 +64,38 @@ class LandingTheme {
           textStyle: DSTypography.landingTextTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
+          // Enhanced hover effects for websitejs parity
+          surfaceTintColor: Colors.transparent,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.hovered)) {
+                return DSColors.primaryLanding.withValues(alpha: 0.1);
+              }
+              return null;
+            },
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: DSColors.primaryLanding,
+          foregroundColor: DSColors.primaryLanding, // indigo-600
           side: const BorderSide(color: DSColors.primaryLanding, width: 2),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.landingTextTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
+          ),
+          // Enhanced hover effects for websitejs parity
+          surfaceTintColor: Colors.transparent,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.hovered)) {
+                return DSColors.primaryLanding.withValues(alpha: 0.05);
+              }
+              return null;
+            },
           ),
         ),
       ),
@@ -172,20 +200,24 @@ class LandingTheme {
     );
   }
 
-  /// Dark theme for the landing page
+  /// Dark theme for the landing page - Updated with websitejs color consistency
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme(
         brightness: Brightness.dark,
-        primary: DSColors.primaryLanding,
+        primary: DSColors.primaryLanding, // indigo-600 consistent with light theme
         onPrimary: DSColors.textOnPrimary,
         secondary: DSColors.secondaryLanding,
         onSecondary: DSColors.textOnSecondary,
         error: DSColors.errorLanding,
         onError: Colors.white,
-        surface: const Color(0xFF1E1E1E), // Dark surface
+        surface: DSColors.gray900, // Use design system gray-900
         onSurface: Colors.white,
+        // Additional color scheme properties for better websitejs alignment
+        surfaceContainerHighest: DSColors.gray800,
+        outline: DSColors.gray700,
+        outlineVariant: DSColors.gray600,
       ),
       textTheme: DSTypography.landingTextTheme.apply(
         bodyColor: Colors.white,
@@ -193,7 +225,7 @@ class LandingTheme {
       ),
       primaryColor: DSColors.primaryLanding,
       primarySwatch: DSColors.landingPrimarySwatch,
-      scaffoldBackgroundColor: const Color(0xFF121212),
+      scaffoldBackgroundColor: DSColors.gray900, // Use design system gray-900
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
@@ -206,15 +238,17 @@ class LandingTheme {
         ),
       ),
       cardTheme: CardThemeData(
-        color: const Color(0xFF1E1E1E),
+        color: DSColors.gray800, // Use design system gray-800
         elevation: 3,
         shadowColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusLG),
         margin: const EdgeInsets.all(8),
+        // Enhanced shadow for better websitejs parity
+        surfaceTintColor: Colors.transparent,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: DSColors.primaryLanding,
+          backgroundColor: DSColors.primaryLanding, // indigo-600
           foregroundColor: DSColors.textOnPrimary,
           elevation: 2,
           shadowColor: Colors.black,
@@ -223,16 +257,38 @@ class LandingTheme {
           textStyle: DSTypography.landingTextTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
+          // Enhanced hover effects for websitejs parity
+          surfaceTintColor: Colors.transparent,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.hovered)) {
+                return DSColors.primaryLanding.withValues(alpha: 0.1);
+              }
+              return null;
+            },
+          ),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: DSColors.primaryLanding,
+          foregroundColor: DSColors.primaryLanding, // indigo-600
           side: const BorderSide(color: DSColors.primaryLanding, width: 2),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusMD),
           textStyle: DSTypography.landingTextTheme.labelLarge?.copyWith(
             fontWeight: FontWeight.w600,
+          ),
+          // Enhanced hover effects for websitejs parity
+          surfaceTintColor: Colors.transparent,
+        ).copyWith(
+          overlayColor: WidgetStateProperty.resolveWith<Color?>(
+            (Set<WidgetState> states) {
+              if (states.contains(WidgetState.hovered)) {
+                return DSColors.primaryLanding.withValues(alpha: 0.05);
+              }
+              return null;
+            },
           ),
         ),
       ),
@@ -248,18 +304,18 @@ class LandingTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF2C2C2C),
+        fillColor: DSColors.gray800, // Use design system gray-800
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
           vertical: 16,
         ),
         border: OutlineInputBorder(
           borderRadius: DSBorders.borderRadiusMD,
-          borderSide: const BorderSide(color: Color(0xFF424242)),
+          borderSide: BorderSide(color: DSColors.gray600), // Use design system gray-600
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: DSBorders.borderRadiusMD,
-          borderSide: const BorderSide(color: Color(0xFF424242)),
+          borderSide: BorderSide(color: DSColors.gray600), // Use design system gray-600
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: DSBorders.borderRadiusMD,
@@ -284,8 +340,8 @@ class LandingTheme {
         ),
       ),
       chipTheme: ChipThemeData(
-        backgroundColor: const Color(0xFF2C2C2C),
-        disabledColor: const Color(0xFF1E1E1E),
+        backgroundColor: DSColors.gray800, // Use design system gray-800
+        disabledColor: DSColors.gray900, // Use design system gray-900
         selectedColor: DSColors.primaryLanding.withValues(alpha: (0.3 * 255).toDouble()),
         secondarySelectedColor: DSColors.primaryLanding,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -298,11 +354,11 @@ class LandingTheme {
         brightness: Brightness.dark,
         shape: RoundedRectangleBorder(
           borderRadius: DSBorders.borderRadiusCircular,
-          side: const BorderSide(color: Color(0xFF424242)),
+          side: BorderSide(color: DSColors.gray600), // Use design system gray-600
         ),
       ),
-      dividerTheme: const DividerThemeData(
-        color: Color(0xFF424242),
+      dividerTheme: DividerThemeData(
+        color: DSColors.gray600, // Use design system gray-600
         thickness: 1,
         space: 1,
       ),
@@ -315,7 +371,7 @@ class LandingTheme {
         ),
       ),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: DSColors.gray800, // Use design system gray-800
         selectedItemColor: DSColors.primaryLanding,
         unselectedItemColor: Colors.grey[400],
         selectedLabelStyle: DSTypography.landingTextTheme.labelSmall,
@@ -334,7 +390,7 @@ class LandingTheme {
         indicatorSize: TabBarIndicatorSize.tab,
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: const Color(0xFF1E1E1E),
+        backgroundColor: DSColors.gray800, // Use design system gray-800
         elevation: 24,
         shape: RoundedRectangleBorder(borderRadius: DSBorders.borderRadiusLG),
       ),

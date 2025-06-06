@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-/// Defines the breakpoints for responsive design
+/// Defines the breakpoints for responsive design - Updated to match Tailwind CSS
 class DSBreakpoints {
   /// Extra small screens (mobile phones)
   static const double xs = 0;
   
-  /// Small screens (large phones, small tablets)
-  static const double sm = 600;
+  /// Small screens (large phones, small tablets) - Tailwind sm: 640px
+  static const double sm = 640;
   
-  /// Medium screens (tablets)
-  static const double md = 960;
+  /// Medium screens (tablets) - Tailwind md: 768px
+  static const double md = 768;
   
-  /// Large screens (desktops)
-  static const double lg = 1280;
+  /// Large screens (desktops) - Tailwind lg: 1024px
+  static const double lg = 1024;
   
-  /// Extra large screens (large desktops)
-  static const double xl = 1920;
+  /// Extra large screens (large desktops) - Tailwind xl: 1280px
+  static const double xl = 1280;
 
   /// Returns the current breakpoint based on screen width
   static String getBreakpoint(BuildContext context) {
