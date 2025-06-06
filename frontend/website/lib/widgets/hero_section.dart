@@ -173,7 +173,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
           style: ElevatedButton.styleFrom(
             backgroundColor: _isHovered ? DSColors.gray100 : Colors.white, // bg-white hover:bg-gray-100
             foregroundColor: DSColors.primaryLanding, // text-indigo-600
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // px-6 py-3
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), // px-6 py-4
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8), // rounded-lg
             ),
@@ -213,7 +213,7 @@ class _SecondaryButtonState extends State<_SecondaryButton> {
             backgroundColor: _isHovered ? Colors.white : Colors.transparent, // bg-transparent hover:bg-white
             foregroundColor: _isHovered ? DSColors.primaryLanding : Colors.white, // text-white hover:text-indigo-600
             side: const BorderSide(color: Colors.white, width: 2), // border-2 border-white
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // px-6 py-3
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), // px-6 py-4
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8), // rounded-lg
             ),

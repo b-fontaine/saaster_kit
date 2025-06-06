@@ -178,7 +178,7 @@ class _TerminalContent extends StatelessWidget {
         ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: _steps
             .asMap()
             .entries
