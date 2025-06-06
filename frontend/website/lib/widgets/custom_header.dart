@@ -272,7 +272,7 @@ class _MobileMenuButtonState extends State<_MobileMenuButton> {
       child: IconButton(
         onPressed: widget.onPressed,
         icon: Icon(
-          widget.isOpen ? Icons.close : Icons.menu,
+          widget.isOpen ? LucideIcons.x : LucideIcons.menu,
           size: 24,
           color: _isHovered ? DSColors.primaryLanding : DSColors.gray700,
         ),

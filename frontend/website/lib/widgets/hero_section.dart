@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:design_system/design_system.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// Custom hero section that exactly matches the websitejs Hero component
 class HeroSection extends StatelessWidget {
@@ -167,7 +168,7 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
               webOnlyWindowName: "_blank",
             );
           },
-          icon: const Icon(Icons.code, size: 20), // Github size={20}
+          icon: const Icon(LucideIcons.github, size: 20), // Github size={20}
           label: const Text('Fork on GitHub'),
           style: ElevatedButton.styleFrom(
             backgroundColor: _isHovered ? DSColors.gray100 : Colors.white, // bg-white hover:bg-gray-100

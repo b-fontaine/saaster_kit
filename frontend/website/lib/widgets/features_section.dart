@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// Features section that exactly matches the websitejs Features component
 class FeaturesSection extends StatelessWidget {
@@ -9,37 +10,37 @@ class FeaturesSection extends StatelessWidget {
     _FeatureData(
       title: 'Enhanced Security Stack',
       description: 'SafeLine WAF integration provides advanced protection against SQL injection, XSS, DoS attacks, bot threats, and OWASP Top 10 vulnerabilities.',
-      icon: Icons.shield,
+      icon: LucideIcons.shield,
     ),
     _FeatureData(
       title: 'Frontend Applications',
       description: 'Flutter-based cross-platform solutions with Material UI and atomic design pattern for web, mobile, and desktop.',
-      icon: Icons.layers,
+      icon: LucideIcons.layers,
     ),
     _FeatureData(
       title: 'API Gateway & Security',
       description: 'Kong Enterprise API Gateway for routing, authentication, rate limiting, and protocol translation plus SafeLine WAF for threat detection.',
-      icon: Icons.shield,
+      icon: LucideIcons.shield,
     ),
     _FeatureData(
       title: 'Identity & Access Management',
       description: 'Keycloak provides enterprise-grade authentication, authorization, and multi-tenant user management with role-based access control.',
-      icon: Icons.lock,
+      icon: LucideIcons.lock,
     ),
     _FeatureData(
       title: 'Workflow Orchestration',
       description: 'Temporal delivers a reliable workflow engine for complex business logic with comprehensive monitoring and management interface.',
-      icon: Icons.account_tree,
+      icon: LucideIcons.workflow,
     ),
     _FeatureData(
       title: 'Microservices Architecture',
       description: 'Go-based services with hexagonal architecture, database-per-service pattern, and gRPC communication with REST API translation.',
-      icon: Icons.code,
+      icon: LucideIcons.code,
     ),
     _FeatureData(
       title: 'Complete Observability',
       description: 'Production-ready monitoring and logging with Prometheus, Grafana, and Elasticsearch for centralized logging and trace analysis.',
-      icon: Icons.bar_chart,
+      icon: LucideIcons.barChart3,
     ),
   ];
 
