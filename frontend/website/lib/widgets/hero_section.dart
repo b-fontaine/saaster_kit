@@ -1,16 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 /// Custom hero section that exactly matches the websitejs Hero component
 class HeroSection extends StatelessWidget {
   final ScrollController? scrollController;
-  
-  const HeroSection({
-    super.key,
-    this.scrollController,
-  });
+
+  const HeroSection({super.key, this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +19,27 @@ class HeroSection extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: DSColors.landingGradient, // Updated to use design system gradient
+        gradient:
+            DSColors.landingGradient, // Updated to use design system gradient
       ),
       child: DSResponsiveLayout.responsiveContainer(
         maxWidth: 1280, // max-w-7xl
         padding: ResponsiveUtils.responsivePadding(
           context,
-          defaultPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 64), // px-4 py-16
-          sm: const EdgeInsets.symmetric(horizontal: 24, vertical: 64), // sm:px-6 py-16
-          lg: const EdgeInsets.symmetric(horizontal: 32, vertical: 96), // lg:px-8 md:py-24
+          defaultPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 64,
+          ), // px-4 py-16
+          sm: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 64,
+          ), // sm:px-6 py-16
+          lg: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 96,
+          ), // lg:px-8 md:py-24
         ),
-        child: isDesktop
-            ? const _DesktopLayout()
-            : const _MobileLayout(),
+        child: isDesktop ? const _DesktopLayout() : const _MobileLayout(),
       ),
     );
   }
@@ -97,12 +102,14 @@ class _HeroTitle extends StatelessWidget {
       'Launch Your SaaS Faster with SaaSter Kit',
       style: ResponsiveUtils.responsiveValue<TextStyle>(
         context: context,
-        defaultValue: DSTypography.text4Xl(context).copyWith( // text-4xl
+        defaultValue: DSTypography.text4Xl(context).copyWith(
+          // text-4xl
           fontWeight: FontWeight.bold, // font-bold
           color: Colors.white, // text-white
           height: 1.1, // Tighter line height for headings
         ),
-        md: DSTypography.text5Xl(context).copyWith( // md:text-5xl
+        md: DSTypography.text5Xl(context).copyWith(
+          // md:text-5xl
           fontWeight: FontWeight.bold,
           color: Colors.white,
           height: 1.1,
@@ -119,7 +126,8 @@ class _HeroDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       'A complete, production-ready starter kit for building modern SaaS applications. Focus on your business logic, we\'ve handled the infrastructure.',
-      style: DSTypography.textXl(context).copyWith( // text-xl
+      style: DSTypography.textXl(context).copyWith(
+        // text-xl
         color: const Color(0xFFE0E7FF), // text-indigo-100
         height: 1.5,
         fontWeight: FontWeight.w400,
@@ -136,10 +144,7 @@ class _ActionButtons extends StatelessWidget {
     return Wrap(
       spacing: 16, // gap-4
       runSpacing: 16,
-      children: [
-        const _PrimaryButton(),
-        _SecondaryButton(),
-      ],
+      children: [const _PrimaryButton(), _SecondaryButton()],
     );
   }
 }
@@ -169,11 +174,20 @@ class _PrimaryButtonState extends State<_PrimaryButton> {
             );
           },
           icon: const Icon(LucideIcons.github, size: 20), // Github size={20}
-          label: const Text('Fork on GitHub'),
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text('Fork on GitHub'),
+          ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: _isHovered ? DSColors.gray100 : Colors.white, // bg-white hover:bg-gray-100
+            backgroundColor:
+                _isHovered
+                    ? DSColors.gray100
+                    : Colors.white, // bg-white hover:bg-gray-100
             foregroundColor: DSColors.primaryLanding, // text-indigo-600
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), // px-6 py-4
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 16,
+            ), // px-6 py-4
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8), // rounded-lg
             ),
@@ -210,10 +224,22 @@ class _SecondaryButtonState extends State<_SecondaryButton> {
             // This matches the href="#features" behavior from websitejs
           },
           style: OutlinedButton.styleFrom(
-            backgroundColor: _isHovered ? Colors.white : Colors.transparent, // bg-transparent hover:bg-white
-            foregroundColor: _isHovered ? DSColors.primaryLanding : Colors.white, // text-white hover:text-indigo-600
-            side: const BorderSide(color: Colors.white, width: 2), // border-2 border-white
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16), // px-6 py-4
+            backgroundColor:
+                _isHovered
+                    ? Colors.white
+                    : Colors.transparent, // bg-transparent hover:bg-white
+            foregroundColor:
+                _isHovered
+                    ? DSColors.primaryLanding
+                    : Colors.white, // text-white hover:text-indigo-600
+            side: const BorderSide(
+              color: Colors.white,
+              width: 2,
+            ), // border-2 border-white
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 16,
+            ), // px-6 py-4
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8), // rounded-lg
             ),
@@ -221,7 +247,10 @@ class _SecondaryButtonState extends State<_SecondaryButton> {
               fontWeight: FontWeight.w500, // font-medium
             ),
           ),
-          child: const Text('Explore Features'),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text('Explore Features'),
+          ),
         ),
       ),
     );

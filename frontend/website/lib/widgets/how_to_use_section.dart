@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 /// How to use section that exactly matches the websitejs HowToUse component
@@ -15,9 +15,18 @@ class HowToUseSection extends StatelessWidget {
         maxWidth: 1280, // max-w-7xl
         padding: ResponsiveUtils.responsivePadding(
           context,
-          defaultPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 64), // px-4 py-16
-          sm: const EdgeInsets.symmetric(horizontal: 24, vertical: 64), // sm:px-6 py-16
-          lg: const EdgeInsets.symmetric(horizontal: 32, vertical: 64), // lg:px-8 py-16
+          defaultPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 64,
+          ), // px-4 py-16
+          sm: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 64,
+          ), // sm:px-6 py-16
+          lg: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 64,
+          ), // lg:px-8 py-16
         ),
         child: const Column(
           children: [
@@ -89,12 +98,7 @@ class _TerminalMockup extends StatelessWidget {
             ),
           ],
         ),
-        child: const Column(
-          children: [
-            _TerminalHeader(),
-            _TerminalContent(),
-          ],
-        ),
+        child: const Column(children: [_TerminalHeader(), _TerminalContent()]),
       ),
     );
   }
@@ -107,7 +111,10 @@ class _TerminalHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     // div className="bg-gray-800 px-4 py-3 flex items-center"
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // px-4 py-3
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 12,
+      ), // px-4 py-3
       decoration: const BoxDecoration(
         color: DSColors.gray800, // bg-gray-800
         borderRadius: BorderRadius.only(
@@ -145,12 +152,14 @@ class _TerminalContent extends StatelessWidget {
   static const List<_TerminalStep> _steps = [
     _TerminalStep(
       comment: '# Step 1: Fork the SaaSter Kit repository',
-      command: 'Visit https://github.com/b-fontaine/saaster_kit and click "Fork"',
+      command:
+          'Visit https://github.com/b-fontaine/saaster_kit and click "Fork"',
       isOpaque: true,
     ),
     _TerminalStep(
       comment: '# Step 2: Clone your forked repository',
-      command: 'git clone https://github.com/your-username/saaster_kit.git\ncd saaster_kit',
+      command:
+          'git clone https://github.com/your-username/saaster_kit.git\ncd saaster_kit',
       isOpaque: false,
     ),
     _TerminalStep(
@@ -179,14 +188,19 @@ class _TerminalContent extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: _steps
-            .asMap()
-            .entries
-            .map((entry) => Padding(
-                  padding: EdgeInsets.only(bottom: entry.key < _steps.length - 1 ? 16 : 0), // mb-4
-                  child: _TerminalStepWidget(step: entry.value),
-                ))
-            .toList(),
+        children:
+            _steps
+                .asMap()
+                .entries
+                .map(
+                  (entry) => Padding(
+                    padding: EdgeInsets.only(
+                      bottom: entry.key < _steps.length - 1 ? 16 : 0,
+                    ), // mb-4
+                    child: _TerminalStepWidget(step: entry.value),
+                  ),
+                )
+                .toList(),
       ),
     );
   }
@@ -218,9 +232,12 @@ class _TerminalStepWidget extends StatelessWidget {
           Text(
             step.command!,
             style: DSTypography.textSm(context).copyWith(
-              color: step.isOpaque 
-                  ? DSColors.gray200.withValues(alpha: 0.7) // opacity-70 to match websitejs
-                  : DSColors.gray200, // text-gray-200
+              color:
+                  step.isOpaque
+                      ? DSColors.gray200.withValues(
+                        alpha: 0.7,
+                      ) // opacity-70 to match websitejs
+                      : DSColors.gray200, // text-gray-200
               fontFamily: 'monospace', // font-mono to match websitejs
               height: 1.5,
             ),
