@@ -126,12 +126,24 @@ class _LogoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      'SaaSter Kit',
-      style: DSTypography.text2Xl(context).copyWith(
-        fontWeight: FontWeight.bold, // font-bold
-        color: DSColors.primaryLanding, // text-indigo-600
-      ),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset(
+          'assets/images/logo.png',
+          height: 32,
+          width: 32,
+          fit: BoxFit.contain,
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'SaaSter Kit',
+          style: DSTypography.text2Xl(context).copyWith(
+            fontWeight: FontWeight.bold, // font-bold
+            color: DSColors.primaryLanding, // text-indigo-600
+          ),
+        ),
+      ],
     );
   }
 }
