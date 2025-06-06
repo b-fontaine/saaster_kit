@@ -1,180 +1,105 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class FooterSection extends StatelessWidget {
   const FooterSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final footerSections = [
-      FooterLinkSection(
-        title: 'Product',
-        links: [
-          FooterLink(title: 'Features', url: '#'),
-          FooterLink(title: 'Pricing', url: '#'),
-          FooterLink(title: 'Documentation', url: '#'),
-          FooterLink(title: 'Roadmap', url: '#'),
-        ],
-      ),
-      FooterLinkSection(
-        title: 'Company',
-        links: [
-          FooterLink(title: 'About Us', url: '#'),
-          FooterLink(title: 'Blog', url: '#'),
-          FooterLink(title: 'Careers', url: '#'),
-          FooterLink(title: 'Contact', url: '#'),
-        ],
-      ),
-      FooterLinkSection(
-        title: 'Resources',
-        links: [
-          FooterLink(title: 'Community', url: '#'),
-          FooterLink(title: 'Help Center', url: '#'),
-          FooterLink(title: 'Status', url: '#'),
-          FooterLink(title: 'GitHub', url: '#'),
-        ],
-      ),
-      FooterLinkSection(
-        title: 'Legal',
-        links: [
-          FooterLink(title: 'Terms of Service', url: '#'),
-          FooterLink(title: 'Privacy Policy', url: '#'),
-          FooterLink(title: 'Cookie Policy', url: '#'),
-        ],
-      ),
-    ];
-
     return Container(
       padding: DSSpacing.getPagePadding(context),
-      color: const Color(0xFF1A1A1A),
+      color: const Color(0xFF111827), // Gray-900
       child: Column(
         children: [
-          const SizedBox(height: 60),
+          const SizedBox(height: 48),
           DSResponsiveLayout.responsiveRowColumn(
             context: context,
             breakpoint: 768,
-            spacing: 40,
+            spacing: 24,
             rowMainAxisAlignment: MainAxisAlignment.spaceBetween,
-            columnMainAxisAlignment: MainAxisAlignment.start,
-            columnCrossAxisAlignment: CrossAxisAlignment.start,
+            columnMainAxisAlignment: MainAxisAlignment.center,
+            columnCrossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // Company info
+              // Left side - Company info
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: DSBreakpoints.isMobile(context)
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(DSIcons.dashboard, color: DSColors.primaryLanding, size: 32),
-                      const SizedBox(width: 8),
-                      Text(
-                        'SaaSter Kit',
-                        style: DSTypography.landingTextTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: 300,
-                    child: Text(
-                      'A complete, production-ready SaaS starter kit with microservices architecture.',
-                      style: DSTypography.landingTextTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withOpacity(0.7),
-                      ),
+                  Text(
+                    'SaaSter Kit',
+                    style: const TextStyle(
+                      fontSize: 24, // text-2xl
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      _buildSocialIcon(Icons.flutter_dash),
-                      const SizedBox(width: 16),
-                      _buildSocialIcon(Icons.code),
-                      const SizedBox(width: 16),
-                      _buildSocialIcon(Icons.cloud),
-                    ],
+                  const SizedBox(height: 8),
+                  Text(
+                    'A free, open-source starter kit for SaaS applications',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF9CA3AF), // gray-400
+                    ),
+                    textAlign: DSBreakpoints.isMobile(context)
+                        ? TextAlign.center
+                        : TextAlign.start,
                   ),
                 ],
               ),
-              // Footer links
-              ...footerSections.map((section) => _buildFooterLinkSection(section)),
+              // Right side - GitHub link and disclaimer
+              Column(
+                crossAxisAlignment: DSBreakpoints.isMobile(context)
+                    ? CrossAxisAlignment.center
+                    : CrossAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      launchUrlString(
+                        "https://github.com/b-fontaine/saaster_kit",
+                        webOnlyWindowName: "_blank",
+                      );
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.code,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'GitHub Repository',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'This project is not for sale and is completely free to use.',
+                    style: const TextStyle(
+                      fontSize: 14, // text-sm
+                      color: Color(0xFF9CA3AF), // gray-400
+                    ),
+                    textAlign: DSBreakpoints.isMobile(context)
+                        ? TextAlign.center
+                        : TextAlign.end,
+                  ),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 60),
-          const Divider(color: Color(0xFF333333)),
-          const SizedBox(height: 24),
-          Text(
-            '© ${DateTime.now().year} SaaSter Kit. All rights reserved.',
-            style: DSTypography.landingTextTheme.bodySmall?.copyWith(
-              color: Colors.white.withOpacity(0.5),
-            ),
-          ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 48),
         ],
       ),
     );
   }
-
-  Widget _buildSocialIcon(IconData icon) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Icon(
-        icon,
-        color: Colors.white,
-        size: 20,
-      ),
-    );
-  }
-
-  Widget _buildFooterLinkSection(FooterLinkSection section) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          section.title,
-          style: DSTypography.landingTextTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 16),
-        ...section.links.map((link) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                link.title,
-                style: DSTypography.landingTextTheme.bodyMedium?.copyWith(
-                  color: Colors.white.withOpacity(0.7),
-                ),
-              ),
-            )),
-      ],
-    );
-  }
 }
 
-class FooterLinkSection {
-  final String title;
-  final List<FooterLink> links;
-
-  FooterLinkSection({
-    required this.title,
-    required this.links,
-  });
-}
-
-class FooterLink {
-  final String title;
-  final String url;
-
-  FooterLink({
-    required this.title,
-    required this.url,
-  });
-}

@@ -32,7 +32,7 @@ This **production-ready starter kit** provides a comprehensive, enterprise-grade
 ## Installation and Startup
 
 ```bash
-docker compose -p SaaSter up -d
+docker compose -p saaster up -d
 ```
 
 > **Note**: In a production environment, replace the development ACME certificates with trusted TLS certificates, and

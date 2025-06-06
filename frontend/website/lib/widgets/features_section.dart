@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/cupertino.dart';
 
 class FeaturesSection extends StatelessWidget {
   const FeaturesSection({super.key});
@@ -9,34 +8,39 @@ class FeaturesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final features = [
       FeatureItem(
-        title: 'Microservices Architecture',
-        description: 'Built with Go, hexagonal architecture, CQRS pattern, and gRPC endpoints for scalable, maintainable services.',
-        icon: Icons.architecture,
+        title: 'Enhanced Security Stack',
+        description: 'SafeLine WAF integration provides advanced protection against SQL injection, XSS, DoS attacks, bot threats, and OWASP Top 10 vulnerabilities.',
+        icon: Icons.shield,
       ),
       FeatureItem(
-        title: 'Authentication & Authorization',
-        description: 'Integrated Keycloak for secure OAuth2/OIDC authentication and fine-grained authorization.',
-        icon: Icons.security,
+        title: 'Frontend Applications',
+        description: 'Flutter-based cross-platform solutions with Material UI and atomic design pattern for web, mobile, and desktop.',
+        icon: Icons.layers,
       ),
       FeatureItem(
-        title: 'API Gateway',
-        description: 'Kong API Gateway with OAuth2 token validation and seamless REST-to-gRPC mapping.',
-        icon: Icons.api,
+        title: 'API Gateway & Security',
+        description: 'Kong Enterprise API Gateway for routing, authentication, rate limiting, and protocol translation plus SafeLine WAF for threat detection.',
+        icon: Icons.shield,
+      ),
+      FeatureItem(
+        title: 'Identity & Access Management',
+        description: 'Keycloak provides enterprise-grade authentication, authorization, and multi-tenant user management with role-based access control.',
+        icon: Icons.lock,
       ),
       FeatureItem(
         title: 'Workflow Orchestration',
-        description: 'Temporal for reliable, scalable workflow orchestration with built-in error handling.',
+        description: 'Temporal delivers a reliable workflow engine for complex business logic with comprehensive monitoring and management interface.',
         icon: Icons.account_tree,
       ),
       FeatureItem(
-        title: 'Observability',
-        description: 'Comprehensive monitoring with Prometheus, Grafana, and Elasticsearch for logs.',
-        icon: Icons.analytics,
+        title: 'Microservices Architecture',
+        description: 'Go-based services with hexagonal architecture, database-per-service pattern, and gRPC communication with REST API translation.',
+        icon: Icons.code,
       ),
       FeatureItem(
-        title: 'Flutter Frontend',
-        description: 'Beautiful, responsive UI with Material Design and atomic design patterns.',
-        icon: Icons.smartphone,
+        title: 'Complete Observability',
+        description: 'Production-ready monitoring and logging with Prometheus, Grafana, and Elasticsearch for centralized logging and trace analysis.',
+        icon: Icons.bar_chart,
       ),
     ];
 
@@ -48,18 +52,20 @@ class FeaturesSection extends StatelessWidget {
         children: [
           const SizedBox(height: 40),
           Text(
-            'Key Features',
-            style: DSTypography.landingTextTheme.headlineMedium?.copyWith(
+            'Comprehensive Features',
+            style: const TextStyle(
+              fontSize: 36, // text-3xl
               fontWeight: FontWeight.bold,
-              color: DSColors.textPrimary,
+              color: Color(0xFF111827), // gray-900
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
-            'Everything you need to build a production-ready SaaS application',
-            style: DSTypography.landingTextTheme.titleMedium?.copyWith(
-              color: DSColors.textSecondary,
+            'SaaSter Kit provides everything you need to build, deploy, and scale your SaaS application.',
+            style: const TextStyle(
+              fontSize: 20, // text-xl
+              color: Color(0xFF6B7280), // gray-600
             ),
             textAlign: TextAlign.center,
           ),
@@ -92,11 +98,51 @@ class FeatureCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DSCards.landingFeatureCard(
-      title: feature.title,
-      description: feature.description,
-      icon: feature.icon,
-      context: context,
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: const Color(0xFFE5E7EB)), // gray-200
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            child: Icon(
+              feature.icon,
+              size: 32,
+              color: const Color(0xFF4F46E5), // indigo-600
+            ),
+          ),
+          Text(
+            feature.title,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF111827), // gray-900
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            feature.description,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color(0xFF6B7280), // gray-600
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

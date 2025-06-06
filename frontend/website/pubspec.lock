@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: async
-      sha256: d2872f9c19731c2e5f10444b14686eb7cc85c76274bd6c16e1816bff9a3bab63
+      sha256: "758e6d74e971c3e5aceb4110bfd6698efc7f501675bcfe0c775459a8140750eb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.12.0"
+    version: "2.13.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -76,10 +76,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus
-      sha256: "77f757b789ff68e4eaf9c56d1752309bd9f7ad557cb105b938a7f8eb89e59110"
+      sha256: "0c6396126421b590089447154c5f98a5de423b70cfb15b1578fd018843ee6f53"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.2"
+    version: "11.4.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -92,10 +92,10 @@ packages:
     dependency: transitive
     description:
       name: fake_async
-      sha256: "6a95e56b2449df2273fd8c45a662d6947ce1ebb7aafe80e550a3f68297f3cacc"
+      sha256: "5368f224a74523e8d2e7399ea1638b37aecfca824a3cc4dfdf77bf1fa905ac44"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.2"
+    version: "1.3.3"
   ffi:
     dependency: transitive
     description:
@@ -171,10 +171,10 @@ packages:
     dependency: transitive
     description:
       name: leak_tracker
-      sha256: c35baad643ba394b40aac41080300150a4f08fd0fd6a10378f8f7c6bc161acec
+      sha256: "6bb818ecbdffe216e81182c2f0714a2e62b593f4a4f13098713ff1685dfb6ab0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.0.8"
+    version: "10.0.9"
   leak_tracker_flutter_testing:
     dependency: transitive
     description:
@@ -480,10 +480,10 @@ packages:
     dependency: transitive
     description:
       name: vm_service
-      sha256: "0968250880a6c5fe7edc067ed0a13d4bae1577fe2771dcf3010d52c4a9d3ca14"
+      sha256: ddfa8d30d89985b96407efce8acbdd124701f96741f2d981ca860662f1c0dc02
       url: "https://pub.dev"
     source: hosted
-    version: "14.3.1"
+    version: "15.0.0"
   web:
     dependency: transitive
     description:
@@ -504,10 +504,10 @@ packages:
     dependency: transitive
     description:
       name: win32_registry
-      sha256: "21ec76dfc731550fd3e2ce7a33a9ea90b828fdf19a5c3bcf556fa992cfa99852"
+      sha256: "6f1b564492d0147b330dd794fee8f512cec4977957f310f9951b5f9d83618dae"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.5"
+    version: "2.1.0"
   xdg_directories:
     dependency: transitive
     description:
