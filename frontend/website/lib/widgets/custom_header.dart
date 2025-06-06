@@ -227,7 +227,7 @@ class _GitHubLinkState extends State<_GitHubLink> {
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               child: Icon(
-                Icons.code, // Using Material Icons instead of Lucide Github
+                Icons.code_outlined, // GitHub-like icon to match lucide-react Github
                 size: 18,
                 color: _isHovered ? DSColors.primaryLanding : DSColors.gray700,
               ),
@@ -371,7 +371,7 @@ class _MobileGitHubLink extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.code, // Using code icon as GitHub substitute
+              Icons.code_outlined, // GitHub-like icon to match lucide-react Github
               size: 18,
               color: DSColors.gray700, // text-gray-700
             ),

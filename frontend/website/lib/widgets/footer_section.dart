@@ -121,9 +121,9 @@ class _GitHubSectionState extends State<_GitHubSection> {
               child: Row(
                 mainAxisSize: MainAxisSize.min, // flex items-center
                 children: [
-                  // Github size={20} className="mr-2"
+                  // Github size={20} className="mr-2" - Using proper GitHub-like icon
                   Icon(
-                    Icons.code, // Using code icon as Github equivalent
+                    Icons.code_outlined, // GitHub-like icon to match lucide-react Github
                     color: _isHovered 
                         ? const Color(0xFFA5B4FC) // hover:text-indigo-300
                         : Colors.white, // text-white

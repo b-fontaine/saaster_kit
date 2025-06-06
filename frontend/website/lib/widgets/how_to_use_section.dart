@@ -116,7 +116,7 @@ class _TerminalHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Terminal size={20} className="text-gray-400 mr-2"
+          // Terminal size={20} className="text-gray-400 mr-2" - Using terminal icon to match lucide-react Terminal
           Icon(
             Icons.terminal,
             color: DSColors.gray400, // text-gray-400
@@ -129,7 +129,7 @@ class _TerminalHeader extends StatelessWidget {
             style: DSTypography.textSm(context).copyWith(
               color: DSColors.gray200, // text-gray-200
               fontWeight: FontWeight.w500, // font-medium
-              fontFamily: 'monospace',
+              fontFamily: 'monospace', // font-mono to match websitejs
             ),
           ),
         ],
@@ -206,7 +206,7 @@ class _TerminalStepWidget extends StatelessWidget {
           step.comment,
           style: DSTypography.textSm(context).copyWith(
             color: const Color(0xFF10B981), // text-green-400
-            fontFamily: 'monospace',
+            fontFamily: 'monospace', // font-mono to match websitejs
             height: 1.5,
           ),
         ),
@@ -218,9 +218,9 @@ class _TerminalStepWidget extends StatelessWidget {
             step.command!,
             style: DSTypography.textSm(context).copyWith(
               color: step.isOpaque 
-                  ? DSColors.gray200.withValues(alpha: 0.7) // opacity-70
+                  ? DSColors.gray200.withValues(alpha: 0.7) // opacity-70 to match websitejs
                   : DSColors.gray200, // text-gray-200
-              fontFamily: 'monospace',
+              fontFamily: 'monospace', // font-mono to match websitejs
               height: 1.5,
             ),
           ),

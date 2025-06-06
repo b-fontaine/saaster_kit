@@ -80,76 +80,76 @@ class DSTypography {
     ),
   );
 
-  // Landing Theme Typography
+  // Landing Theme Typography - using system default fonts to match websitejs
   static final TextTheme landingTextTheme = TextTheme(
-    displayLarge: GoogleFonts.montserrat(
+    displayLarge: const TextStyle(
       fontSize: 96,
       fontWeight: FontWeight.w300,
       letterSpacing: -1.5,
     ),
-    displayMedium: GoogleFonts.montserrat(
+    displayMedium: const TextStyle(
       fontSize: 60,
       fontWeight: FontWeight.w300,
       letterSpacing: -0.5,
     ),
-    displaySmall: GoogleFonts.montserrat(
+    displaySmall: const TextStyle(
       fontSize: 48,
       fontWeight: FontWeight.w400,
     ),
-    headlineLarge: GoogleFonts.montserrat(
+    headlineLarge: const TextStyle(
       fontSize: 40,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.25,
     ),
-    headlineMedium: GoogleFonts.montserrat(
+    headlineMedium: const TextStyle(
       fontSize: 34,
       fontWeight: FontWeight.w400,
     ),
-    headlineSmall: GoogleFonts.montserrat(
+    headlineSmall: const TextStyle(
       fontSize: 24,
       fontWeight: FontWeight.w400,
     ),
-    titleLarge: GoogleFonts.montserrat(
+    titleLarge: const TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.15,
     ),
-    titleMedium: GoogleFonts.montserrat(
+    titleMedium: const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.15,
     ),
-    titleSmall: GoogleFonts.montserrat(
+    titleSmall: const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w500,
       letterSpacing: 0.1,
     ),
-    bodyLarge: GoogleFonts.openSans(
+    bodyLarge: const TextStyle(
       fontSize: 16,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.5,
     ),
-    bodyMedium: GoogleFonts.openSans(
+    bodyMedium: const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.25,
     ),
-    bodySmall: GoogleFonts.openSans(
+    bodySmall: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.4,
     ),
-    labelLarge: GoogleFonts.montserrat(
+    labelLarge: const TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.w500,
       letterSpacing: 1.25,
     ),
-    labelMedium: GoogleFonts.montserrat(
+    labelMedium: const TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w400,
       letterSpacing: 0.4,
     ),
-    labelSmall: GoogleFonts.montserrat(
+    labelSmall: const TextStyle(
       fontSize: 10,
       fontWeight: FontWeight.w400,
       letterSpacing: 1.5,
@@ -176,15 +176,15 @@ class DSTypography {
     );
   }
   
-  /// Tailwind-inspired text size utilities to match websitejs
-  static TextStyle textXs(BuildContext context) => GoogleFonts.openSans(fontSize: 12, letterSpacing: 0.05);
-  static TextStyle textSm(BuildContext context) => GoogleFonts.openSans(fontSize: 14, letterSpacing: 0.025);
-  static TextStyle textBase(BuildContext context) => GoogleFonts.openSans(fontSize: 16);
-  static TextStyle textLg(BuildContext context) => GoogleFonts.openSans(fontSize: 18, letterSpacing: -0.025);
-  static TextStyle textXl(BuildContext context) => GoogleFonts.openSans(fontSize: 20, letterSpacing: -0.025);
-  static TextStyle text2Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 24, letterSpacing: -0.025);
-  static TextStyle text3Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 30, letterSpacing: -0.025);
-  static TextStyle text4Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 36, letterSpacing: -0.025);
-  static TextStyle text5Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 48, letterSpacing: -0.025);
-  static TextStyle text6Xl(BuildContext context) => GoogleFonts.montserrat(fontSize: 60, letterSpacing: -0.025);
+  /// Tailwind-inspired text size utilities to match websitejs - using system default fonts
+  static TextStyle textXs(BuildContext context) => const TextStyle(fontSize: 12, letterSpacing: 0.05);
+  static TextStyle textSm(BuildContext context) => const TextStyle(fontSize: 14, letterSpacing: 0.025);
+  static TextStyle textBase(BuildContext context) => const TextStyle(fontSize: 16);
+  static TextStyle textLg(BuildContext context) => const TextStyle(fontSize: 18, letterSpacing: -0.025);
+  static TextStyle textXl(BuildContext context) => const TextStyle(fontSize: 20, letterSpacing: -0.025);
+  static TextStyle text2Xl(BuildContext context) => const TextStyle(fontSize: 24, letterSpacing: -0.025);
+  static TextStyle text3Xl(BuildContext context) => const TextStyle(fontSize: 30, letterSpacing: -0.025);
+  static TextStyle text4Xl(BuildContext context) => const TextStyle(fontSize: 36, letterSpacing: -0.025);
+  static TextStyle text5Xl(BuildContext context) => const TextStyle(fontSize: 48, letterSpacing: -0.025);
+  static TextStyle text6Xl(BuildContext context) => const TextStyle(fontSize: 60, letterSpacing: -0.025);
 }
