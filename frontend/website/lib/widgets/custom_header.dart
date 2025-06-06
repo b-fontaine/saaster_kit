@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:design_system/design_system.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// Custom header widget that exactly matches the websitejs Header component
 class CustomHeader extends StatefulWidget {
@@ -227,7 +228,7 @@ class _GitHubLinkState extends State<_GitHubLink> {
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               child: Icon(
-                Icons.code_outlined, // GitHub-like icon to match lucide-react Github
+                LucideIcons.github, // Exact match for lucide-react Github
                 size: 18,
                 color: _isHovered ? DSColors.primaryLanding : DSColors.gray700,
               ),
@@ -371,7 +372,7 @@ class _MobileGitHubLink extends StatelessWidget {
         child: Row(
           children: [
             Icon(
-              Icons.code_outlined, // GitHub-like icon to match lucide-react Github
+              LucideIcons.github, // Exact match for lucide-react Github
               size: 18,
               color: DSColors.gray700, // text-gray-700
             ),

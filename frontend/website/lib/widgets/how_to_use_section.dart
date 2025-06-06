@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// How to use section that exactly matches the websitejs HowToUse component
 class HowToUseSection extends StatelessWidget {
@@ -118,7 +119,7 @@ class _TerminalHeader extends StatelessWidget {
         children: [
           // Terminal size={20} className="text-gray-400 mr-2" - Using terminal icon to match lucide-react Terminal
           Icon(
-            Icons.terminal,
+            LucideIcons.terminal,
             color: DSColors.gray400, // text-gray-400
             size: 20,
           ),

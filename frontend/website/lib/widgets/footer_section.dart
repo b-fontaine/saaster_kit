@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 /// Footer section that exactly matches the websitejs Footer component
 class FooterSection extends StatelessWidget {
@@ -123,7 +124,7 @@ class _GitHubSectionState extends State<_GitHubSection> {
                 children: [
                   // Github size={20} className="mr-2" - Using proper GitHub-like icon
                   Icon(
-                    Icons.code_outlined, // GitHub-like icon to match lucide-react Github
+                    LucideIcons.github, // Exact match for lucide-react Github
                     color: _isHovered 
                         ? const Color(0xFFA5B4FC) // hover:text-indigo-300
                         : Colors.white, // text-white
