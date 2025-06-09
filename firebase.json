@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "target": "saaster-kit",
+    "site": "saaster-kit",
     "public": "frontend/website/build/web",
     "ignore": [
       "firebase.json",
