@@ -55,7 +55,7 @@ class FeaturesSection extends StatelessWidget {
           context,
           defaultPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 64), // px-4 py-16
           sm: const EdgeInsets.symmetric(horizontal: 24, vertical: 64), // sm:px-6 py-16
-          lg: const EdgeInsets.symmetric(horizontal: 32, vertical: 64), // lg:px-8 py-16
+          lg: const EdgeInsets.symmetric(horizontal: 32, vertical: 96), // lg:px-8 py-24 (match hero)
         ),
         child: const Column(
           children: [
@@ -109,37 +109,19 @@ class _FeaturesGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-    return ResponsiveUtils.responsiveValue<Widget>(
-      context: context,
-      defaultValue: Column(
-        children: FeaturesSection._features
-            .map((feature) => Padding(
-                  padding: const EdgeInsets.only(bottom: 32), // gap-8
-                  child: _FeatureCard(feature: feature),
-                ))
-            .toList(),
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 400, // Let Flutter choose columns based on this max width
+        crossAxisSpacing: 32, // gap-8
+        mainAxisSpacing: 32, // gap-8
+        childAspectRatio: 1.2, // Adjust based on content height needs
       ),
-      md: Wrap(
-        spacing: 32, // gap-8
-        runSpacing: 32,
-        children: FeaturesSection._features
-            .map((feature) => SizedBox(
-                  width: (MediaQuery.of(context).size.width - 96) / 2, // 2 columns on md
-                  child: _FeatureCard(feature: feature),
-                ))
-            .toList(),
-      ),
-      lg: Wrap(
-        spacing: 32, // gap-8
-        runSpacing: 32,
-        children: FeaturesSection._features
-            .map((feature) => SizedBox(
-                  width: (MediaQuery.of(context).size.width - 128) / 3, // 3 columns on lg
-                  child: _FeatureCard(feature: feature),
-                ))
-            .toList(),
-      ),
+      itemCount: FeaturesSection._features.length,
+      itemBuilder: (context, index) {
+        return _FeatureCard(feature: FeaturesSection._features[index]);
+      },
     );
   }
 }
