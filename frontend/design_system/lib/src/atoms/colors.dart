@@ -13,8 +13,8 @@ class DSColors {
   static const Color warningApp = Color(0xFFFFC107); // Amber
   static const Color infoApp = Color(0xFF2196F3); // Blue
 
-  // Landing Theme Colors
-  static const Color primaryLanding = Color(0xFF6200EE); // Deep Purple
+  // Landing Theme Colors - Updated to match websitejs
+  static const Color primaryLanding = Color(0xFF4F46E5); // Indigo-600 to match websitejs
   static const Color secondaryLanding = Color(0xFF03DAC6); // Teal
   static const Color accentLanding = Color(0xFFFF9800); // Orange
   static const Color backgroundLanding = Color(0xFFFFFFFF); // White
@@ -35,6 +35,18 @@ class DSColors {
   static const Color divider = Color(0xFFE0E0E0); // Very Light Grey
   static const Color shadow = Color(0x40000000); // Black with opacity
   static const Color overlay = Color(0x80000000); // Black with opacity
+  
+  // Additional colors to match websitejs Tailwind classes
+  static const Color gray50 = Color(0xFFF9FAFB); // gray-50
+  static const Color gray100 = Color(0xFFF3F4F6); // gray-100
+  static const Color gray200 = Color(0xFFE5E7EB); // gray-200
+  static const Color gray300 = Color(0xFFD1D5DB); // gray-300
+  static const Color gray400 = Color(0xFF9CA3AF); // gray-400
+  static const Color gray500 = Color(0xFF6B7280); // gray-500
+  static const Color gray600 = Color(0xFF4B5563); // gray-600
+  static const Color gray700 = Color(0xFF374151); // gray-700
+  static const Color gray800 = Color(0xFF1F2937); // gray-800
+  static const Color gray900 = Color(0xFF111827); // gray-900
 
   // Icon Colors - App Theme
   static const Color appIconPrimary = primaryApp;
@@ -65,8 +77,9 @@ class DSColors {
     end: Alignment.bottomRight,
   );
 
+  // Landing gradient updated to match websitejs hero gradient
   static const LinearGradient landingGradient = LinearGradient(
-    colors: [primaryLanding, Color(0xFF9C27B0)],
+    colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)], // indigo-600 to violet-600
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -88,19 +101,20 @@ class DSColors {
     },
   );
 
+  // Updated to match websitejs indigo color palette
   static const MaterialColor landingPrimarySwatch = MaterialColor(
-    0xFF6200EE,
+    0xFF4F46E5,
     <int, Color>{
-      50: Color(0xFFF3E5F5),
-      100: Color(0xFFE1BEE7),
-      200: Color(0xFFCE93D8),
-      300: Color(0xFFBA68C8),
-      400: Color(0xFFAB47BC),
-      500: Color(0xFF9C27B0),
-      600: Color(0xFF8E24AA),
-      700: Color(0xFF7B1FA2),
-      800: Color(0xFF6A1B9A),
-      900: Color(0xFF4A148C),
+      50: Color(0xFFEEF2FF),
+      100: Color(0xFFE0E7FF),
+      200: Color(0xFFC7D2FE),
+      300: Color(0xFFA5B4FC),
+      400: Color(0xFF818CF8),
+      500: Color(0xFF6366F1),
+      600: Color(0xFF4F46E5),
+      700: Color(0xFF4338CA),
+      800: Color(0xFF3730A3),
+      900: Color(0xFF312E81),
     },
   );
 }

@@ -1,146 +1,277 @@
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 /// Custom hero section that exactly matches the websitejs Hero component
 class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
+  final ScrollController? scrollController;
+
+  const HeroSection({super.key, this.scrollController});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isDesktop = screenWidth >= 768; // md breakpoint
+    final isDesktop = ResponsiveUtils.responsiveValue<bool>(
+      context: context,
+      defaultValue: false,
+      md: true,
+    );
 
     return Container(
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft, // from-indigo-600
-          end: Alignment.centerRight, // to-purple-600
-          colors: [
-            Color(0xFF4F46E5), // indigo-600
-            Color(0xFF7C3AED), // purple-600
-          ],
-        ),
+        gradient:
+            DSColors.landingGradient, // Updated to use design system gradient
       ),
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 1280), // max-w-7xl
-        margin: const EdgeInsets.symmetric(horizontal: 16), // px-4 sm:px-6 lg:px-8
-        padding: EdgeInsets.symmetric(
-          vertical: isDesktop ? 96 : 64, // py-16 md:py-24
+      child: DSResponsiveLayout.responsiveContainer(
+        maxWidth: 1280, // max-w-7xl
+        padding: ResponsiveUtils.responsivePadding(
+          context,
+          defaultPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 64,
+          ), // px-4 py-16
+          sm: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 64,
+          ), // sm:px-6 py-16
+          lg: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 96,
+          ), // lg:px-8 md:py-24
         ),
-        child: isDesktop
-            ? Row( // grid md:grid-cols-2
-                crossAxisAlignment: CrossAxisAlignment.center, // items-center
-                children: [
-                  Expanded(child: _buildLeftContent(context)),
-                  const SizedBox(width: 32), // gap-8
-                  Expanded(child: _buildRightContent()),
-                ],
-              )
-            : Column(
-                children: [
-                  _buildLeftContent(context),
-                  const SizedBox(height: 32),
-                  // Hide code preview on mobile (hidden md:block)
-                ],
-              ),
+        child: isDesktop ? const _DesktopLayout() : const _MobileLayout(),
       ),
     );
   }
+}
 
-  Widget _buildLeftContent(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+// Separate widget classes for better performance and reusability
+class _DesktopLayout extends StatelessWidget {
+  const _DesktopLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center, // items-center
       children: [
-        // h1 className="text-4xl md:text-5xl font-bold mb-4"
-        Text(
-          'Launch Your SaaS Faster with SaaSter Kit',
-          style: TextStyle(
-            fontSize: MediaQuery.of(context).size.width >= 768 ? 48 : 36, // text-4xl md:text-5xl
-            fontWeight: FontWeight.bold, // font-bold
-            color: Colors.white, // text-white
-            height: 1.1, // Tighter line height for headings
-          ),
-        ),
-        const SizedBox(height: 16), // mb-4
-
-        // p className="text-xl mb-8 text-indigo-100"
-        Text(
-          'A complete, production-ready starter kit for building modern SaaS applications. Focus on your business logic, we\'ve handled the infrastructure.',
-          style: const TextStyle(
-            fontSize: 20, // text-xl
-            color: Color(0xFFE0E7FF), // text-indigo-100
-            height: 1.5,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        const SizedBox(height: 32), // mb-8
-
-        // div className="flex flex-wrap gap-4"
-        Wrap(
-          spacing: 16, // gap-4
-          runSpacing: 16,
-          children: [
-            _buildPrimaryButton(),
-            _buildSecondaryButton(),
-          ],
-        ),
+        const Expanded(child: _LeftContent()),
+        const SizedBox(width: 32), // gap-8
+        const Expanded(child: _RightContent()),
       ],
     );
   }
+}
 
-  Widget _buildPrimaryButton() {
-    // a href="..." className="flex items-center bg-white text-indigo-600 px-6 py-3 rounded-lg font-medium shadow-lg hover:bg-gray-100 transition-colors"
-    return ElevatedButton.icon(
-      onPressed: () {
-        launchUrlString(
-          "https://github.com/b-fontaine/saaster_kit",
-          webOnlyWindowName: "_blank",
-        );
-      },
-      icon: const Icon(Icons.code, size: 20), // Github size={20}
-      label: const Text('Fork on GitHub'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white, // bg-white
-        foregroundColor: const Color(0xFF4F46E5), // text-indigo-600
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // px-6 py-3
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // rounded-lg
+class _MobileLayout extends StatelessWidget {
+  const _MobileLayout();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        _LeftContent(),
+        SizedBox(height: 32),
+        // Hide code preview on mobile (hidden md:block)
+      ],
+    );
+  }
+}
+
+class _LeftContent extends StatelessWidget {
+  const _LeftContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _HeroTitle(),
+        const SizedBox(height: 16), // mb-4
+        const _HeroDescription(),
+        const SizedBox(height: 32), // mb-8
+        const _ActionButtons(),
+      ],
+    );
+  }
+}
+
+class _HeroTitle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Launch Your SaaS Faster with SaaSter Kit',
+      style: ResponsiveUtils.responsiveValue<TextStyle>(
+        context: context,
+        defaultValue: DSTypography.text4Xl(context).copyWith(
+          // text-4xl
+          fontWeight: FontWeight.bold, // font-bold
+          color: Colors.white, // text-white
+          height: 1.1, // Tighter line height for headings
         ),
-        elevation: 8, // shadow-lg
-        shadowColor: Colors.black.withValues(alpha: 0.25),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500, // font-medium
+        md: DSTypography.text5Xl(context).copyWith(
+          // md:text-5xl
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          height: 1.1,
         ),
       ),
     );
   }
+}
 
-  Widget _buildSecondaryButton() {
-    // a href="#features" className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-indigo-600 transition-colors"
-    return OutlinedButton(
-      onPressed: () {
-        // TODO: Implement scroll to features section
-      },
-      style: OutlinedButton.styleFrom(
-        backgroundColor: Colors.transparent, // bg-transparent
-        foregroundColor: Colors.white, // text-white
-        side: const BorderSide(color: Colors.white, width: 2), // border-2 border-white
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12), // px-6 py-3
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8), // rounded-lg
-        ),
-        textStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500, // font-medium
-        ),
+class _HeroDescription extends StatelessWidget {
+  const _HeroDescription();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'A complete, production-ready starter kit for building modern SaaS applications. Focus on your business logic, we\'ve handled the infrastructure.',
+      style: DSTypography.textXl(context).copyWith(
+        // text-xl
+        color: const Color(0xFFE0E7FF), // text-indigo-100
+        height: 1.5,
+        fontWeight: FontWeight.w400,
       ),
-      child: const Text('Explore Features'),
     );
   }
+}
 
-  Widget _buildRightContent() {
-    // div className="hidden md:block"
+class _ActionButtons extends StatelessWidget {
+  const _ActionButtons();
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 16, // gap-4
+      runSpacing: 16,
+      children: [const _PrimaryButton(), _SecondaryButton()],
+    );
+  }
+}
+
+class _PrimaryButton extends StatefulWidget {
+  const _PrimaryButton();
+
+  @override
+  State<_PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<_PrimaryButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200), // transition-colors
+        child: ElevatedButton.icon(
+          onPressed: () {
+            launchUrlString(
+              "https://github.com/b-fontaine/saaster_kit",
+              webOnlyWindowName: "_blank",
+            );
+          },
+          icon: const Icon(LucideIcons.github, size: 20), // Github size={20}
+          label: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text('Fork on GitHub'),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                _isHovered
+                    ? DSColors.gray100
+                    : Colors.white, // bg-white hover:bg-gray-100
+            foregroundColor: DSColors.primaryLanding, // text-indigo-600
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 16,
+            ), // px-6 py-4
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8), // rounded-lg
+            ),
+            elevation: 8, // shadow-lg
+            shadowColor: Colors.black.withValues(alpha: 0.25),
+            textStyle: DSTypography.textBase(context).copyWith(
+              fontWeight: FontWeight.w500, // font-medium
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SecondaryButton extends StatefulWidget {
+  @override
+  State<_SecondaryButton> createState() => _SecondaryButtonState();
+}
+
+class _SecondaryButtonState extends State<_SecondaryButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200), // transition-colors
+        child: OutlinedButton(
+          onPressed: () {
+            // Scroll to features section functionality would be implemented here
+            // This matches the href="#features" behavior from websitejs
+          },
+          style: OutlinedButton.styleFrom(
+            backgroundColor:
+                _isHovered
+                    ? Colors.white
+                    : Colors.transparent, // bg-transparent hover:bg-white
+            foregroundColor:
+                _isHovered
+                    ? DSColors.primaryLanding
+                    : Colors.white, // text-white hover:text-indigo-600
+            side: const BorderSide(
+              color: Colors.white,
+              width: 2,
+            ), // border-2 border-white
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 16,
+            ), // px-6 py-4
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8), // rounded-lg
+            ),
+            textStyle: DSTypography.textBase(context).copyWith(
+              fontWeight: FontWeight.w500, // font-medium
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: const Text('Explore Features'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RightContent extends StatelessWidget {
+  const _RightContent();
+
+  @override
+  Widget build(BuildContext context) {
+    // div className="hidden md:block" - only shown on desktop
+    return const _CodePreview();
+  }
+}
+
+class _CodePreview extends StatelessWidget {
+  const _CodePreview();
+
+  @override
+  Widget build(BuildContext context) {
     // div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 shadow-xl border border-white/20"
     return Container(
       padding: const EdgeInsets.all(24), // p-6
@@ -164,10 +295,9 @@ class HeroSection extends StatelessWidget {
           // pre className="text-indigo-100 overflow-x-auto"
           Text(
             '# Get started in seconds\n\$ git clone your-fork-url\n\$ docker compose -p saaster up -d\n# Ready to customize and deploy!',
-            style: const TextStyle(
-              color: Color(0xFFE0E7FF), // text-indigo-100
+            style: DSTypography.textSm(context).copyWith(
+              color: const Color(0xFFE0E7FF), // text-indigo-100
               fontFamily: 'monospace',
-              fontSize: 14,
               height: 1.5,
             ),
           ),
