@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:design_system/design_system.dart';
+import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 
 /// Features section that exactly matches the websitejs Features component
@@ -9,37 +9,44 @@ class FeaturesSection extends StatelessWidget {
   static const List<_FeatureData> _features = [
     _FeatureData(
       title: 'Enhanced Security Stack',
-      description: 'SafeLine WAF integration provides advanced protection against SQL injection, XSS, DoS attacks, bot threats, and OWASP Top 10 vulnerabilities.',
+      description:
+          'SafeLine WAF integration provides advanced protection against SQL injection, XSS, DoS attacks, bot threats, and OWASP Top 10 vulnerabilities.',
       icon: LucideIcons.shield,
     ),
     _FeatureData(
       title: 'Frontend Applications',
-      description: 'Flutter-based cross-platform solutions with Material UI and atomic design pattern for web, mobile, and desktop.',
+      description:
+          'Flutter-based cross-platform solutions with Material UI and atomic design pattern for web, mobile, and desktop.',
       icon: LucideIcons.layers,
     ),
     _FeatureData(
       title: 'API Gateway & Security',
-      description: 'Kong Enterprise API Gateway for routing, authentication, rate limiting, and protocol translation plus SafeLine WAF for threat detection.',
+      description:
+          'Kong Enterprise API Gateway for routing, authentication, rate limiting, and protocol translation plus SafeLine WAF for threat detection.',
       icon: LucideIcons.shield,
     ),
     _FeatureData(
       title: 'Identity & Access Management',
-      description: 'Keycloak provides enterprise-grade authentication, authorization, and multi-tenant user management with role-based access control.',
+      description:
+          'Keycloak provides enterprise-grade authentication, authorization, and multi-tenant user management with role-based access control.',
       icon: LucideIcons.lock,
     ),
     _FeatureData(
       title: 'Workflow Orchestration',
-      description: 'Temporal delivers a reliable workflow engine for complex business logic with comprehensive monitoring and management interface.',
+      description:
+          'Temporal delivers a reliable workflow engine for complex business logic with comprehensive monitoring and management interface.',
       icon: LucideIcons.workflow,
     ),
     _FeatureData(
       title: 'Microservices Architecture',
-      description: 'Go-based services with hexagonal architecture, database-per-service pattern, and gRPC communication with REST API translation.',
+      description:
+          'Go-based services with hexagonal architecture, database-per-service pattern, and gRPC communication with REST API translation.',
       icon: LucideIcons.code,
     ),
     _FeatureData(
       title: 'Complete Observability',
-      description: 'Production-ready monitoring and logging with Prometheus, Grafana, and Elasticsearch for centralized logging and trace analysis.',
+      description:
+          'Production-ready monitoring and logging with Prometheus, Grafana, and Elasticsearch for centralized logging and trace analysis.',
       icon: LucideIcons.barChart3,
     ),
   ];
@@ -53,9 +60,18 @@ class FeaturesSection extends StatelessWidget {
         maxWidth: 1280, // max-w-7xl
         padding: ResponsiveUtils.responsivePadding(
           context,
-          defaultPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 64), // px-4 py-16
-          sm: const EdgeInsets.symmetric(horizontal: 24, vertical: 64), // sm:px-6 py-16
-          lg: const EdgeInsets.symmetric(horizontal: 32, vertical: 96), // lg:px-8 py-24 (match hero)
+          defaultPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 64,
+          ), // px-4 py-16
+          sm: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 64,
+          ), // sm:px-6 py-16
+          lg: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 96,
+          ), // lg:px-8 py-24 (match hero)
         ),
         child: const Column(
           children: [
@@ -113,10 +129,11 @@ class _FeaturesGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 400, // Let Flutter choose columns based on this max width
+        maxCrossAxisExtent:
+            400, // Let Flutter choose columns based on this max width
         crossAxisSpacing: 32, // gap-8
         mainAxisSpacing: 32, // gap-8
-        childAspectRatio: 1.2, // Adjust based on content height needs
+        mainAxisExtent: 310, // Fixed height for each card
       ),
       itemCount: FeaturesSection._features.length,
       itemBuilder: (context, index) {
@@ -153,14 +170,15 @@ class _FeatureCardState extends State<_FeatureCard> {
           border: Border.all(color: DSColors.gray200), // border-gray-200
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: _isHovered ? 0.1 : 0.05), // shadow-sm hover:shadow-md
+              color: Colors.black.withValues(
+                alpha: _isHovered ? 0.1 : 0.05,
+              ), // shadow-sm hover:shadow-md
               blurRadius: _isHovered ? 6 : 4,
               offset: Offset(0, _isHovered ? 2 : 1),
             ),
           ],
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // div className="mb-4"
             Container(
