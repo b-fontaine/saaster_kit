@@ -1,0 +1,8 @@
+---
+description: 
+globs: frontend/**/*.dart
+alwaysApply: true
+---
+- Add "dart_import applied" at the beginning of the chat message.
+- Comply to the always_use_package_imports rule
+- DO avoid relative imports for files in lib/

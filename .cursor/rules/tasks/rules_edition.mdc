@@ -1,0 +1,12 @@
+---
+description: 
+globs: *.mdc
+alwaysApply: false
+---
+- Add "rule_edition applied" at the beginning of the chat message.
+- When user ask for a correction to the Agent, edit the corresponding rule or write a new one.
+- Rules must be written in .cursor/rules files
+- Cursor rules files must be .mdc files.
+- Always write or edit Cursor rules in english
+- Prefer editing an existing rule file instead of creating a new one, when the subject is already handled by a rule file
+

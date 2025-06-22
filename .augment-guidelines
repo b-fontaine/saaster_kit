@@ -1,0 +1,12 @@
+- For every development request, start by writing a clear Gherkin feature file
+- Reuse existing step definitions whenever possible before creating new ones
+- Automate the scenario import and configure the BDD runner (e.g. `bdd_widget_test` for Flutter and `godog` for Go)
+- Implement the step definitions for each Given/When/Then clause
+- Confirm the BDD test fails initially (Red)
+- Write only the minimal implementation to make the BDD test pass (Green)
+- Refactor production code and step definitions without breaking any tests (Refactor)
+- For each unit of business logic, apply TDD:
+  - Write the unit test in Dart first and verify it fails
+  - Implement just enough code to make the unit test succeed
+  - Refactor both production code and tests as needed, keeping all tests green
+- At the end of each development cycle, run linter and fix all reported issues before delivery (`flutter analyze` for Flutter and `golangci-lint` for Go)

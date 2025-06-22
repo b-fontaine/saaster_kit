@@ -1,0 +1,15 @@
+---
+description: 
+globs: frontend/**/*.dart
+alwaysApply: true
+---
+- Add "dart_nomenclature applied" at the beginning of the chat message.
+- Use PascalCase for classes.
+- Use camelCase for variables, functions, and methods.
+- Use underscores_case for file and directory names.
+- Avoid magic numbers and define constants.
+- Start each function with a verb.
+- Use verbs for boolean variables. Example: isLoading, hasError, canDelete, etc.
+- Use complete words instead of abbreviations and correct spelling, except for standard abbreviations like API, URL, etc.
+- Prefer noun for class names
+- Prefer verb for methods

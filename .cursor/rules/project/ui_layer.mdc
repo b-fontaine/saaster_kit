@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+- Add "ui_layer applied" at the beginning of the chat message.
+  
+# Templates
+
+- Use template [example_page.dart](mdc:lib/modules/example/ui/example_page.dart) for Page classes implementation.
+- Use template [example_state_notifier.dart](mdc:lib/modules/example/ui/providers/example_state_notifier.dart) for State notifier implementation.
+- Use template [example_state.dart](mdc:lib/modules/example/ui/providers/example_state.dart) for State managed by State notifier.
+- Use template [example_state_notifier_test.dart](mdc:test/modules/example/ui/providers/example_state_notifier_test.dart) for State notifier unit tests.
+- Use template [fake_get_example_usecase.dart](mdc:test/modules/example/ui/fakes/fake_get_example_usecase.dart) to define fake Use case for tests. 
+
+# State notifier rules
+
+- Always follow strict TDD for State notifier implementation.
+- Always write unit tests BEFORE state notifier implementation.
+- Use only use cases in State notifier to interact with the domain layer.
+- Create fake use case for State notifier unit tests.
+- Run unit tests after each modification of the State notifier.
+- Always use freezed for state notifier's state.
+- Prefer immutable objects for states classes.
+- Prefer state managed by State notifer than StatefulWidget
+  
+# Pages and components rules
+
+- Each widget outside of the "Page" widget must be defined in its own file : in sub package "component" if it uses state notifier, in "widget" otherwise.
+- All text displayed to users in the application MUST use the Slang internationalization system, using [strings.i18n.json](mdc:lib/i18n/strings.i18n.json) file, rather than hardcoded strings. This includes: Labels in widgets, Button text, Dialog content, Error messages, Tooltips or Any other user-facing text.
+- Use command line `dart run slang` each time the [strings.i18n.json](mdc:lib/i18n/strings.i18n.json) is modified.
+- Use app theming system defined in `lib/core/ui/theme` for widget styling, using extensions defined in [theme_extension.dart](mdc:lib/core/ui/theme/extensions/theme_extension.dart) (Ex : `context.colors`, `context.textTheme` etc.). 
+- Modify global theme defined in folder `lib/core/ui/theme` when adding a new widget style is required.

@@ -1,0 +1,126 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+- Add "task_writing applied" at the beginning of the chat message.
+
+## Task Writing Standards
+
+### Required Structure for Task Files
+- Task files must be placed in `.status/tasks/` directory
+- Each task file should follow the naming convention: `[task_description].md`
+- Task files must contain all required sections defined below
+
+### Task File Template Structure
+```markdown
+# Task : [Clear and descriptive title]
+
+Status: [To Do | In Progress | Done]
+Priority: [High | Medium | Low]
+Dependencies: [List of dependencies or "None"]
+
+## Requirements
+[Clear description of what needs to be built]
+- [Bullet point listing key features]
+- [Each requirement should be testable]
+
+## Steps
+[Ordered list of implementation steps following TDD approach]
+1. Domain layer:
+- [Create model and repository interface following domain_layer.mdc rules]
+- [Create empty use case implementation]
+- [Create unit tests using fake repositories]
+- [Implement use case following domain_layer.mdc rules]
+- [Execute unit tests again]
+
+2. Data layer:
+- [Create tests for repository]
+- [Execute unit tests]
+- [Implement API, DAO and repository]
+- [Execute tests again]
+- [Follow data_layer.mdc rules for every ]
+
+3. UI layer:
+- [Create widgets and state notifier following ui_layer.mdc rules]
+
+## Acceptance criteria
+[Detailed criteria that define task completion]
+- [Each criteria should be measurable and testable]
+- [UI/UX requirements should be specific]
+- [Performance and behavior requirements]
+- [Error handling requirements]
+
+## Technical notes
+[Implementation specific details]
+- [Module location and file structure]
+- [Specific technology or pattern requirements]
+- [Integration points with existing code]
+```
+
+### Content Guidelines
+
+#### Task Title
+- Use imperative mood (e.g., "Display task list", "Create user profile")
+- Be specific and action-oriented
+- Avoid technical jargon in titles
+
+#### Requirements Section
+- Start with high-level user-facing description
+- Break down into specific, testable features
+- Each requirement should contribute to user value
+- Use clear, non-technical language when possible
+
+#### Steps Section
+- Must follow TDD-focused workflow from task_reading.mdc
+- Always start with domain layer with detailed sub-steps:
+  - Create model and repository interface
+  - Create empty use case implementation
+  - Create unit tests using fake repositories
+  - Implement use case following domain_layer.mdc rules
+  - Execute unit tests again
+- Data layer must include explicit testing cycle:
+  - Create tests for repository first
+  - Execute unit tests
+  - Implement API, DAO and repository
+  - Execute tests again
+  - Follow data_layer.mdc rules
+- UI layer should specify widgets and state management
+- Each sub-step should be actionable and specific
+- Include explicit testing phases throughout
+
+#### Acceptance Criteria
+- Must cover all functional requirements
+- Include UI/UX specifications
+- Define error handling and edge cases
+- Specify real-time behavior requirements
+- Include accessibility considerations
+- Must be verifiable through testing
+
+#### Technical Notes
+- Specify exact module location (e.g., `lib/modules/[module_name]`)
+- Reference existing architecture patterns
+- Identify integration points
+- Note any special technical considerations
+
+### Quality Standards
+- Each task must be completable within one development session
+- All acceptance criteria must be testable
+- Dependencies must be clearly identified
+- Technical complexity should be appropriate for task scope
+- Task should follow SOLID principles and project architecture
+
+### Task Status Management
+- New tasks start with "To Do" status
+- Status must be updated in both task file and [status.md](mdc:.status/status.md)
+- Completed tasks should be marked "Done" with completion date
+
+### Validation Checklist for New Tasks
+- [ ] Task title is clear and action-oriented
+- [ ] All required sections are present and complete
+- [ ] Steps follow TDD-focused workflow
+- [ ] Acceptance criteria are specific and testable
+- [ ] Technical notes specify module location
+- [ ] Dependencies are identified
+- [ ] Task scope is appropriate for single session
+- [ ] Follows project architecture guidelines

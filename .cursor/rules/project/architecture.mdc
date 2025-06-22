@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+- Add "architecture applied" at the beginning of the chat message.
+
+## Documentation
+
+- Read the architecture documentation [architecture.md](mdc:docs/architecture.md) before doing any task on the app code.
+- After each task, verify that the generated code is compliant with the architecture documentation [architecture.md](mdc:docs/architecture.md).
+
+## TDD 
+
+- Each testable classes (repositories, use cases, state notifier) must be developped using TDD (Test-driven development). It means following thoses steps :
+  1. Create interface and empty implementation (ex: returning a default value or an exception)
+  2. Create unit tests testing this empty implemetation
+  3. Run tests, thoses tests must fail
+  4. Implements empty methods
+  5. Run tests, thoses tests must pass
+  6. Optimise generated code

@@ -1,0 +1,25 @@
+---
+description: 
+globs: **/tasks/*.md
+alwaysApply: false
+---
+- Add "task_reading applied" at the beginning of the chat message.
+
+## Required files and folders
+  - .status/tasks: Current development tasks and requirements, source of tasks definitions
+  - [status.md](mdc:.status/status.md) : Project progress and state
+  
+## TDD-focused Workflow Steps
+  1. Read task requirements, divide the task by "steps", extract acceptance criteria and identify dependencies.
+  2. Update [status.md](mdc:.status/status.md) to mark the corresponding task as "In progress". If the task is not mentioned in [status.md](mdc:.status/status.md), add it.
+  3. Always begin with steps defining the domain layer, using [domain_layer.mdc](mdc:.cursor/rules/project/domain_layer.mdc) rules. Give an empty implementation for repository methods. 
+  4. Then, handle steps for the data layer, using [data_layer.mdc](mdc:.cursor/rules/project/data_layer.mdc) rules.
+  5. At last, handle steps for the UI layer, using [ui_layer.mdc](mdc:.cursor/rules/project/ui_layer.mdc) rules.
+
+## Validation Checklist Before Marking Task Complete
+- [ ] All repositories, use cases and state notifiers have corresponding test files
+- [ ] All tests are passing
+- [ ] Tests cover all acceptance criteria from requirements
+- [ ] Tests include edge cases and error scenarios
+- [ ] Code follows project architecture and style guidelines
+- [ ] TDD approach was followed: tests written before implementation

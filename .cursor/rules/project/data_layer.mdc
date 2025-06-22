@@ -1,0 +1,34 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+
+- Add "data_layer applied" at the beginning of the chat message.
+  
+# Templates
+
+- Use template [example_api.dart](mdc:lib/modules/example/data/api/example_api.dart) for API classes
+- Use template [example_repository.dart](mdc:lib/modules/example/data/repositories/example_repository.dart) for Repositories implementation classes.
+- Use template [example_dao.dart](mdc:lib/modules/example/data/storage/example_dao.dart) for DAO classes.
+- Use template [fake_example_api.dart](mdc:test/modules/example/data/fakes/fake_example_api.dart) to define fakes API classes.
+- Use template [fake_example_dao.dart](mdc:test/modules/example/data/fakes/fake_example_dao.dart) to define fakes DAO classes.
+- Use template [example_repository_test.dart](mdc:test/modules/example/data/repositories/example_repository_test.dart) to define tests for Repositories.
+
+# Repository rules
+
+- Always follow TDD for repositories implementations.
+- Always write unit tests BEFORE repositories implementation.
+- Run unit tests after each modification of the repository implementation.
+- Test repositories in a unit manner with fake implementations of dependencies, NEVER USE MOCKITO.
+- Expose only domain models through repositories, never DTOs nor Entities.
+- Implement one repository per data domain
+
+# API Rules
+
+- Always use dedicated DTO model classes to interact with API.
+
+# DTO Rules
+
+- Always use dedicater Entity model classes to interact with storage.
+
